@@ -56,7 +56,7 @@ class Handler extends ExceptionHandler
         if ($exception instanceof QueryException) {
             return response()->json(['status' => -211,'message' => 'forbidden database query'], 403);
         }
-        // return response()->json(['status' => -211,'message' => 'invalid request'], 401);
+        // return response()->json(['status' => -200,'message' => 'invalid request'], 401);
         return parent::render($request, $exception);
     }
 }

@@ -68,6 +68,7 @@
             <div class="content">
                 <div class="title m-b-md">
                 HappyBox APIs Documentation
+                <!-- <img src="{{ asset('media/default.png') }}"> -->
                 </div>
 
                 <div class="links">

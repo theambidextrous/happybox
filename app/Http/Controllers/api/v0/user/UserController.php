@@ -165,7 +165,8 @@ class UserController extends Controller
             if( $validator->fails() ){
                 return response([
                     'status' => -211,
-                    'message' => $validator->errors()
+                    'message' => 'Invalid or empty fields',
+                    'errors' => $validator->errors()
                 ], 401);
             }
             $input = $request->all();
@@ -204,7 +205,8 @@ class UserController extends Controller
             if( $validator->fails() ){
                 return response([
                     'status' => -211,
-                    'message' => $validator->errors()
+                    'message' => 'Invalid or empty fields',
+                    'errors' => $validator->errors()
                 ], 401);
             }
             $input = $request->all();
@@ -251,7 +253,8 @@ class UserController extends Controller
             if( $validator->fails() ){
                 return response([
                     'status' => -211,
-                    'message' => $validator->errors()
+                    'message' => 'Invalid or empty fields',
+                    'errors' => $validator->errors()
                 ], 401);
             }
             $input = $request->all();
@@ -323,7 +326,7 @@ class UserController extends Controller
                     'message' => 'Permission denied'
                 ], 401);
             }
-            $user =  User::where('id', $id)->get();
+            $user =  User::where('id', $id)->first();
             return response([
                 'status' => 0,
                 'message' => 'user fetched successfully',
@@ -396,7 +399,8 @@ class UserController extends Controller
         if( $validator->fails() ){
             return response([
                 'status' => -211,
-                'message' => $validator->errors()
+                'message' => 'Invalid or empty fields',
+                'errors' => $validator->errors()
             ], 401);
         }
         $input = $request->all();
@@ -420,7 +424,8 @@ class UserController extends Controller
         if( $validator->fails() ){
             return response([
                 'status' => -211,
-                'message' => $validator->errors()
+                'message' => 'Invalid or empty fields',
+                'errors' => $validator->errors()
             ], 401);
         }
         $input = $request->all();

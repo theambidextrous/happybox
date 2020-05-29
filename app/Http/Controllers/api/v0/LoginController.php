@@ -20,13 +20,24 @@ class LoginController extends Controller
                 'password' => 'required|string'
             ]);
         if( !Auth::attempt( $login ) ){
-            return response(['status' => -211, 'message' => 'Invalid authentication data']);
+            return response(['status' => -211, 'message' => 'Invalid username or password']);
         }
         $accessToken = Auth::user()->createToken('authToken')->accessToken;
+        $user = Auth::user();
+        if(!$user['is_active']){
+            return response(['status' => -211, 'message' => 'Account not active']);
+        }
         return response([
             'status' => 0,
-            'user' => Auth::user(),
+            'user' => $user,
             'access_token' => $accessToken
         ]);
+    }
+
+    public function is_active(Request $request ){
+        if(isset($request->user()->id)){
+            return response(['status' => 0,'message' => 'is active']);
+        }
+        return response(['status' => -211,'message' => 'is inactive']);
     }
 }

@@ -33,6 +33,12 @@ Route::prefix('/users')->group( function() {
     /** =======AUTHENTICATED ROUTES======================================= */
     // Route::middleware('auth:api', 'verified')->
     Route::middleware('auth:api')->group( function(){
+        /** is logged in  */
+        Route::get('/loginstatus', 'api\v0\LoginController@is_active');
+        /** userinfo */
+        Route::get('/info/{userid}', 'api\v0\user\UserinfoController@show');
+        /** upload profile pic */
+        Route::post('/profilepic/{userid}', 'api\v0\user\UserinfoController@change_profile');
         /** register admins --- using root user */
         Route::prefix('/admins')->group( function(){
             Route::post('/register', 'api\v0\user\UserController@create_admin');
@@ -44,14 +50,20 @@ Route::prefix('/users')->group( function() {
         /** find clients */
         Route::prefix('/clients')->group( function(){
             Route::get('/findall', 'api\v0\user\UserController@clients');
+            Route::post('/profile/{id}', 'api\v0\user\UserinfoController@create_for_client');
+            Route::put('/profile/{userid}', 'api\v0\user\UserinfoController@update_client');
         });
         /** find partners */
         Route::prefix('/partners')->group( function(){
             Route::get('/findall', 'api\v0\user\UserController@partners');
+            Route::post('/profile/{id}', 'api\v0\user\UserinfoController@create_for_partner');
+            Route::put('/profile/{userid}', 'api\v0\user\UserinfoController@update_partner');
         });
         /** find admins */
         Route::prefix('/admins')->group( function(){
             Route::get('/findall', 'api\v0\user\UserController@admins');
+            Route::post('/profile/{id}', 'api\v0\user\UserinfoController@create_for_admin');
+            Route::put('/profile/{userid}', 'api\v0\user\UserinfoController@update_admin');
         });
     });
     /** RESETS */
@@ -61,6 +73,62 @@ Route::prefix('/users')->group( function() {
     Route::get('/email/resend', 'api\v0\VerificationController@resend')->name('verification.resend');
     Route::get('/email/verify/{id}/{hash}', 'api\v0\VerificationController@verify')->name('verification.verify');
 }); 
+
+/** Services */
+Route::prefix('/services')->group( function() {
+    Route::middleware('auth:api')->group( function(){
+        /** topics */
+        Route::prefix('/topics')->group( function(){
+            Route::get('/topics', 'api\v0\happybox\TopicController@index');
+            Route::get('/topic/{id}', 'api\v0\happybox\TopicController@show');
+            Route::post('/topic', 'api\v0\happybox\TopicController@create');
+            Route::put('/topic/{id}', 'api\v0\happybox\TopicController@update');
+        });
+        /** media */
+        Route::prefix('/pictures')->group( function(){
+            Route::get('/pictures', 'api\v0\happybox\PictureController@index');
+            Route::get('/picture/{id}', 'api\v0\happybox\PictureController@show');
+            Route::get('/picture/byitem/{item}', 'api\v0\happybox\PictureController@byitem');
+            Route::post('/picture', 'api\v0\happybox\PictureController@create');
+            Route::put('/picture/{id}', 'api\v0\happybox\PictureController@update');
+        });
+        /** media types*/
+        Route::prefix('/mediatypes')->group( function(){
+            Route::get('/mediatypes', 'api\v0\happybox\MediatypeController@index');
+            Route::get('/mediatype/{id}', 'api\v0\happybox\MediatypeController@show');
+            Route::post('/mediatype', 'api\v0\happybox\MediatypeController@create');
+            Route::put('/mediatype/{id}', 'api\v0\happybox\MediatypeController@update');
+        });
+        /** experiences */
+        Route::prefix('/experiences')->group( function(){
+            Route::get('/experiences', 'api\v0\happybox\ExperienceController@index');
+            Route::get('/experience/{id}', 'api\v0\happybox\ExperienceController@show');
+            Route::get('/experience/byidf/{internal_id}', 'api\v0\happybox\ExperienceController@byidf');
+            Route::get('/experience/bytopic/{topic_internal_id}', 'api\v0\happybox\ExperienceController@bytopic');
+            Route::get('/experience/bypartner/{partner_internal_id}', 'api\v0\happybox\ExperienceController@bypartner');
+            Route::post('/experience', 'api\v0\happybox\ExperienceController@create');
+            Route::put('/experience/{id}', 'api\v0\happybox\ExperienceController@update');
+        });
+        /** happyboxexperiences */
+        Route::prefix('/happyboxexperiences')->group( function(){
+            Route::get('/happyboxexperiences', 'api\v0\happybox\HappyBoxExperienceController@index');
+            Route::get('/happyboxexperience/{id}', 'api\v0\happybox\HappyBoxExperienceController@show');
+            Route::get('/happyboxexperience/byexperience/{experience_internal_id}', 'api\v0\happybox\HappyBoxExperienceController@byexperience');
+            Route::get('/happyboxexperience/bybox/{box_internal_id}', 'api\v0\happybox\HappyBoxExperienceController@bybox');
+            Route::post('/happyboxexperience', 'api\v0\happybox\HappyBoxExperienceController@create');
+            Route::put('/happyboxexperience/{id}', 'api\v0\happybox\HappyBoxExperienceController@update');
+        });
+
+        /** happyboxes */
+        Route::prefix('/happyboxes')->group( function(){
+            Route::get('/happyboxes', 'api\v0\happybox\HappyBoxController@index');
+            Route::get('/happybox/{id}', 'api\v0\happybox\HappyBoxController@show');
+            Route::get('/happybox/byidf/{box_internal_id}', 'api\v0\happybox\HappyBoxController@byidf');
+            Route::post('/happybox', 'api\v0\happybox\HappyBoxController@create');
+            Route::put('/happybox/{id}', 'api\v0\happybox\HappyBoxController@update');
+        });
+    });
+});
 Route::fallback(function(){
     return response()->json([
         'status' => -211,
