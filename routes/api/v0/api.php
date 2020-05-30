@@ -37,6 +37,7 @@ Route::prefix('/users')->group( function() {
         Route::get('/loginstatus', 'api\v0\LoginController@is_active');
         /** userinfo */
         Route::get('/info/{userid}', 'api\v0\user\UserinfoController@show');
+        Route::get('/info/byidf/{userid}', 'api\v0\user\UserinfoController@show_byidf');
         /** upload profile pic */
         Route::post('/profilepic/{userid}', 'api\v0\user\UserinfoController@change_profile');
         /** register admins --- using root user */
@@ -81,6 +82,7 @@ Route::prefix('/services')->group( function() {
         Route::prefix('/topics')->group( function(){
             Route::get('/topics', 'api\v0\happybox\TopicController@index');
             Route::get('/topic/{id}', 'api\v0\happybox\TopicController@show');
+            Route::get('/topic/byidf/{id}', 'api\v0\happybox\TopicController@show_byidf');
             Route::post('/topic', 'api\v0\happybox\TopicController@create');
             Route::put('/topic/{id}', 'api\v0\happybox\TopicController@update');
         });

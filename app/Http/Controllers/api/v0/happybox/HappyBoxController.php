@@ -16,7 +16,7 @@ class HappyBoxController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
         try{
             if(!$this->is_admin($request)){
@@ -60,7 +60,7 @@ class HappyBoxController extends Controller
             }
             $validator = Validator::make($request->all(), [
                 'name' => 'required|string',
-                'price' => 'required|float',
+                'price' => 'required|string',
                 'description' => 'required|string',
                 'topics' => 'required|string'
             ]);
@@ -180,7 +180,7 @@ class HappyBoxController extends Controller
         }
         $validator = Validator::make($request->all(), [
             'name' => 'required|string',
-            'price' => 'required|float',
+            'price' => 'required|string',
             'description' => 'required|string',
             'topics' => 'required|string'
         ]);

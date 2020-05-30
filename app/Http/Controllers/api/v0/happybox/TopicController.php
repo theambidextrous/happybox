@@ -129,6 +129,27 @@ class TopicController extends Controller
         }
     }
 
+    public function show_byidf($id, Request $request)
+    {
+        try {
+            $topic =  Topic::where('internal_id', $id)->first();
+            return response([
+                'status' => 0,
+                'message' => 'fetched successfully',
+                'data' => $topic
+            ]);
+        } catch (\Illuminate\Database\QueryException $e) {
+            return response([
+                'status' => -211,
+                'message' => 'Database server rule violation error'
+            ], 401);
+        } catch (PDOException $e) {
+            return response([
+                'status' => -211,
+                'message' => 'Database rule violation error'
+            ], 401);
+        }
+    }
     /**
      * Show the form for editing the specified resource.
      *

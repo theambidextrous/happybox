@@ -16,7 +16,7 @@ class ExperienceController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
         try{
             if(!$this->is_admin($request)){
@@ -62,7 +62,7 @@ class ExperienceController extends Controller
                 'partner' => 'required|string',
                 'name' => 'required|string',
                 'description' => 'required|string',
-                'price' => 'required|float',
+                'price' => 'required|string',
                 'topic' => 'required|string'
                 ]);
             if( $validator->fails() ){
@@ -224,7 +224,7 @@ class ExperienceController extends Controller
             'partner' => 'required|string',
             'name' => 'required|string',
             'description' => 'required|string',
-            'price' => 'required|float',
+            'price' => 'required|string',
             'topic' => 'required|string'
             ]);
         if( $validator->fails() ){

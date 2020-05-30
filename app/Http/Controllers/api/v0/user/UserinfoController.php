@@ -298,6 +298,34 @@ class UserinfoController extends Controller
         }
     }
 
+    public function show_byidf($id, Request $request)
+    {
+        try {
+            if(!$this->is_admin($request) && $request->user()->id != $id){
+                return response([
+                    'status' => -211,
+                    'message' => 'Permission denied'
+                ], 401);
+            }
+            $userinfo =  Userinfo::where('internal_id', $id)->first();
+            return response([
+                'status' => 0,
+                'message' => 'user fetched successfully',
+                'data' => $userinfo
+            ]);
+        } catch (\Illuminate\Database\QueryException $e) {
+            return response([
+                'status' => -211,
+                'message' => 'Database server rule violation error'
+            ], 401);
+        } catch (PDOException $e) {
+            return response([
+                'status' => -211,
+                'message' => 'Database rule violation error'
+            ], 401);
+        }
+    }
+
     /**
      * Show the form for editing the specified resource.
      *
