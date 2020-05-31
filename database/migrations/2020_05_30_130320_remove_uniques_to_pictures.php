@@ -14,7 +14,7 @@ class RemoveUniquesToPictures extends Migration
     public function up()
     {
         Schema::table('pictures', function (Blueprint $table) {
-            $table->dropUnique('related_item_unique');
+            $table->dropUnique('pictures_related_item_unique');
             $table->unique(['related_item','type']);
         });
     }
