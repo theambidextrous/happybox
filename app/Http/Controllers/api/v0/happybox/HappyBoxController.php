@@ -170,6 +170,40 @@ class HappyBoxController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
+    public function deactivate(Request $request, $id){
+        if(!$this->is_admin($request)){
+            return response([
+                'status' => -211,
+                'message' => 'Permission denied'
+            ], 401);
+        }
+        $h = Happybox::find($id);
+        $h->is_active = 1;
+        if($h->save()){
+            return response([
+                'status' => 0,
+                'message' => 'updated successfully',
+                'box' => $id
+            ]);
+        }
+    }
+    public function activate(Request $request, $id){
+        if(!$this->is_admin($request)){
+            return response([
+                'status' => -211,
+                'message' => 'Permission denied'
+            ], 401);
+        }
+        $h = Happybox::find($id);
+        $h->is_active = 2;
+        if($h->save()){
+            return response([
+                'status' => 0,
+                'message' => 'updated successfully',
+                'box' => $id
+            ]);
+        }
+    }
     public function update(Request $request, $id)
     {
         if(!$this->is_admin($request)){

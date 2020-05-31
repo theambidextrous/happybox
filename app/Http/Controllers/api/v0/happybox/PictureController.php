@@ -49,7 +49,7 @@ class PictureController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create(Request $request)
+    public function create(Request $request, $item, $type)
     {
         try{
             if(!$this->is_admin($request)){
@@ -58,24 +58,13 @@ class PictureController extends Controller
                     'message' => 'Permission denied'
                 ], 401);
             }
-            $validator = Validator::make($request->all(), [
-                'related_item' => 'required|string',
-                // 'path_name' => 'required|string',
-                'type' => 'required|string'
-            ]);
-            if( $validator->fails() ){
-                return response([
-                    'status' => -211,
-                    'message' => 'Invalid or empty fields',
-                    'errors' => $validator->errors()
-                ], 401);
-            }
-
             $input = $request->all();
             if(!$request->hasFile('path_name')){
                 return response(['status' => -211, 'message'=> 'no valid file']);
             }
             $input['path_name'] = $this->upload_item($request);
+            $input['related_item'] = $item;
+            $input['type'] = $type;
             $pic = Picture::create($input);
             return response([
                 'status' => 0,
@@ -85,7 +74,7 @@ class PictureController extends Controller
         } catch (\Illuminate\Database\QueryException $e) {
             return response([
                 'status' => -211,
-                'message' => 'Database server rule violation error'
+                'message' => 'Database server rule violation error'.$e->getMessage()
             ], 401);
         } catch (PDOException $e) {
             return response([
@@ -133,7 +122,7 @@ class PictureController extends Controller
             ], 401);
         }
     }
-    public function byitem($item, Request $request)
+    public function byitem($item)
     {
         try {
             $pics =  Picture::where('related_item', $item)->get();

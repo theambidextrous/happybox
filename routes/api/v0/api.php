@@ -91,7 +91,7 @@ Route::prefix('/services')->group( function() {
             Route::get('/pictures', 'api\v0\happybox\PictureController@index');
             Route::get('/picture/{id}', 'api\v0\happybox\PictureController@show');
             Route::get('/picture/byitem/{item}', 'api\v0\happybox\PictureController@byitem');
-            Route::post('/picture', 'api\v0\happybox\PictureController@create');
+            Route::post('/picture/{item}/type/{type}', 'api\v0\happybox\PictureController@create');
             Route::put('/picture/{id}', 'api\v0\happybox\PictureController@update');
         });
         /** media types*/
@@ -119,6 +119,7 @@ Route::prefix('/services')->group( function() {
             Route::get('/happyboxexperience/bybox/{box_internal_id}', 'api\v0\happybox\HappyBoxExperienceController@bybox');
             Route::post('/happyboxexperience', 'api\v0\happybox\HappyBoxExperienceController@create');
             Route::put('/happyboxexperience/{id}', 'api\v0\happybox\HappyBoxExperienceController@update');
+            Route::post('/happyboxexperience/delete', 'api\v0\happybox\HappyBoxExperienceController@destroy');
         });
 
         /** happyboxes */
@@ -127,6 +128,8 @@ Route::prefix('/services')->group( function() {
             Route::get('/happybox/{id}', 'api\v0\happybox\HappyBoxController@show');
             Route::get('/happybox/byidf/{box_internal_id}', 'api\v0\happybox\HappyBoxController@byidf');
             Route::post('/happybox', 'api\v0\happybox\HappyBoxController@create');
+            Route::put('/happybox/activate/{id}', 'api\v0\happybox\HappyBoxController@activate');
+            Route::put('/happybox/deactivate/{id}', 'api\v0\happybox\HappyBoxController@deactivate');
             Route::put('/happybox/{id}', 'api\v0\happybox\HappyBoxController@update');
         });
     });

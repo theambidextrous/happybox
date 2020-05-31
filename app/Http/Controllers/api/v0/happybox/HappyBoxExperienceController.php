@@ -4,7 +4,7 @@ namespace App\Http\Controllers\api\v0\happybox;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\HappyboxExperience;
+use App\Happyboxexperience;
 use Validator;
 use Illuminate\Auth\Middleware\Authenticate;
 use Illuminate\Support\Str;
@@ -16,7 +16,7 @@ class HappyBoxExperienceController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
         try{
             if(!$this->is_admin($request)){
@@ -79,7 +79,7 @@ class HappyBoxExperienceController extends Controller
         } catch (\Illuminate\Database\QueryException $e) {
             return response([
                 'status' => -211,
-                'message' => 'Database server rule violation error'
+                'message' => 'Database server rule violation error' . $e->getMessage()
             ], 401);
         } catch (PDOException $e) {
             return response([
@@ -217,15 +217,76 @@ class HappyBoxExperienceController extends Controller
         }
     }
 
+    public function updatebybox(Request $request, $box){
+        if(!$this->is_admin($request)){
+            return response([
+                'status' => -211,
+                'message' => 'Permission denied'
+            ], 401);
+        }
+        $validator = Validator::make($request->all(), [
+            'experience' => 'required|string',
+            'happybox' => 'required|string'
+        ]);
+        if( $validator->fails() ){
+            return response([
+                'status' => -211,
+                'message' => 'Invalid or empty field',
+                'errors' => $validator->errors()
+            ], 401);
+        }
+        $h = HappyboxExperience::find($id);
+        $h->experience = $request->get('experience');
+        $h->happybox = $request->get('happybox');
+        if($h->save()){
+            return response([
+                'status' => 0,
+                'message' => 'updated successfully',
+                'type' => $id
+            ]);
+        }
+    }
     /**
      * Remove the specified resource from storage.
      *
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Request $request)
     {
-        //
+        try{
+            if(!$this->is_admin($request)){
+                return response([
+                    'status' => -211,
+                    'message' => 'Permission denied'
+                ], 401);
+            }
+            $validator = Validator::make($request->all(), [
+                'experience' => 'required|string',
+                'happybox' => 'required|string'
+            ]);
+            if( $validator->fails() ){
+                return response([
+                    'status' => -211,
+                    'message' => 'Invalid or empty field',
+                    'errors' => $validator->errors()
+                ], 401);
+            }
+            HappyboxExperience::where([
+                'experience' => $request->get('experience'),
+                'happybox' => $request->get('happybox')
+            ])->delete();
+        } catch (\Illuminate\Database\QueryException $e) {
+            return response([
+                'status' => -211,
+                'message' => 'Database server rule violation error'
+            ], 401);
+        } catch (PDOException $e) {
+            return response([
+                'status' => -211,
+                'message' => 'Database rule violation error'
+            ], 401);
+        }
     }
     /** utitlties */
     public function is_admin($r){
