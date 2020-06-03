@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class RemoveUniquesToPictures extends Migration
+class AddBoxTypeToHappyboxes extends Migration
 {
     /**
      * Run the migrations.
@@ -13,9 +13,8 @@ class RemoveUniquesToPictures extends Migration
      */
     public function up()
     {
-        Schema::table('pictures', function (Blueprint $table) {
-            // $table->dropUnique('pictures_related_item_unique');
-            // $table->unique(['related_item','type']);
+        Schema::table('happyboxes', function (Blueprint $table) {
+            $table->string('box_type');
         });
     }
 
@@ -26,7 +25,7 @@ class RemoveUniquesToPictures extends Migration
      */
     public function down()
     {
-        Schema::table('pictures', function (Blueprint $table) {
+        Schema::table('happyboxes', function (Blueprint $table) {
             //
         });
     }

@@ -33,6 +33,7 @@ class VerificationController extends Controller
                 'message' => 'Email verification link sent'
             ]);
         }
+        // return redirect();
         return response([
             'status' => 0,
             'message' => 'Email verification link sent'

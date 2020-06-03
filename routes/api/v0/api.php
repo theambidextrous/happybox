@@ -92,7 +92,7 @@ Route::prefix('/services')->group( function() {
             Route::get('/picture/{id}', 'api\v0\happybox\PictureController@show');
             Route::get('/picture/byitem/{item}', 'api\v0\happybox\PictureController@byitem');
             Route::post('/picture/{item}/type/{type}', 'api\v0\happybox\PictureController@create');
-            Route::put('/picture/{id}', 'api\v0\happybox\PictureController@update');
+            Route::post('/picture/{id}', 'api\v0\happybox\PictureController@update');
         });
         /** media types*/
         Route::prefix('/mediatypes')->group( function(){
@@ -122,6 +122,20 @@ Route::prefix('/services')->group( function() {
             Route::post('/happyboxexperience/delete', 'api\v0\happybox\HappyBoxExperienceController@destroy');
         });
 
+        /** inventories */
+        Route::prefix('/inventories')->group( function(){
+            Route::get('/inventory', 'api\v0\happybox\InventoryController@index');
+            Route::get('/inventory/{id}', 'api\v0\happybox\InventoryController@show');
+            Route::get('/inventory/vstatus/{status}', 'api\v0\happybox\InventoryController@by_voucher_status');
+            Route::post('/inventory', 'api\v0\happybox\InventoryController@create');
+        });
+         /** reports */
+         Route::prefix('/reports')->group( function(){
+            Route::get('/report', 'api\v0\happybox\ReportController@index');
+            Route::get('/report/{id}', 'api\v0\happybox\ReportController@show');
+            Route::post('/report', 'api\v0\happybox\ReportController@create');
+            Route::put('/report/{id}', 'api\v0\happybox\ReportController@update');
+        });
         /** happyboxes */
         Route::prefix('/happyboxes')->group( function(){
             Route::get('/happyboxes', 'api\v0\happybox\HappyBoxController@index');

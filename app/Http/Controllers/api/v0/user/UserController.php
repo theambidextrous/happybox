@@ -178,7 +178,8 @@ class UserController extends Controller
             return response([
                 'status' => 0,
                 'message' => 'User created successfully',
-                'data' => $user
+                'data' => $user,
+                'token' => $access_token
             ], 200);
         } catch (\Illuminate\Database\QueryException $e) {
             return response([
@@ -220,7 +221,8 @@ class UserController extends Controller
             return response([
                 'status' => 0,
                 'message' => 'User created successfully',
-                'data' => $user
+                'data' => $user,
+                'token' => $access_token
             ], 200);
         } catch (\Illuminate\Database\QueryException $e) {
             return response([
@@ -268,7 +270,8 @@ class UserController extends Controller
             return response([
                 'status' => 0,
                 'message' => 'User created successfully',
-                'data' => $user
+                'data' => $user,
+                'token' => $access_token
             ], 200);
         } catch (\Illuminate\Database\QueryException $e) {
             return response([

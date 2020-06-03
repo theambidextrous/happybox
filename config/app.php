@@ -13,8 +13,8 @@ return [
     |
     */
 
-    'name' => env('APP_NAME', 'Laravel'),
-    'client_url' => env('APP_CLIENT_APP_URL', 'http://happybox.ke/'),
+    'name' => env('APP_NAME'),
+    'client_url' => env('APP_CLIENT_APP_URL'),
     /*
     |--------------------------------------------------------------------------
     | Application Environment
@@ -52,7 +52,7 @@ return [
     |
     */
 
-    'url' => env('APP_URL', 'http://localhost'),
+    'url' => env('APP_URL'),
 
     'asset_url' => env('ASSET_URL', null),
 

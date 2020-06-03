@@ -4,15 +4,15 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Happybox extends Model
+class Report extends Model
 {
-    /**
+     /**
      * The attributes that are mass assignable.
      *
      * @var array
      */
     protected $fillable = [
-        'internal_id', 'name', 'price', 'description', 'topics', 'is_active', 'partners', 'box_type',
+        'name', 'cols',
     ];
 
     /**

@@ -41,12 +41,12 @@ class PasswordResetNotification extends Notification
      */
     public function toMail($notifiable)
     {
-        $notification_link = config('app.client_url') . 'reset/password?token=' . $this->token;
+        $notification_link = config('app.client_url') . 'reset-password.php?token=' . $this->token;
         return (new MailMessage)
             ->subject('Reset your HappyBox Account Password.')
             ->line('You are receiving this email because we received a password reset request for your account.')
             ->action('Reset Password', $notification_link)
-            ->line('This reset link will expire in :count minutes.', ['count' => config('auth.passwords.users.expire')])
+            ->line('This reset link will expire in '.config('auth.passwords.users.expire').' minutes.')
             ->line('If you did not make this request, no action is required. Token::: ' . $this->token);
     }
 

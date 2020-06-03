@@ -76,7 +76,9 @@ class UserinfoController extends Controller
                 ], 401);
             }
             $input = $request->all();
-            $input['internal_id'] = 'PT-' . $this->createCode(10);
+            if(empty($input['internal_id'])){
+                $input['internal_id'] = 'PT-' . $this->createCode(10);
+            }
             $input['userid'] = $id;
             $user = Userinfo::create($input);
             return response([

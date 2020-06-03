@@ -62,7 +62,9 @@ class HappyBoxController extends Controller
                 'name' => 'required|string',
                 'price' => 'required|string',
                 'description' => 'required|string',
-                'topics' => 'required|string'
+                'topics' => 'required|string',
+                'partners' => 'required|string',
+                'box_type' => 'required|string'
             ]);
             if( $validator->fails() ){
                 return response([
@@ -73,7 +75,7 @@ class HappyBoxController extends Controller
             }
             $input = $request->all();
             $input['internal_id'] = 'HB-' . $this->createCode(10);
-            $input['voucher'] = $this->createCode(8);
+            // $input['voucher'] = $this->createCode(8);
             $h = Happybox::create($input);
             return response([
                 'status' => 0,

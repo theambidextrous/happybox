@@ -4,12 +4,12 @@ namespace App\Http\Controllers\api\v0\happybox;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Picture;
+use App\Inventory;
 use Validator;
 use Illuminate\Auth\Middleware\Authenticate;
 use Illuminate\Support\Str;
 
-class PictureController extends Controller
+class InventoryController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -25,11 +25,11 @@ class PictureController extends Controller
                     'message' => 'Permission denied'
                 ], 401);
             }
-            $pics =  Picture::all();
+            $i =  Inventory::all();
             return response([
                 'status' => 0,
                 'message' => 'fetched successfully',
-                'data' => $pics
+                'data' => $i
             ]);
         } catch (\Illuminate\Database\QueryException $e) {
             return response([
@@ -43,13 +43,7 @@ class PictureController extends Controller
             ], 401);
         }
     }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create(Request $request, $item, $type)
+    public function by_voucher_status(Request $request, $status)
     {
         try{
             if(!$this->is_admin($request)){
@@ -58,23 +52,65 @@ class PictureController extends Controller
                     'message' => 'Permission denied'
                 ], 401);
             }
-            $input = $request->all();
-            if(!$request->hasFile('path_name')){
-                return response(['status' => -211, 'message'=> 'no valid file']);
+            $i =  Inventory::where('box_voucher_status', $status)->get();
+            return response([
+                'status' => 0,
+                'message' => 'fetched successfully',
+                'data' => $i
+            ]);
+        } catch (\Illuminate\Database\QueryException $e) {
+            return response([
+                'status' => -211,
+                'message' => 'Database server rule violation error'
+            ], 401);
+        } catch (PDOException $e) {
+            return response([
+                'status' => -211,
+                'message' => 'Database rule violation error'
+            ], 401);
+        }
+    }
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function create(Request $request)
+    {
+        try{
+            if(!$this->is_admin($request)){
+                return response([
+                    'status' => -211,
+                    'message' => 'Permission denied'
+                ], 401);
             }
-            $input['path_name'] = $this->upload_item($request);
-            $input['related_item'] = $item;
-            $input['type'] = $type;
-            $pic = Picture::create($input);
+            $validator = Validator::make($request->all(), [
+                'box_internal_id' => 'required|string',
+                'box_type' => 'required|string'
+            ]);
+            if( $validator->fails() ){
+                return response([
+                    'status' => -211,
+                    'message' => 'Invalid or empty field',
+                    'errors' => $validator->errors()
+                ], 401);
+            }
+            $input = $request->all();
+            if($input['box_type'] == '00'){
+                $input['box_voucher'] = 'P-' . $this->createCode(8);
+            }else{
+                $input['box_voucher'] = 'E-' . $this->createCode(8); 
+            }
+            $h = Inventory::create($input);
             return response([
                 'status' => 0,
                 'message' => 'created successfully',
-                'data' => null
+                'box' => $input['box_internal_id']
             ], 200);
         } catch (\Illuminate\Database\QueryException $e) {
             return response([
                 'status' => -211,
-                'message' => 'Database server rule violation error'.$e->getMessage()
+                'message' => 'Database server rule violation error'
             ], 401);
         } catch (PDOException $e) {
             return response([
@@ -104,11 +140,11 @@ class PictureController extends Controller
     public function show($id, Request $request)
     {
         try {
-            $pic =  Picture::find($id);
+            $h =  Inventory::find($id);
             return response([
                 'status' => 0,
                 'message' => 'fetched successfully',
-                'data' => $pic
+                'data' => $h
             ]);
         } catch (\Illuminate\Database\QueryException $e) {
             return response([
@@ -122,14 +158,14 @@ class PictureController extends Controller
             ], 401);
         }
     }
-    public function byitem($item)
+    public function by_box($id, Request $request)
     {
         try {
-            $pics =  Picture::where('related_item', $item)->get();
+            $h =  Inventory::where('box_internal_id', $id)->get();
             return response([
                 'status' => 0,
                 'message' => 'fetched successfully',
-                'data' => $pics
+                'data' => $h
             ]);
         } catch (\Illuminate\Database\QueryException $e) {
             return response([
@@ -161,30 +197,18 @@ class PictureController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update_voucher(Request $request, $status)
     {
-        if(!$this->is_admin($request)){
-            return response([
-                'status' => -211,
-                'message' => 'Permission denied'
-            ], 401);
-        }
-        $input = $request->all();
-        if(!$request->hasFile('path_name')){
-            return response(['status' => -211, 'message'=> 'no valid file']);
-        }
-        $new_file_path = $this->upload_item($request);
-        $pic = Picture::find($id);
-        $pic->path_name = $new_file_path;
-        if($pic->save()){
-            return response([
-                'status' => 0,
-                'message' => 'media file updated successfully',
-                'picture' => $id
-            ]);
-        }
+        
     }
-
+    public function update_c_buyer(Request $request)
+    {
+        
+    }
+    public function update_c_user(Request $request)
+    {
+        
+    }
     /**
      * Remove the specified resource from storage.
      *
@@ -213,11 +237,6 @@ class PictureController extends Controller
             return true;
         }
         return false;
-    }
-    public function upload_item(Request $r){
-        $file_name = strtolower($this->createCode(32)) . '.' . $r->file('path_name')->extension();
-        $path = $r->file('path_name')->move(public_path('/media'), $file_name);
-        return $file_url = url('/media/' . $file_name);
     }
     public function createCode($length = 20) {
         $characters = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';

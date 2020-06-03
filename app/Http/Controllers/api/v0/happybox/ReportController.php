@@ -4,12 +4,12 @@ namespace App\Http\Controllers\api\v0\happybox;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Picture;
+use App\Report;
 use Validator;
 use Illuminate\Auth\Middleware\Authenticate;
 use Illuminate\Support\Str;
 
-class PictureController extends Controller
+class ReportController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -25,11 +25,11 @@ class PictureController extends Controller
                     'message' => 'Permission denied'
                 ], 401);
             }
-            $pics =  Picture::all();
+            $h =  Report::all();
             return response([
                 'status' => 0,
                 'message' => 'fetched successfully',
-                'data' => $pics
+                'data' => $h
             ]);
         } catch (\Illuminate\Database\QueryException $e) {
             return response([
@@ -49,7 +49,7 @@ class PictureController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create(Request $request, $item, $type)
+    public function create(Request $request)
     {
         try{
             if(!$this->is_admin($request)){
@@ -58,23 +58,27 @@ class PictureController extends Controller
                     'message' => 'Permission denied'
                 ], 401);
             }
-            $input = $request->all();
-            if(!$request->hasFile('path_name')){
-                return response(['status' => -211, 'message'=> 'no valid file']);
+            $validator = Validator::make($request->all(), [
+                'name' => 'required|string',
+                'cols' => 'required|string'
+            ]);
+            if( $validator->fails() ){
+                return response([
+                    'status' => -211,
+                    'message' => 'Invalid or empty field',
+                    'errors' => $validator->errors()
+                ], 401);
             }
-            $input['path_name'] = $this->upload_item($request);
-            $input['related_item'] = $item;
-            $input['type'] = $type;
-            $pic = Picture::create($input);
+            $input = $request->all();
+            Report::create($input);
             return response([
                 'status' => 0,
-                'message' => 'created successfully',
-                'data' => null
+                'message' => 'created successfully'
             ], 200);
         } catch (\Illuminate\Database\QueryException $e) {
             return response([
                 'status' => -211,
-                'message' => 'Database server rule violation error'.$e->getMessage()
+                'message' => 'Database server rule violation error'
             ], 401);
         } catch (PDOException $e) {
             return response([
@@ -104,11 +108,11 @@ class PictureController extends Controller
     public function show($id, Request $request)
     {
         try {
-            $pic =  Picture::find($id);
+            $h =  Report::find($id);
             return response([
                 'status' => 0,
                 'message' => 'fetched successfully',
-                'data' => $pic
+                'data' => $h
             ]);
         } catch (\Illuminate\Database\QueryException $e) {
             return response([
@@ -122,14 +126,14 @@ class PictureController extends Controller
             ], 401);
         }
     }
-    public function byitem($item)
+    public function byidf($id, Request $request)
     {
         try {
-            $pics =  Picture::where('related_item', $item)->get();
+            $h =  Report::where('internal_id', $id)->first();
             return response([
                 'status' => 0,
                 'message' => 'fetched successfully',
-                'data' => $pics
+                'data' => $h
             ]);
         } catch (\Illuminate\Database\QueryException $e) {
             return response([
@@ -161,6 +165,40 @@ class PictureController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
+    public function deactivate(Request $request, $id){
+        if(!$this->is_admin($request)){
+            return response([
+                'status' => -211,
+                'message' => 'Permission denied'
+            ], 401);
+        }
+        $h = Report::find($id);
+        $h->is_active = 1;
+        if($h->save()){
+            return response([
+                'status' => 0,
+                'message' => 'updated successfully',
+                'box' => $id
+            ]);
+        }
+    }
+    public function activate(Request $request, $id){
+        if(!$this->is_admin($request)){
+            return response([
+                'status' => -211,
+                'message' => 'Permission denied'
+            ], 401);
+        }
+        $h = Report::find($id);
+        $h->is_active = 2;
+        if($h->save()){
+            return response([
+                'status' => 0,
+                'message' => 'updated successfully',
+                'box' => $id
+            ]);
+        }
+    }
     public function update(Request $request, $id)
     {
         if(!$this->is_admin($request)){
@@ -169,18 +207,30 @@ class PictureController extends Controller
                 'message' => 'Permission denied'
             ], 401);
         }
-        $input = $request->all();
-        if(!$request->hasFile('path_name')){
-            return response(['status' => -211, 'message'=> 'no valid file']);
+        $validator = Validator::make($request->all(), [
+            'name' => 'required|string',
+            'price' => 'required|string',
+            'description' => 'required|string',
+            'topics' => 'required|string'
+        ]);
+        if( $validator->fails() ){
+            return response([
+                'status' => -211,
+                'message' => 'Invalid or empty field',
+                'errors' => $validator->errors()
+            ], 401);
         }
-        $new_file_path = $this->upload_item($request);
-        $pic = Picture::find($id);
-        $pic->path_name = $new_file_path;
-        if($pic->save()){
+        $input = $request->all();
+        $h = Report::find($id);
+        $h->name = $request->get('name');
+        $h->price = $request->get('price');
+        $h->description = $request->get('description');
+        $h->topics = $request->get('topics');
+        if($h->save()){
             return response([
                 'status' => 0,
-                'message' => 'media file updated successfully',
-                'picture' => $id
+                'message' => 'updated successfully',
+                'box' => $id
             ]);
         }
     }
@@ -213,11 +263,6 @@ class PictureController extends Controller
             return true;
         }
         return false;
-    }
-    public function upload_item(Request $r){
-        $file_name = strtolower($this->createCode(32)) . '.' . $r->file('path_name')->extension();
-        $path = $r->file('path_name')->move(public_path('/media'), $file_name);
-        return $file_url = url('/media/' . $file_name);
     }
     public function createCode($length = 20) {
         $characters = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
