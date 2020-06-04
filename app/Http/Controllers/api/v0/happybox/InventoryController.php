@@ -43,6 +43,61 @@ class InventoryController extends Controller
             ], 401);
         }
     }
+
+    public function get_report(Request $request)
+    {
+        try{
+            if(!$this->is_admin($request)){
+                return response([
+                    'status' => -211,
+                    'message' => 'Permission denied'
+                ], 401);
+            }
+            $validator = Validator::make($request->all(), [
+                'cols' => 'required|string',
+                'date_from' => 'required|string',
+                'date_to' => 'required|string'
+            ]);
+            if( $validator->fails() ){
+                return response([
+                    'status' => -211,
+                    'message' => 'Invalid or empty field',
+                    'errors' => $validator->errors()
+                ], 401);
+            }
+            $col_arr = explode(',', $request->get('cols'));
+            foreach ( $col_arr as $c_a ){
+                if( strpos( $c_a, 'customer_buyer_id_' ) !== false ) {
+                    $final_cols[] = 'customer_buyer_id';
+                }elseif( strpos( $c_a, 'customer_user_id_' ) !== false ){
+                    $final_cols[] = 'customer_user_id';
+                }elseif( strpos( $c_a, 'box_internal_id_' ) !== false ){
+                    $final_cols[] = 'box_internal_id';
+                }else{
+                    $final_cols[] = $c_a;
+                }
+            }
+            $date_from = date('Y-m-d h:i:s', strtotime($request->get('date_from')));
+            $date_to = date('Y-m-d h:i:s', strtotime($request->get('date_to')));
+            $i =  Inventory::select($final_cols)->whereBetween('created_at', [$date_from, $date_to])->get();
+            return response([
+                'status' => 0,
+                'message' => 'fetched successfully',
+                'data' => $i
+            ]);
+        } catch (\Illuminate\Database\QueryException $e) {
+            return response([
+                'status' => -211,
+                'message' => 'Database server rule violation error' . $e->getMessage()
+            ], 401);
+        } catch (PDOException $e) {
+            return response([
+                'status' => -211,
+                'message' => 'Database rule violation error'
+            ], 401);
+        }
+    }
+
     public function by_voucher_status(Request $request, $status)
     {
         try{
@@ -53,6 +108,37 @@ class InventoryController extends Controller
                 ], 401);
             }
             $i =  Inventory::where('box_voucher_status', $status)->get();
+            return response([
+                'status' => 0,
+                'message' => 'fetched successfully',
+                'data' => $i
+            ]);
+        } catch (\Illuminate\Database\QueryException $e) {
+            return response([
+                'status' => -211,
+                'message' => 'Database server rule violation error'
+            ], 401);
+        } catch (PDOException $e) {
+            return response([
+                'status' => -211,
+                'message' => 'Database rule violation error'
+            ], 401);
+        }
+    }
+
+    public function by_voucher(Request $request, $v)
+    {
+        try{
+            if(!$this->is_admin($request)){
+                return response([
+                    'status' => -211,
+                    'message' => 'Permission denied'
+                ], 401);
+            }
+            $i =  Inventory::where('box_voucher', $v)->first();
+            if(empty($i)){
+                $i =  Inventory::where('box_voucher_new', $v)->first(); 
+            }
             return response([
                 'status' => 0,
                 'message' => 'fetched successfully',
