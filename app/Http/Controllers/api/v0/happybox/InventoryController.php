@@ -129,12 +129,12 @@ class InventoryController extends Controller
     public function by_voucher(Request $request, $v)
     {
         try{
-            if(!$this->is_admin($request)){
-                return response([
-                    'status' => -211,
-                    'message' => 'Permission denied'
-                ], 401);
-            }
+            // if(!$this->is_admin($request)){
+            //     return response([
+            //         'status' => -211,
+            //         'message' => 'Permission denied'
+            //     ], 401);
+            // }
             $i =  Inventory::where('box_voucher', $v)->first();
             if(empty($i)){
                 $i =  Inventory::where('box_voucher_new', $v)->first(); 
@@ -265,6 +265,27 @@ class InventoryController extends Controller
             ], 401);
         }
     }
+    public function by_partner($ptn, Request $request)
+    {
+        try {
+            $i =  Inventory::where('partner_internal_id', $ptn)->get();
+            return response([
+                'status' => 0,
+                'message' => 'fetched successfully',
+                'data' => $i
+            ]);
+        } catch (\Illuminate\Database\QueryException $e) {
+            return response([
+                'status' => -211,
+                'message' => 'Database server rule violation error'
+            ], 401);
+        } catch (PDOException $e) {
+            return response([
+                'status' => -211,
+                'message' => 'Database rule violation error'
+            ], 401);
+        }
+    }
     /**
      * Show the form for editing the specified resource.
      *
@@ -283,9 +304,35 @@ class InventoryController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update_voucher(Request $request, $status)
+    public function redeem_by_partner(Request $request, $voucher)
     {
-        
+        $validator = Validator::make($request->all(), [
+            'redeemed_date' => 'required|string',
+            'partner_identity' => 'required|string',
+            'booking_date' => 'required|string'
+        ]);
+        if( $validator->fails() ){
+            return response([
+                'status' => -211,
+                'message' => 'Invalid or empty field',
+                'errors' => $validator->errors()
+            ], 401);
+        }
+        $i =  Inventory::where('box_voucher', $voucher)->first();
+        if(empty($i)){
+            $i =  Inventory::where('box_voucher_new', $voucher)->first();
+        }
+        $i->box_voucher_status = 3;
+        $i->redeemed_date = $request->get('redeemed_date');
+        $i->booking_date = $request->get('booking_date');
+        $i->partner_internal_id = $request->get('partner_identity');
+        if($i->save()){
+            return response([
+                'status' => 0,
+                'message' => 'updated successfully',
+                'voucher' => $voucher
+            ]);
+        }
     }
     public function update_c_buyer(Request $request)
     {

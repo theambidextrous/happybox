@@ -128,8 +128,10 @@ Route::prefix('/services')->group( function() {
             Route::get('/inventory/{id}', 'api\v0\happybox\InventoryController@show');
             Route::get('/inventory/vstatus/{status}', 'api\v0\happybox\InventoryController@by_voucher_status');
             Route::get('/inventory/v/{v}', 'api\v0\happybox\InventoryController@by_voucher');
+            Route::get('/inventory/ptn/{p}', 'api\v0\happybox\InventoryController@by_partner');
             Route::post('/inventory', 'api\v0\happybox\InventoryController@create');
             Route::post('/inventory/reports', 'api\v0\happybox\InventoryController@get_report');
+            Route::put('/inventory/redeem/bypartner/{v}', 'api\v0\happybox\InventoryController@redeem_by_partner');
         });
          /** reports */
          Route::prefix('/reports')->group( function(){

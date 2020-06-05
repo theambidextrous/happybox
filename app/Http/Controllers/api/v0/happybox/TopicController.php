@@ -19,12 +19,6 @@ class TopicController extends Controller
     public function index(Request $request)
     {
         try{
-            if(!$this->is_admin($request)){
-                return response([
-                    'status' => -211,
-                    'message' => 'Permission denied'
-                ], 401);
-            }
             $topics =  Topic::all();
             return response([
                 'status' => 0,
