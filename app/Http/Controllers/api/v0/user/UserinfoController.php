@@ -59,7 +59,6 @@ class UserinfoController extends Controller
             }
             $validator = Validator::make($request->all(), [
                 'fname' => 'required|string',
-                'mname' => 'required|string',
                 'sname' => 'required|string',
                 'short_description' => 'required|string',
                 'location' => 'required|string',
@@ -110,7 +109,6 @@ class UserinfoController extends Controller
             }
             $validator = Validator::make($request->all(), [
                 'fname' => 'required|string',
-                'mname' => 'required|string',
                 'sname' => 'required|string',
                 'short_description' => 'string',
                 'location' => 'string',
@@ -156,7 +154,6 @@ class UserinfoController extends Controller
             }
             $validator = Validator::make($request->all(), [
                 'fname' => 'required|string',
-                'mname' => 'required|string',
                 'sname' => 'required|string',
                 'short_description' => 'string',
                 'location' => 'string',
@@ -327,7 +324,47 @@ class UserinfoController extends Controller
             ], 401);
         }
     }
-
+    
+    public function show_bytopic($topic, Request $request){
+        try {
+            $u =  Userinfo::select('userid','internal_id','short_description','location','picture','business_name')->where('internal_id', 'like', '%PT-%')->where('business_category', $topic)->get();
+            return response([
+                'status' => 0,
+                'message' => 'fetched successfully',
+                'data' => $u
+            ]);
+        } catch (\Illuminate\Database\QueryException $e) {
+            return response([
+                'status' => -211,
+                'message' => 'Database server rule violation error'
+            ], 401);
+        } catch (PDOException $e) {
+            return response([
+                'status' => -211,
+                'message' => 'Database rule violation error'
+            ], 401);
+        }
+    }
+    public function show_ptn_all(){
+        try {
+            $u =  Userinfo::select('userid','internal_id','picture','business_name')->where('internal_id', 'like', '%PT-%')->get();
+            return response([
+                'status' => 0,
+                'message' => 'fetched successfully',
+                'data' => $u
+            ]);
+        } catch (\Illuminate\Database\QueryException $e) {
+            return response([
+                'status' => -211,
+                'message' => 'Database server rule violation error'
+            ], 401);
+        } catch (PDOException $e) {
+            return response([
+                'status' => -211,
+                'message' => 'Database rule violation error'
+            ], 401);
+        }
+    }
     /**
      * Show the form for editing the specified resource.
      *
@@ -356,7 +393,6 @@ class UserinfoController extends Controller
         }
         $validator = Validator::make($request->all(), [
             'fname' => 'required|string',
-            'mname' => 'required|string',
             'sname' => 'required|string',
             'short_description' => 'required|string',
             'location' => 'required|string',
@@ -375,7 +411,6 @@ class UserinfoController extends Controller
         $input = $request->all();
         $userinfo = Userinfo::where('userid', $id)->first();
         $userinfo->fname = $request->get('fname');
-        $userinfo->mname = $request->get('mname');
         $userinfo->sname = $request->get('sname');
         $userinfo->short_description = $request->get('short_description');
         $userinfo->location = $request->get('location');
@@ -401,7 +436,6 @@ class UserinfoController extends Controller
         }
         $validator = Validator::make($request->all(), [
             'fname' => 'required|string',
-            'mname' => 'required|string',
             'sname' => 'required|string',
             'short_description' => 'string',
             'location' => 'string',
@@ -417,7 +451,6 @@ class UserinfoController extends Controller
         $input = $request->all();
         $userinfo = Userinfo::where('userid', $id)->first();
         $userinfo->fname = $request->get('fname');
-        $userinfo->mname = $request->get('mname');
         $userinfo->sname = $request->get('sname');
         $userinfo->short_description = $request->get('short_description');
         $userinfo->location = $request->get('location');
@@ -440,7 +473,6 @@ class UserinfoController extends Controller
         }
         $validator = Validator::make($request->all(), [
             'fname' => 'required|string',
-            'mname' => 'required|string',
             'sname' => 'required|string',
             'short_description' => 'string',
             'location' => 'string',
@@ -456,7 +488,6 @@ class UserinfoController extends Controller
         $input = $request->all();
         $userinfo = Userinfo::where('userid', $id)->first();
         $userinfo->fname = $request->get('fname');
-        $userinfo->mname = $request->get('mname');
         $userinfo->sname = $request->get('sname');
         $userinfo->short_description = $request->get('short_description');
         $userinfo->location = $request->get('location');

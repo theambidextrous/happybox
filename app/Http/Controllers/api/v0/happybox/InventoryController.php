@@ -265,6 +265,46 @@ class InventoryController extends Controller
             ], 401);
         }
     }
+    public function by_cust_user($cu, Request $request){
+        try {
+            $i =  Inventory::where('customer_user_id', $cu)->where('box_voucher_status', 6)->get();
+            return response([
+                'status' => 0,
+                'message' => 'fetched successfully',
+                'data' => $i
+            ]);
+        } catch (\Illuminate\Database\QueryException $e) {
+            return response([
+                'status' => -211,
+                'message' => 'Database server rule violation error'
+            ], 401);
+        } catch (PDOException $e) {
+            return response([
+                'status' => -211,
+                'message' => 'Database rule violation error'
+            ], 401);
+        }
+    }
+    public function stock($box, Request $request){
+        try {
+            $i =  Inventory::where('box_internal_id', $box)->where('box_voucher_status', 1)->count();
+            return response([
+                'status' => 0,
+                'message' => 'fetched successfully',
+                'stock' => $i
+            ]);
+        } catch (\Illuminate\Database\QueryException $e) {
+            return response([
+                'status' => -211,
+                'message' => 'Database server rule violation error'
+            ], 401);
+        } catch (PDOException $e) {
+            return response([
+                'status' => -211,
+                'message' => 'Database rule violation error'
+            ], 401);
+        }
+    }
     public function by_partner($ptn, Request $request)
     {
         try {
@@ -304,6 +344,41 @@ class InventoryController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
+    public function v_activate(Request $request, $voucher){
+        $validator = Validator::make($request->all(), [
+            'activation_date' => 'required|string',
+            'customer_user_id' => 'required|string'
+        ]);
+        if( $validator->fails() ){
+            return response([
+                'status' => -211,
+                'message' => 'Invalid or empty field',
+                'errors' => $validator->errors()
+            ], 401);
+        }
+        $i =  Inventory::where('box_voucher', $voucher)->where('box_voucher_status', 2)->first();
+        if(empty($i)){
+            $i =  Inventory::where('box_voucher_new', $voucher)->where('box_voucher_status', 2)->first();
+        }
+        if(is_null($i)){
+            return response([
+                'status' => -211,
+                'message' => 'Voucher '.$voucher.' Is invalid',
+                'voucher' => $voucher
+            ]);
+        }
+        $i->box_voucher_status = 6;
+        $i->customer_user_id = $request->get('customer_user_id');
+        $i->voucher_activation_date = $request->get('activation_date');
+        if($i->save()){
+            return response([
+                'status' => 0,
+                'message' => 'updated successfully',
+                'voucher' => $voucher
+            ]);
+        }
+    }
+
     public function redeem_by_partner(Request $request, $voucher)
     {
         $validator = Validator::make($request->all(), [

@@ -347,7 +347,26 @@ class UserController extends Controller
             ], 401);
         }
     }
-
+    public function show_active($id){
+        try {
+            $u =  User::select(['is_active'])->where('id', $id)->first();
+            return response([
+                'status' => 0,
+                'message' => 'fetched successfully',
+                'is_active' => $u
+            ]);
+        } catch (\Illuminate\Database\QueryException $e) {
+            return response([
+                'status' => -211,
+                'message' => 'Database server rule violation error'
+            ], 401);
+        } catch (PDOException $e) {
+            return response([
+                'status' => -211,
+                'message' => 'Database rule violation error'
+            ], 401);
+        }
+    }
     public function showbyemail($email, Request $request){
         try {
             if(!$this->is_admin($request) && $request->user()->email != $email){

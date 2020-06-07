@@ -144,6 +144,26 @@ class TopicController extends Controller
             ], 401);
         }
     }
+    public function show_byname($n){
+        try {
+            $t =  Topic::where('name', $n)->first();
+            return response([
+                'status' => 0,
+                'message' => 'fetched successfully',
+                'data' => $t
+            ]);
+        } catch (\Illuminate\Database\QueryException $e) {
+            return response([
+                'status' => -211,
+                'message' => 'Database server rule violation error'
+            ], 401);
+        } catch (PDOException $e) {
+            return response([
+                'status' => -211,
+                'message' => 'Database rule violation error'
+            ], 401);
+        }
+    }
     /**
      * Show the form for editing the specified resource.
      *

@@ -29,12 +29,19 @@ Route::prefix('/users')->group( function() {
     /** register partners */
     Route::prefix('/partners')->group( function(){
         Route::post('/register', 'api\v0\user\UserController@create_partner');
+        Route::get('/info/topic/{t}', 'api\v0\user\UserinfoController@show_bytopic');
+        Route::get('/info/all', 'api\v0\user\UserinfoController@show_ptn_all');
     });
+    Route::get('/findbyid/active/{id}', 'api\v0\user\UserController@show_active');
     /** =======AUTHENTICATED ROUTES======================================= */
     // Route::middleware('auth:api', 'verified')->
     Route::middleware('auth:api')->group( function(){
         /** is logged in  */
         Route::get('/loginstatus', 'api\v0\LoginController@is_active');
+        /** shipping */
+        Route::get('/shipping/user/{idf}', 'api\v0\user\ShippingController@show');
+        Route::put('/shipping/user/{idf}', 'api\v0\user\ShippingController@update');
+        Route::post('/shipping/user/{idf}', 'api\v0\user\ShippingController@create');
         /** userinfo */
         Route::get('/info/{userid}', 'api\v0\user\UserinfoController@show');
         Route::get('/info/byidf/{userid}', 'api\v0\user\UserinfoController@show_byidf');
@@ -77,20 +84,42 @@ Route::prefix('/users')->group( function() {
 
 /** Services */
 Route::prefix('/services')->group( function() {
+    /** UNSECURED */
+    /** topics */
+    Route::prefix('/topics')->group( function(){
+        Route::get('/topics', 'api\v0\happybox\TopicController@index');
+        Route::get('/topic/{id}', 'api\v0\happybox\TopicController@show');
+        Route::get('/topic/byidf/{id}', 'api\v0\happybox\TopicController@show_byidf');
+        Route::get('/topic/name/{n}', 'api\v0\happybox\TopicController@show_byname');
+    });
+    /** boxes */
+    Route::prefix('/happyboxes')->group( function(){
+        Route::get('/happyboxes', 'api\v0\happybox\HappyBoxController@index');
+        Route::get('/happyboxes/active', 'api\v0\happybox\HappyBoxController@index_active');
+        Route::get('/happyboxes/topic/{t}', 'api\v0\happybox\HappyBoxController@index_bytopic');
+        Route::get('/happybox/{id}', 'api\v0\happybox\HappyBoxController@show');
+        Route::get('/happybox/byidf/{box_internal_id}', 'api\v0\happybox\HappyBoxController@byidf');
+    });
+    /** pictures */
+    Route::prefix('/pictures')->group( function(){
+        Route::get('/pictures', 'api\v0\happybox\PictureController@index');
+        Route::get('/picture/{id}', 'api\v0\happybox\PictureController@show');
+        Route::get('/picture/byitem/{item}', 'api\v0\happybox\PictureController@byitem');
+        Route::get('/picture/byitem/single/{item}', 'api\v0\happybox\PictureController@byitem_one');
+    });
+    /** inventories */
+    Route::prefix('/inventories')->group( function(){
+        Route::get('/inventory/stock/{box}', 'api\v0\happybox\InventoryController@stock');
+    });
+    /** SECURED */
     Route::middleware('auth:api')->group( function(){
         /** topics */
         Route::prefix('/topics')->group( function(){
-            Route::get('/topics', 'api\v0\happybox\TopicController@index');
-            Route::get('/topic/{id}', 'api\v0\happybox\TopicController@show');
-            Route::get('/topic/byidf/{id}', 'api\v0\happybox\TopicController@show_byidf');
             Route::post('/topic', 'api\v0\happybox\TopicController@create');
             Route::put('/topic/{id}', 'api\v0\happybox\TopicController@update');
         });
         /** media */
         Route::prefix('/pictures')->group( function(){
-            Route::get('/pictures', 'api\v0\happybox\PictureController@index');
-            Route::get('/picture/{id}', 'api\v0\happybox\PictureController@show');
-            Route::get('/picture/byitem/{item}', 'api\v0\happybox\PictureController@byitem');
             Route::post('/picture/{item}/type/{type}', 'api\v0\happybox\PictureController@create');
             Route::post('/picture/{id}', 'api\v0\happybox\PictureController@update');
         });
@@ -129,9 +158,11 @@ Route::prefix('/services')->group( function() {
             Route::get('/inventory/vstatus/{status}', 'api\v0\happybox\InventoryController@by_voucher_status');
             Route::get('/inventory/v/{v}', 'api\v0\happybox\InventoryController@by_voucher');
             Route::get('/inventory/ptn/{p}', 'api\v0\happybox\InventoryController@by_partner');
+            Route::get('/inventory/cu/{c}', 'api\v0\happybox\InventoryController@by_cust_user');
             Route::post('/inventory', 'api\v0\happybox\InventoryController@create');
             Route::post('/inventory/reports', 'api\v0\happybox\InventoryController@get_report');
             Route::put('/inventory/redeem/bypartner/{v}', 'api\v0\happybox\InventoryController@redeem_by_partner');
+            Route::put('/inventory/activate/cu/{v}', 'api\v0\happybox\InventoryController@v_activate');
         });
          /** reports */
          Route::prefix('/reports')->group( function(){
@@ -142,9 +173,9 @@ Route::prefix('/services')->group( function() {
         });
         /** happyboxes */
         Route::prefix('/happyboxes')->group( function(){
-            Route::get('/happyboxes', 'api\v0\happybox\HappyBoxController@index');
-            Route::get('/happybox/{id}', 'api\v0\happybox\HappyBoxController@show');
-            Route::get('/happybox/byidf/{box_internal_id}', 'api\v0\happybox\HappyBoxController@byidf');
+            // Route::get('/happyboxes', 'api\v0\happybox\HappyBoxController@index');
+            // Route::get('/happybox/{id}', 'api\v0\happybox\HappyBoxController@show');
+            // Route::get('/happybox/byidf/{box_internal_id}', 'api\v0\happybox\HappyBoxController@byidf');
             Route::post('/happybox', 'api\v0\happybox\HappyBoxController@create');
             Route::put('/happybox/activate/{id}', 'api\v0\happybox\HappyBoxController@activate');
             Route::put('/happybox/deactivate/{id}', 'api\v0\happybox\HappyBoxController@deactivate');

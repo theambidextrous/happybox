@@ -19,12 +19,6 @@ class HappyBoxController extends Controller
     public function index(Request $request)
     {
         try{
-            if(!$this->is_admin($request)){
-                return response([
-                    'status' => -211,
-                    'message' => 'Permission denied'
-                ], 401);
-            }
             $h =  Happybox::all();
             return response([
                 'status' => 0,
@@ -44,6 +38,48 @@ class HappyBoxController extends Controller
         }
     }
 
+    public function index_active(Request $request)
+    {
+        try{
+            $h =  Happybox::where('is_active', 2)->get();
+            return response([
+                'status' => 0,
+                'message' => 'fetched successfully',
+                'data' => $h
+            ]);
+        } catch (\Illuminate\Database\QueryException $e) {
+            return response([
+                'status' => -211,
+                'message' => 'Database server rule violation error'
+            ], 401);
+        } catch (PDOException $e) {
+            return response([
+                'status' => -211,
+                'message' => 'Database rule violation error'
+            ], 401);
+        }
+    }
+
+    public function index_bytopic($topic, Request $request){
+        try{
+            $h =  Happybox::where('is_active', 2)->where('topics', 'like', '%' . $topic . '%')->get();
+            return response([
+                'status' => 0,
+                'message' => 'fetched successfully',
+                'data' => $h
+            ]);
+        } catch (\Illuminate\Database\QueryException $e) {
+            return response([
+                'status' => -211,
+                'message' => 'Database server rule violation error'
+            ], 401);
+        } catch (PDOException $e) {
+            return response([
+                'status' => -211,
+                'message' => 'Database rule violation error'
+            ], 401);
+        }
+    }
     /**
      * Show the form for creating a new resource.
      *

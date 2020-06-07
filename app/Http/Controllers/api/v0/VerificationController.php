@@ -48,19 +48,21 @@ class VerificationController extends Controller
             throw new AuthorizationException;
         }
         if($request->user()->hasVerifiedEmail()){
-            return response([
-                'status' => 0,
-                'message' => 'email already verified'
-            ]);
+            return redirect()->away(config('app.client_url').'verify.php?success=email already verified');
+            // return response([
+            //     'status' => 0,
+            //     'message' => 'email already verified'
+            // ]);
         }
         if($request->user()->markEmailAsVerified()){
             event( new Verified($request->user()) );
         }
         /** redirect to app client */
-        return response([
-            'status' => 0,
-            'message' => 'email successfully verified'
-        ]);
+        return redirect()->away(config('app.client_url').'verify.php?success=email successfully verified');
+        // return response([
+        //     'status' => 0,
+        //     'message' => 'email successfully verified'
+        // ]);
     }
 }
 ?>
