@@ -254,7 +254,8 @@ class HappyBoxController extends Controller
             'name' => 'required|string',
             'price' => 'required|string',
             'description' => 'required|string',
-            'topics' => 'required|string'
+            'topics' => 'required|string',
+            'partners' => 'required|string'
         ]);
         if( $validator->fails() ){
             return response([
@@ -269,6 +270,7 @@ class HappyBoxController extends Controller
         $h->price = $request->get('price');
         $h->description = $request->get('description');
         $h->topics = $request->get('topics');
+        $h->partners = $request->get('partners');
         if($h->save()){
             return response([
                 'status' => 0,
