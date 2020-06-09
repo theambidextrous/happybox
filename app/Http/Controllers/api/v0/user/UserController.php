@@ -160,7 +160,8 @@ class UserController extends Controller
                 'username' => 'required|string',
                 'email' => 'required|email',
                 'password' => 'required|string',
-                'c_password' => 'required|same:password'
+                'c_password' => 'required|same:password',
+                'is_active' => 'string'
             ]);
             if( $validator->fails() ){
                 return response([
@@ -171,6 +172,7 @@ class UserController extends Controller
             }
             $input = $request->all();
             $input['password'] = bcrypt($input['password']);
+            $input['is_active'] = true;
             $user = User::create($input);
             $access_token = $user->createToken('authToken')->accessToken;
             $user['token'] = $access_token;

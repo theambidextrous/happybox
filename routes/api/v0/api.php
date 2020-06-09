@@ -113,6 +113,20 @@ Route::prefix('/services')->group( function() {
     });
     /** SECURED */
     Route::middleware('auth:api')->group( function(){
+        /** orders */
+        Route::prefix('/orders')->group( function(){
+            Route::get('/orders', 'api\v0\happybox\OrderController@index');
+            Route::get('/order/{id}', 'api\v0\happybox\OrderController@show');
+            Route::get('/order/ex/{ord}', 'api\v0\happybox\OrderController@show_ex');
+            Route::get('/order/order/lmt/{order}', 'api\v0\happybox\OrderController@by_order_limited');
+            Route::get('/order/order/{order}', 'api\v0\happybox\OrderController@by_order');
+            Route::get('/order/customer/{customer}', 'api\v0\happybox\OrderController@by_customer');
+            Route::put('/order/pay/true/{order}', 'api\v0\happybox\OrderController@mark_paid_success');
+            Route::put('/order/pay/false/{order}', 'api\v0\happybox\OrderController@mark_paid_fail');
+            Route::put('/order/shipment/{order}', 'api\v0\happybox\OrderController@update_shipping');
+            Route::post('/order', 'api\v0\happybox\OrderController@create');
+            // Route::put('/topic/{id}', 'api\v0\happybox\TopicController@update');
+        });
         /** topics */
         Route::prefix('/topics')->group( function(){
             Route::post('/topic', 'api\v0\happybox\TopicController@create');
