@@ -65,7 +65,8 @@ class UserinfoController extends Controller
                 'phone' => 'required|string',
                 'business_name' => 'required|string',
                 'business_category' => 'required|string',
-                'business_reg_no' => 'required|string'
+                'business_reg_no' => 'required|string',
+                'services' => 'required|string'
             ]);
             if( $validator->fails() ){
                 return response([
@@ -75,15 +76,14 @@ class UserinfoController extends Controller
                 ], 401);
             }
             $input = $request->all();
-            if(empty($input['internal_id'])){
-                $input['internal_id'] = 'PT-' . $this->createCode(10);
-            }
+            $input['internal_id'] = 'PT-' . $this->createCode(10);
             $input['userid'] = $id;
             $user = Userinfo::create($input);
             return response([
                 'status' => 0,
                 'message' => 'Account updated successfully',
-                'userid' => $id
+                'userid' => $id,
+                'internal_id' => $input['internal_id']
             ], 200);
         } catch (\Illuminate\Database\QueryException $e) {
             return response([
@@ -128,7 +128,8 @@ class UserinfoController extends Controller
             return response([
                 'status' => 0,
                 'message' => 'Account updated successfully',
-                'userid' => $id
+                'userid' => $id,
+                'internal_id' => $input['internal_id']
             ], 200);
         } catch (\Illuminate\Database\QueryException $e) {
             return response([
@@ -399,7 +400,8 @@ class UserinfoController extends Controller
             'phone' => 'required|string',
             'business_name' => 'required|string',
             'business_category' => 'required|string',
-            'business_reg_no' => 'required|string'
+            'business_reg_no' => 'required|string',
+            'services' => 'required|string'
         ]);
         if( $validator->fails() ){
             return response([
@@ -410,6 +412,7 @@ class UserinfoController extends Controller
         }
         $input = $request->all();
         $userinfo = Userinfo::where('userid', $id)->first();
+        $internal_id = $userinfo->internal_id;
         $userinfo->fname = $request->get('fname');
         $userinfo->sname = $request->get('sname');
         $userinfo->short_description = $request->get('short_description');
@@ -418,11 +421,13 @@ class UserinfoController extends Controller
         $userinfo->business_name = $request->get('business_name');
         $userinfo->business_category = $request->get('business_category');
         $userinfo->business_reg_no = $request->get('business_reg_no');
+        $userinfo->services = $request->get('services');
         if($userinfo->save()){
             return response([
                 'status' => 0,
                 'message' => 'user updated successfully',
-                'userid' => $id
+                'userid' => $id,
+                'internal_id' => $internal_id
             ]);
         }
     }

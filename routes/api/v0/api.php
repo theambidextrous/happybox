@@ -85,6 +85,12 @@ Route::prefix('/users')->group( function() {
 /** Services */
 Route::prefix('/services')->group( function() {
     /** UNSECURED */
+    /** prices */
+    Route::prefix('/prices')->group( function(){
+        Route::get('/prices', 'api\v0\happybox\PriceController@index');
+        Route::get('/price/{id}', 'api\v0\happybox\PriceController@show');
+        Route::get('/price/byidf/{id}', 'api\v0\happybox\PriceController@show_byidf');
+    });
     /** topics */
     Route::prefix('/topics')->group( function(){
         Route::get('/topics', 'api\v0\happybox\TopicController@index');
@@ -126,6 +132,11 @@ Route::prefix('/services')->group( function() {
             Route::put('/order/shipment/{order}', 'api\v0\happybox\OrderController@update_shipping');
             Route::post('/order', 'api\v0\happybox\OrderController@create');
             // Route::put('/topic/{id}', 'api\v0\happybox\TopicController@update');
+        });
+        /** prices */
+        Route::prefix('/prices')->group( function(){
+            Route::post('/price', 'api\v0\happybox\PriceController@create');
+            Route::put('/price/{id}', 'api\v0\happybox\PriceController@update');
         });
         /** topics */
         Route::prefix('/topics')->group( function(){
