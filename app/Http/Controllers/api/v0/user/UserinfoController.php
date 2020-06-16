@@ -455,6 +455,16 @@ class UserinfoController extends Controller
         }
         $input = $request->all();
         $userinfo = Userinfo::where('userid', $id)->first();
+        if(!$userinfo){
+            $input['userid'] = $id;
+            $input['internal_id'] = 'CU-' . $this->createCode(8);
+            Userinfo::create($input);
+            return response([
+                'status' => -211,
+                'message' => 'Invalid or empty fields',
+                'errors' => $validator->errors()
+            ], 401);
+        }
         $userinfo->fname = $request->get('fname');
         $userinfo->sname = $request->get('sname');
         $userinfo->short_description = $request->get('short_description');

@@ -184,6 +184,7 @@ class InventoryController extends Controller
             $input = $request->all();
             if($input['box_type'] == '00'){
                 $input['box_voucher'] = 'P-' . $this->createCode(8);
+                $input['box_barcode'] = 'BX' . $this->createCode(16);
             }else{
                 $input['box_voucher'] = 'E-' . $this->createCode(8); 
             }
