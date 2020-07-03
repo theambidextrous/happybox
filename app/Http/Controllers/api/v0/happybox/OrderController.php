@@ -5,9 +5,18 @@ namespace App\Http\Controllers\api\v0\happybox;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Order;
+use App\Payment;
 use Validator;
+use Auth;
+use Config;
 use Illuminate\Auth\Middleware\Authenticate;
 use Illuminate\Support\Str;
+/** mail */
+use Illuminate\Support\Facades\Mail;
+use App\Mail\NewOrder;
+use App\Mail\EboxDelivery;
+use App\Mail\FullOrderSummary;
+use App\Mail\OrderPaymentReceived;
 
 class OrderController extends Controller
 {
@@ -93,6 +102,218 @@ class OrderController extends Controller
             ], 401);
         }
     }
+    public function record_a_payment(Request $request)
+    {
+        try{
+            $input = $request->all();
+            Payment::create($input);
+            $o = Order::where('order_id', $request->get('order'))->first();
+            $o->paid = true;
+            $o->payment_method = $request->get('method');
+            $o->payment_status = 1;
+            $o->payment_string = $request->get('pay_string');
+            $o->order_evouchers = 'awaiting_allocation';
+            $o->order_pvouchers = 'awaiting_allocation';
+            $o->paid_amount = $request->get('amount');
+            $o->save();
+            $user = Auth::user()->email;
+            Mail::to($user)
+                ->send(new OrderPaymentReceived($o));
+            $admin_user = Config::get('mail.from.address');
+            Mail::to($admin_user)
+                ->send(new NewOrder($o));
+            return response([
+                'status' => 0,
+                'message' => 'created successfully'
+            ], 200);
+        } catch (\Illuminate\Database\QueryException $e) {
+            return response([
+                'status' => -211,
+                'message' => 'Database server rule violation error',
+                'ref' => $input['ref']
+            ], 401);
+        } catch (PDOException $e) {
+            return response([
+                'status' => -211,
+                'message' => 'Database rule violation error'
+            ], 401);
+        }
+    }
+    public function mail_e_voucher(Request $request)
+    {
+        try{
+            $validator = Validator::make($request->all(), [
+                'image' => 'required|string',
+                'order_id' => 'required|string',
+                'ebook' => 'required|string',
+                'box' => 'required|string',
+                'type' => 'required|string',
+                'qty' => 'required',
+                'price' => 'required',
+                'cost' => 'required',
+                'receiver_email' => 'required|string',
+                'vouchers' => 'required|array'
+            ]);
+            if( $validator->fails() ){
+                return response([
+                    'status' => -211,
+                    'message' => 'Invalid or empty field',
+                    'errors' => $validator->errors()
+                ], 401);
+            }
+            $input = $request->all();
+            $user = $input['receiver_email'];
+            Mail::to($user)
+                ->send( new EboxDelivery( $input ) );
+            return response([
+                'status' => 0,
+                'message' => 'sent successfully'
+            ], 200);
+        } catch (\Illuminate\Database\QueryException $e) {
+            return response([
+                'status' => -211,
+                'message' => 'Database server rule violation error',
+                'order' => $input['order_id']
+            ], 401);
+        } catch (PDOException $e) {
+            return response([
+                'status' => -211,
+                'message' => 'Database rule violation error'
+            ], 401);
+        }
+    }
+    public function mail_fullorder(Request $request)
+    {
+        try{
+            $validator = Validator::make($request->all(), [
+                'buyer' => 'required|string',
+                'order_id' => 'required|string',
+                'mail_body' => 'required|string'
+            ]);
+            if( $validator->fails() ){
+                return response([
+                    'status' => -211,
+                    'message' => 'Invalid or empty field',
+                    'errors' => $validator->errors()
+                ], 401);
+            }
+            $input = $request->all();
+            $user = Auth::user()->email;
+            Mail::to($user)
+                ->cc([Config::get('mail.from.address')])
+                ->send( new FullOrderSummary( json_decode(json_encode($input)) ) );
+            return response([
+                'status' => 0,
+                'message' => 'sent successfully'
+            ], 200);
+        } catch (\Illuminate\Database\QueryException $e) {
+            return response([
+                'status' => -211,
+                'message' => 'Database server rule violation error',
+                'order' => $input['order_id']
+            ], 401);
+        } catch (PDOException $e) {
+            return response([
+                'status' => -211,
+                'message' => 'Database rule violation error'
+            ], 401);
+        }
+    }
+    public function findby_check_out_Req($check_req_id){
+        try {
+            $h =  Order::select('order_id','token')->where('paid', '!=', 1)->where('checkout_request_id', $check_req_id)->first();
+            return response([
+                'status' => 0,
+                'message' => 'fetched successfully',
+                'data' => $h
+            ]);
+        } catch (\Illuminate\Database\QueryException $e) {
+            return response([
+                'status' => -211,
+                'message' => 'Database server rule violation error'
+            ], 401);
+        } catch (PDOException $e) {
+            return response([
+                'status' => -211,
+                'message' => 'Database rule violation error'
+            ], 401);
+        }
+    }
+    public function check_out_Req(Request $request, $order_id){
+        $validator = Validator::make($request->all(), [
+            'checkout_request_id' => 'required|string'
+        ]);
+        if( $validator->fails() ){
+            return response([
+                'status' => -211,
+                'message' => 'Invalid or empty field',
+                'errors' => $validator->errors()
+            ], 401);
+        }
+        $o = Order::where('order_id', $order_id)->first();
+        $o->checkout_request_id = $request->get('checkout_request_id');
+        if($o->save()){
+            return response([
+                'status' => 0,
+                'message' => 'updated successfully',
+                'order' => $order_id
+            ]);
+        } 
+    }
+    public function mark_paid_fail(Request $request, $order_id){
+        //'order_id', 'customer_buyer', 'order_evouchers', 'order_pvouchers','order_string', 'subtotal', 'shipping_cost', 'order_totals', 'paid', 'payment_method', 'payment_status', 'payment_string','shipped', 'shipment_status', 'shipment_string',
+        $validator = Validator::make($request->all(), [
+            'order_evouchers' => 'required|string',
+            'order_pvouchers' => 'required|string',
+            'payment_method' => 'required|string',
+            'payment_string' => 'required|string'
+        ]);
+        if( $validator->fails() ){
+            return response([
+                'status' => -211,
+                'message' => 'Invalid or empty field',
+                'errors' => $validator->errors()
+            ], 401);
+        }
+        $o = Order::where('order_id', $order_id)->first();
+        $o->paid = false;
+        $o->payment_method = $request->get('payment_method');
+        $o->payment_status = 2;
+        $o->payment_string = $request->get('payment_string');
+        $o->order_evouchers = $request->get('order_evouchers');
+        $o->order_pvouchers = $request->get('order_pvouchers');
+        if($o->save()){
+            return response([
+                'status' => 0,
+                'message' => 'updated successfully',
+                'order' => $order_id
+            ]);
+        }
+    }
+
+    public function update_shipping(Request $request, $order_id){
+        $validator = Validator::make($request->all(), [
+            'shipment_string' => 'required|string',
+        ]);
+        if( $validator->fails() ){
+            return response([
+                'status' => -211,
+                'message' => 'Invalid or empty field',
+                'errors' => $validator->errors()
+            ], 401);
+        }
+        $o = Order::where('order_id', $order_id)->first();
+        $o->shipped = false;
+        $o->shipment_status = 2;
+        $o->shipment_string = $request->get('shipment_string');
+        if($o->save()){
+            return response([
+                'status' => 0,
+                'message' => 'updated successfully',
+                'order' => $order_id
+            ]);
+        }
+    }
 
     /**
      * Store a newly created resource in storage.
@@ -176,7 +397,7 @@ class OrderController extends Controller
     public function by_order_limited($order_id, Request $request)
     {
         try {
-            $h =  Order::select('order_id','customer_buyer','subtotal','shipping_cost','order_totals')->where('order_id', $order_id)->first();
+            $h =  Order::select('order_id','customer_buyer','subtotal','shipping_cost','order_totals','token')->where('order_id', $order_id)->first();
             return response([
                 'status' => 0,
                 'message' => 'fetched successfully',
@@ -233,91 +454,6 @@ class OrderController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function mark_paid_success(Request $request, $order_id){
-        $validator = Validator::make($request->all(), [
-            'order_evouchers' => 'required|string',
-            'order_pvouchers' => 'required|string',
-            'payment_method' => 'required|string',
-            'payment_string' => 'required|string'
-        ]);
-        if( $validator->fails() ){
-            return response([
-                'status' => -211,
-                'message' => 'Invalid or empty field',
-                'errors' => $validator->errors()
-            ], 401);
-        }
-        $o = Order::find($order_id);
-        $o->paid = true;
-        $o->payment_method = $request->get('payment_method');
-        $o->payment_status = 1;
-        $o->payment_string = $request->get('payment_string');
-        $o->order_evouchers = $request->get('order_evouchers');
-        $o->order_pvouchers = $request->get('order_pvouchers');
-        if($o->save()){
-            return response([
-                'status' => 0,
-                'message' => 'updated successfully',
-                'order' => $order_id
-            ]);
-        }
-    }
-    
-    public function mark_paid_fail(Request $request, $order_id){
-        //'order_id', 'customer_buyer', 'order_evouchers', 'order_pvouchers','order_string', 'subtotal', 'shipping_cost', 'order_totals', 'paid', 'payment_method', 'payment_status', 'payment_string','shipped', 'shipment_status', 'shipment_string',
-        $validator = Validator::make($request->all(), [
-            'order_evouchers' => 'required|string',
-            'order_pvouchers' => 'required|string',
-            'payment_method' => 'required|string',
-            'payment_string' => 'required|string'
-        ]);
-        if( $validator->fails() ){
-            return response([
-                'status' => -211,
-                'message' => 'Invalid or empty field',
-                'errors' => $validator->errors()
-            ], 401);
-        }
-        $o = Order::find($order_id);
-        $o->paid = false;
-        $o->payment_method = $request->get('payment_method');
-        $o->payment_status = 2;
-        $o->payment_string = $request->get('payment_string');
-        $o->order_evouchers = $request->get('order_evouchers');
-        $o->order_pvouchers = $request->get('order_pvouchers');
-        if($o->save()){
-            return response([
-                'status' => 0,
-                'message' => 'updated successfully',
-                'order' => $order_id
-            ]);
-        }
-    }
-
-    public function update_shipping(Request $request, $order_id){
-        $validator = Validator::make($request->all(), [
-            'shipment_string' => 'required|string',
-        ]);
-        if( $validator->fails() ){
-            return response([
-                'status' => -211,
-                'message' => 'Invalid or empty field',
-                'errors' => $validator->errors()
-            ], 401);
-        }
-        $o = Order::find($order_id);
-        $o->shipped = false;
-        $o->shipment_status = 2;
-        $o->shipment_string = $request->get('shipment_string');
-        if($o->save()){
-            return response([
-                'status' => 0,
-                'message' => 'updated successfully',
-                'order' => $order_id
-            ]);
-        }
-    }
-
     public function update(Request $request, $id)
     {
         if(!$this->is_admin($request)){

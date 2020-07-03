@@ -117,6 +117,9 @@ Route::prefix('/services')->group( function() {
     Route::prefix('/inventories')->group( function(){
         Route::get('/inventory/stock/{box}', 'api\v0\happybox\InventoryController@stock');
     });
+    Route::prefix('/orders')->group( function(){
+        Route::get('/order/req/id/{id}', 'api\v0\happybox\OrderController@findby_check_out_Req');
+    });
     /** SECURED */
     Route::middleware('auth:api')->group( function(){
         /** orders */
@@ -128,10 +131,17 @@ Route::prefix('/services')->group( function() {
             Route::get('/order/order/{order}', 'api\v0\happybox\OrderController@by_order');
             Route::get('/order/customer/{customer}', 'api\v0\happybox\OrderController@by_customer');
             Route::put('/order/pay/true/{order}', 'api\v0\happybox\OrderController@mark_paid_success');
+            Route::put('/order/checkout/reqid/{order}', 'api\v0\happybox\OrderController@check_out_Req');
             Route::put('/order/pay/false/{order}', 'api\v0\happybox\OrderController@mark_paid_fail');
             Route::put('/order/shipment/{order}', 'api\v0\happybox\OrderController@update_shipping');
             Route::post('/order', 'api\v0\happybox\OrderController@create');
-            // Route::put('/topic/{id}', 'api\v0\happybox\TopicController@update');
+            Route::post('/order/add/a/pay', 'api\v0\happybox\OrderController@record_a_payment');
+            Route::post('/order/create/order/evouchers','api\v0\happybox\InventoryController@create_c_buyer_ebox');
+            Route::post('/order/assign/order/pvouchers','api\v0\happybox\InventoryController@assign_c_buyer_pbox');
+            Route::post('/order/find/vouchers','api\v0\happybox\InventoryController@find_o_voucher');
+            Route::post('/order/mail/evouchers','api\v0\happybox\OrderController@mail_e_voucher');
+            Route::post('/order/mail/fullorder','api\v0\happybox\OrderController@mail_fullorder');
+            //
         });
         /** prices */
         Route::prefix('/prices')->group( function(){

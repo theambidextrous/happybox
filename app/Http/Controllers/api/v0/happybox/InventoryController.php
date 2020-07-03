@@ -5,6 +5,7 @@ namespace App\Http\Controllers\api\v0\happybox;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Inventory;
+use App\Orderlog;
 use Validator;
 use Illuminate\Auth\Middleware\Authenticate;
 use Illuminate\Support\Str;
@@ -410,13 +411,229 @@ class InventoryController extends Controller
             ]);
         }
     }
-    public function update_c_buyer(Request $request)
+    public function assign_c_buyer_pbox(Request $request)
     {
-        
+        try{
+            $validator = Validator::make($request->all(), [
+                'box_internal_id' => 'required|string',
+                'order_number' => 'required|string',
+                'customer_buyer_id' => 'required|string',
+                'customer_payment_method' => 'required|string',
+                'box_purchase_date' => 'required|string',
+                'box_validity_date' => 'required|string',
+                'customer_buyer_invoice' => 'required|string',
+                'box_qty' => 'required|string',
+                'box_voucher_status' => 'required|string',
+                'box_delivery_address' => 'required|string'
+            ]);
+            if( $validator->fails() ){
+                return response([
+                    'status' => -211,
+                    'message' => 'Invalid or empty field',
+                    'errors' => $validator->errors()
+                ], 401);
+            }
+            $input = $request->all();
+            $pay_method_Ref = explode('~', $request->get('customer_payment_method'));
+            $input['pay_ref'] = $pay_method_Ref[0];
+            $input['customer_payment_method'] = $pay_method_Ref[1];
+            $affected = Inventory::where('box_voucher_status', '1')/**in stock */
+                        ->where('box_type', '00')/** physical */
+                        ->where('box_internal_id', $request->get('box_internal_id')) /** current one */
+                        ->limit($request->get('box_qty'))
+                        ->update([
+                            'order_number' => $request->get('order_number'),
+                            'customer_buyer_id' => $request->get('customer_buyer_id'),
+                            'customer_payment_method' => $input['customer_payment_method'],
+                            'box_purchase_date' => $request->get('box_purchase_date'),
+                            'box_validity_date' => $request->get('box_validity_date'),
+                            'customer_buyer_invoice' => $request->get('customer_buyer_invoice'),
+                            'box_voucher_status' => $request->get('box_voucher_status'),
+                            'box_delivery_address' => $request->get('box_delivery_address')
+                        ]);
+            if( $affected < 1 ){
+                $msg = 'No physical voucher has been assigned for the order ' . $request->get('order_number') . ' the affected box is ' . $input['box_internal_id'];
+                Orderlog::create([
+                    'order_id' => $request->get('order_number'),
+                    'customer_buyer' => $request->get('customer_buyer_id'),
+                    'pay_ref' => $input['pay_ref'],
+                    'error_string' => $msg 
+                ]);
+                return response([
+                    'status' => -211,
+                    'message' => $msg,
+                    'box' => $input['box_internal_id']
+                ], 401);
+            }
+            elseif( $affected < $request->get('box_qty') ){
+                $msg = 'Partial order physical voucher allocation. Only '.$affected.' of '.$request->get('box_qty').' vouchers where assigned.';
+                Orderlog::create([
+                    'order_id' => $request->get('order_number'),
+                    'customer_buyer' => $request->get('customer_buyer_id'),
+                    'pay_ref' => $input['pay_ref'],
+                    'error_string' => $msg 
+                ]);
+                return response([
+                    'status' => 0,
+                    'update_status' => 1,
+                    'message' => $msg,
+                    'box' => $input['box_internal_id']
+                ], 200);
+            }
+            return response([
+                'status' => 0,
+                'message' => 'created successfully',
+                'box' => $input['box_internal_id']
+            ], 200);
+        } catch (\Illuminate\Database\QueryException $e) {
+            Orderlog::create([
+                'order_id' => $request->get('order_number'),
+                'customer_buyer' => $request->get('customer_buyer_id'),
+                'pay_ref' => $request->get('customer_payment_method'),
+                'error_string' => $e->getMessage() 
+            ]);
+            return response([
+                'status' => -211,
+                'message' => 'Database server rule violation error'
+            ], 401);
+        } catch (PDOException $e) {
+            Orderlog::create([
+                'order_id' => $request->get('order_number'),
+                'customer_buyer' => $request->get('customer_buyer_id'),
+                'pay_ref' => $request->get('customer_payment_method'),
+                'error_string' => $e->getMessage() 
+            ]);
+            return response([
+                'status' => -211,
+                'message' => 'Database rule violation error'
+            ], 401);
+        }
     }
-    public function update_c_user(Request $request)
+    public function create_c_buyer_ebox(Request $request)
     {
-        
+        try{
+            $validator = Validator::make($request->all(), [
+                'box_internal_id' => 'required|string',
+                'order_number' => 'required|string',
+                'customer_buyer_id' => 'required|string',
+                'customer_payment_method' => 'required|string',
+                'box_purchase_date' => 'required|string',
+                'box_validity_date' => 'required|string',
+                'customer_buyer_invoice' => 'required|string',
+                'box_vouchers' => 'required|string',
+                'box_voucher_status' => 'required|string',
+                'box_delivery_address' => 'required|string'
+            ]);
+            if( $validator->fails() ){
+                Orderlog::create([
+                    'order_id' => $request->get('order_number'),
+                    'customer_buyer' => $request->get('customer_buyer_id'),
+                    'pay_ref' => $request->get('customer_payment_method'),
+                    'error_string' => $validator->errors()->toJson() 
+                ]);
+                return response([
+                    'status' => -211,
+                    'message' => 'Invalid or empty field',
+                    'errors' => $validator->errors()
+                ], 401);
+            }
+            $evouchers_arr = explode(',', $request->get('box_vouchers'));
+            $input = $request->all();
+            $input['box_type'] = '11';
+            $input['order_number'] = $input['order_number'];
+            foreach( $evouchers_arr as $evoucher ):
+                $input['box_voucher'] = $evoucher;
+                $h = Inventory::create($input);
+            endforeach;
+            return response([
+                'status' => 0,
+                'message' => 'created successfully',
+                'box' => $input['box_internal_id']
+            ], 200);
+        } catch (\Illuminate\Database\QueryException $e) {
+            Orderlog::create([
+                'order_id' => $request->get('order_number'),
+                'customer_buyer' => $request->get('customer_buyer_id'),
+                'pay_ref' => $request->get('customer_payment_method'),
+                'error_string' => $e->getMessage() 
+            ]);
+            return response([
+                'status' => -211,
+                'message' => 'Database server rule violation error'
+            ], 401);
+        } catch (PDOException $e) {
+            Orderlog::create([
+                'order_id' => $request->get('order_number'),
+                'customer_buyer' => $request->get('customer_buyer_id'),
+                'pay_ref' => $request->get('customer_payment_method'),
+                'error_string' => $e->getMessage()
+            ]);
+            return response([
+                'status' => -211,
+                'message' => 'Database rule violation error'
+            ], 401);
+        }
+    }
+
+    public function find_o_voucher(Request $request)
+    {
+        try{
+            $validator = Validator::make($request->all(), [
+                'order_id' => 'required|string',
+                'customer_buyer_id' => 'required|string',
+                'box_internal_id' => 'required|string',
+                'receiver' => 'required|string',
+                'type' => 'required|string'
+            ]);
+            if( $validator->fails() ){
+                Orderlog::create([
+                    'order_id' => $request->get('order_id'),
+                    'customer_buyer' => $request->get('customer_buyer_id'),
+                    'pay_ref' => $request->get('box_internal_id'),
+                    'error_string' => $validator->errors()->toJson() 
+                ]);
+                return response([
+                    'status' => -211,
+                    'message' => 'Invalid or empty field',
+                    'errors' => $validator->errors()
+                ], 401);
+            }
+            $input = $request->all();
+            $found_vouchers = Inventory::select(['box_voucher'])
+                            ->where('order_number', $input['order_id'])
+                            ->where('customer_buyer_id', $input['customer_buyer_id'])
+                            ->where('box_internal_id', $input['box_internal_id'])
+                            ->where('box_delivery_address', $input['receiver'])
+                            ->where('box_type', $input['type'])
+                            ->where('box_voucher_status', '2')->get();
+            return response([
+                'status' => 0,
+                'message' => 'fetched successfully',
+                'vouchers' => $found_vouchers->toArray()
+            ], 200);
+        } catch (\Illuminate\Database\QueryException $e) {
+            Orderlog::create([
+                'order_id' => $request->get('order_id'),
+                'customer_buyer' => $request->get('customer_buyer_id'),
+                'pay_ref' => $request->get('box_internal_id'),
+                'error_string' => $e->getMessage() 
+            ]);
+            return response([
+                'status' => -211,
+                'message' => 'Database server rule violation error'
+            ], 401);
+        } catch (PDOException $e) {
+            Orderlog::create([
+                'order_id' => $request->get('order_id'),
+                'customer_buyer' => $request->get('customer_buyer_id'),
+                'pay_ref' => $request->get('box_internal_id'),
+                'error_string' => $e->getMessage() 
+            ]);
+            return response([
+                'status' => -211,
+                'message' => 'Database rule violation error'
+            ], 401);
+        }
     }
     /**
      * Remove the specified resource from storage.

@@ -85,7 +85,22 @@ return [
 
     'from' => [
         'address' => env('MAIL_FROM_ADDRESS', 'admin@happybox.ke'),
-        'name' => env('MAIL_FROM_NAME', 'happybox.ke'),
+        'name' => env('MAIL_FROM_NAME', 'HappyBox'),
+    ],
+    
+    /*
+    |--------------------------------------------------------------------------
+    | Global "reply-to" Address
+    |--------------------------------------------------------------------------
+    |
+    | You may wish for all e-mails sent by your application to be sent from
+    | the same address. Here, you may specify a name and address that is
+    | used globally for all e-mails that are sent by your application.
+    |
+    */
+    'reply_to' => [
+        'address' => 'customer.care@happybox.ke',
+        'name' => 'HappyBox Customer Experience'
     ],
 
     /*
