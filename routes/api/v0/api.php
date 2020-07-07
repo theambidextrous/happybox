@@ -121,6 +121,9 @@ Route::prefix('/services')->group( function() {
     Route::prefix('/orders')->group( function(){
         Route::get('/order/req/id/{id}', 'api\v0\happybox\OrderController@findby_check_out_Req');
     });
+    Route::prefix('/orders')->group( function(){
+        Route::get('/order/ord/id/{id}', 'api\v0\happybox\OrderController@findby_ord_Req');
+    });
     /** ratings */
     Route::prefix('/ratings')->group( function(){
         Route::get('/ratings', 'api\v0\happybox\RatingController@index');

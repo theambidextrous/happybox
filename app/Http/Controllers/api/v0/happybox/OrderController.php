@@ -239,6 +239,26 @@ class OrderController extends Controller
             ], 401);
         }
     }
+    public function findby_ord_Req($order_id){
+        try {
+            $h =  Order::select('order_id','token')->where('paid', '!=', 1)->where('order_id', $order_id)->first();
+            return response([
+                'status' => 0,
+                'message' => 'fetched successfully',
+                'data' => $h
+            ]);
+        } catch (\Illuminate\Database\QueryException $e) {
+            return response([
+                'status' => -211,
+                'message' => 'Database server rule violation error'
+            ], 401);
+        } catch (PDOException $e) {
+            return response([
+                'status' => -211,
+                'message' => 'Database rule violation error'
+            ], 401);
+        }
+    }
     public function check_out_Req(Request $request, $order_id){
         $validator = Validator::make($request->all(), [
             'checkout_request_id' => 'required|string'
