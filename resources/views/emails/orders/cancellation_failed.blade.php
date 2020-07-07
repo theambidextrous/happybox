@@ -54,7 +54,7 @@ body{background-color:#ddf0e6}.logo a:hover,.logo a:focus{color:#1e2e3b !importa
         
     <div style="Margin-left: 20px;Margin-right: 20px;">
         <div style="font-size: 12px;font-style: normal;font-weight: normal;line-height: 19px;Margin-bottom: 20px;" align="center">
-          <img style="border: 0;display: block;height: auto;width: 100%;max-width: 900px;" alt="" width="560" src="{{asset('icons/slider-a.png')}}">
+          <img style="border: 0;display: block;height: auto;width: 100%;max-width: 900px;" alt="" width="560" src="{{asset('media/slider-a.png')}}">
         </div>
       </div>
     <div style="Margin-left: 20px;Margin-right: 20px;">
