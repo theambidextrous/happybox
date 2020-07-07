@@ -5,10 +5,25 @@ namespace App\Http\Controllers\api\v0\happybox;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Inventory;
+use App\Userinfo;
+use App\User;
 use App\Orderlog;
+use App\Cancellation;
 use Validator;
+use Auth;
+use Config;
 use Illuminate\Auth\Middleware\Authenticate;
 use Illuminate\Support\Str;
+/**mailables */
+use Illuminate\Support\Facades\Mail;
+use App\Mail\ActivationFailed;
+use App\Mail\ActivationFailedAdmin;
+use App\Mail\CancellationFailed;
+use App\Mail\CancellationSucess;
+use App\Mail\ActivationSuccess;
+use App\Mail\ModificationSuccess;
+use App\Mail\PartnerCancellationAdmin;
+use App\Mail\PartnerCancellation;
 
 class InventoryController extends Controller
 {
@@ -130,20 +145,41 @@ class InventoryController extends Controller
     public function by_voucher(Request $request, $v)
     {
         try{
-            // if(!$this->is_admin($request)){
-            //     return response([
-            //         'status' => -211,
-            //         'message' => 'Permission denied'
-            //     ], 401);
-            // }
             $i =  Inventory::where('box_voucher', $v)->first();
-            if(empty($i)){
-                $i =  Inventory::where('box_voucher_new', $v)->first(); 
+            if(is_null($i)){
+                return response([
+                    'status' => -211,
+                    'message' => 'The voucher you are trying to redeem is invalid',
+                    'data' => null
+                ]);
+            }
+            if($i->box_voucher_status == 3){
+                return response([
+                    'status' => -211,
+                    'message' => 'The voucher is already redeemed',
+                    'data' => null
+                ]);
+            }
+            $voucher_valid_date = date('Y-m-d', strtotime($i->box_validity_date));
+            $today_date = date('Y-m-d', strtotime('now'));
+            if( $today_date > $voucher_valid_date ){
+                return response([
+                    'status' => -211,
+                    'message' => 'The voucher is expired!',
+                    'data' => null
+                ]);
+            }
+            if($i->box_voucher_status == 6){
+                return response([
+                    'status' => 0,
+                    'message' => 'fetched successfully',
+                    'data' => $i
+                ]);
             }
             return response([
-                'status' => 0,
-                'message' => 'fetched successfully',
-                'data' => $i
+                'status' => -211,
+                'message' => 'Unrecognized voucher code. ',
+                'data' => null
             ]);
         } catch (\Illuminate\Database\QueryException $e) {
             return response([
@@ -269,7 +305,11 @@ class InventoryController extends Controller
     }
     public function by_cust_user($cu, Request $request){
         try {
-            $i =  Inventory::where('customer_user_id', $cu)->where('box_voucher_status', 6)->get();
+            $i =  Inventory::where('customer_user_id', $cu)
+                ->where('box_voucher_status', '!=', 1)
+                ->where('box_voucher_status', '!=', 2)
+                ->where('box_voucher_status', '!=', 7)
+                ->get();
             return response([
                 'status' => 0,
                 'message' => 'fetched successfully',
@@ -310,7 +350,12 @@ class InventoryController extends Controller
     public function by_partner($ptn, Request $request)
     {
         try {
-            $i =  Inventory::where('partner_internal_id', $ptn)->get();
+            $i =  Inventory::where('partner_internal_id', $ptn)
+                    ->where('box_voucher_status', '!=', 1)
+                    ->where('box_voucher_status', '!=', 2)
+                    ->where('box_voucher_status', '!=', 6)
+                    ->where('box_voucher_status', '!=', 7)
+                    ->get();
             return response([
                 'status' => 0,
                 'message' => 'fetched successfully',
@@ -346,6 +391,101 @@ class InventoryController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
+    public function v_cancel(Request $request, $voucher)
+    {
+        $validator = Validator::make($request->all(), [
+            'cancellation_date' => 'required|string',
+            'customer_user_id' => 'required|string',
+            'cancelled_by' => 'required|string'
+        ]);
+        if( $validator->fails() ){
+            return response([
+                'status' => -211,
+                'message' => 'Invalid or empty field',
+                'errors' => $validator->errors()
+            ], 401);
+        }
+        if(substr( $voucher, 0, 2 ) === "R-"){ /** replacement voucher cant cancel */
+            return response([
+                'status' => -211,
+                'message' => 'Voucher '.$voucher.' has already been replaced. A voucher can only be replaced once.',
+                'voucher' => $voucher
+            ]);
+        }
+        $i =  Inventory::where('box_voucher', $voucher)->first();
+        $new_inventory = $i;
+        if(is_null($i)){
+            return response([
+                'status' => -211,
+                'message' => 'Voucher '.$voucher.' Is Unknown',
+                'voucher' => $voucher
+            ]);
+        }
+        if($i->box_voucher_status == 6){ /** is activated --check validity */
+            $voucher_valid_date = date('Y-m-d', strtotime($i->box_validity_date));
+            $today_date = date('Y-m-d', strtotime('now'));
+            if( $today_date > $voucher_valid_date ){/** voucher is expired */
+                return response([
+                    'status' => -211,
+                    'message' => 'Voucher '.$voucher.' is expired',
+                    'voucher' => $voucher
+                ]);
+            }else{/** replace */
+                $new_box_voucher = 'R-' . $this->createCode(8);
+                $new_inventory->box_voucher = $new_box_voucher;
+                $new_inventory->box_voucher_status = 2;/**back to purchased */
+                $new_inventory->voucher_activation_date = null;
+                $new_inventory->redeemed_date = null; 
+                $new_inventory->cancellation_date = null; 
+                $new_inventory->booking_date = null; 
+                $new_inventory->partner_pay_due_date = null; 
+                $new_inventory->partner_pay_effec_date = null; 
+                $new_inventory->partner_pay_amount = null; 
+                $new_inventory->partner_internal_id = null; 
+                $new_inventory->partner_invoice = null; 
+                $new_inventory->redeemed_service = null;
+                $input = $new_inventory->toArray();
+                unset($input['id']);/** remove unq key */
+                /** save old one as was b4 */
+                $i->box_voucher_new = $new_box_voucher;
+                $i->box_voucher = $voucher;
+                $i->cancellation_date = $request->get('cancellation_date');
+                $i->box_voucher_status = 4;/** set cancel it */
+                if($i->save() && Inventory::create($input)){
+                    $cancellation_payload = [
+                        'cancelled_voucher' => $voucher,
+                        'new_voucher' => $new_box_voucher,
+                        'reason' => 'Declared lost by user ' . Auth::user()->email,
+                        'partner' => 'N/A. Cancelled by user'
+                    ];
+                    Cancellation::create($cancellation_payload);
+                    $payload = [
+                        'message' => 'Voucher '.$voucher.' has been cancelled and replaced by a new voucher code ' .$new_box_voucher,
+                        'voucher' => $new_box_voucher
+                    ];
+                    $user = Auth::user()->email;
+                    Mail::to($user)->send(new CancellationSucess($payload));
+                    return response([
+                        'status' => 0,
+                        'message' => 'Voucher '.$voucher.' has been cancelled and replaced by a new voucher ' .$new_box_voucher,
+                        'voucher' => $new_box_voucher
+                    ]);
+                }
+            }
+        }else{/** code is after redemption */
+            $payload = [
+                'message' => 'Voucher '.$voucher.' which you tried to replace is no longer valid for replacement. Most likely it has been redeemed already',
+                'voucher' => $voucher
+            ];
+            $user = Auth::user()->email;
+            Mail::to($user)->send(new CancellationFailed($payload));
+            return response([
+                'status' => -211,
+                'message' => 'Voucher '.$voucher.' has no selling date attached',
+                'voucher' => $voucher
+            ]);
+        }
+    }
     public function v_activate(Request $request, $voucher){
         $validator = Validator::make($request->all(), [
             'activation_date' => 'required|string',
@@ -358,24 +498,108 @@ class InventoryController extends Controller
                 'errors' => $validator->errors()
             ], 401);
         }
-        $i =  Inventory::where('box_voucher', $voucher)->where('box_voucher_status', 2)->first();
-        if(empty($i)){
-            $i =  Inventory::where('box_voucher_new', $voucher)->where('box_voucher_status', 2)->first();
-        }
+        $i =  Inventory::where('box_voucher', $voucher)->first();
         if(is_null($i)){
             return response([
                 'status' => -211,
-                'message' => 'Voucher '.$voucher.' Is invalid',
+                'message' => 'Voucher '.$voucher.' Is Unknown',
                 'voucher' => $voucher
             ]);
         }
-        $i->box_voucher_status = 6;
-        $i->customer_user_id = $request->get('customer_user_id');
-        $i->voucher_activation_date = $request->get('activation_date');
-        if($i->save()){
+        if( $i->box_voucher_status == 3){/** already redeemed */
+            $payload = [
+                'message' => 'Voucher '.$voucher.' Which you tried to activate is already redeemed',
+                'voucher' => $voucher
+            ];
+            $user = Auth::user()->email;
+            Mail::to($user)
+                ->send(new ActivationFailed($payload));
+            $admin_user = Config::get('mail.from.address');
+            Mail::to($admin_user)
+                ->send(new ActivationFailedAdmin($payload));
             return response([
-                'status' => 0,
-                'message' => 'updated successfully',
+                'status' => -211,
+                'message' => 'Voucher '.$voucher.' Is already redeemed',
+                'voucher' => $voucher
+            ]);
+        }
+        if( $i->box_voucher_status == 6){/** already activated */
+            $payload = [
+                'message' => 'Voucher '.$voucher.' Which you tried to activate is already activated',
+                'voucher' => $voucher
+            ];
+            $user = Auth::user()->email;
+            Mail::to($user)
+                ->send(new ActivationFailed($payload));
+            $admin_user = Config::get('mail.from.address');
+            Mail::to($admin_user)
+                ->send(new ActivationFailedAdmin($payload));
+            return response([
+                'status' => -211,
+                'message' => 'Voucher '.$voucher.' Is already activated',
+                'voucher' => $voucher
+            ]);
+        }
+        if( $i->box_voucher_status == 1){/** no selling date */
+            $payload = [
+                'message' => 'Voucher '.$voucher.' Which you tried to activate has no selling date',
+                'voucher' => $voucher
+            ];
+            $user = Auth::user()->email;
+            Mail::to($user)
+                ->send(new ActivationFailed($payload));
+            $admin_user = Config::get('mail.from.address');
+            Mail::to($admin_user)
+                ->send(new ActivationFailedAdmin($payload));
+            return response([
+                'status' => -211,
+                'message' => 'Voucher '.$voucher.' has no selling date attached',
+                'voucher' => $voucher
+            ]);
+        }
+        $voucher_valid_date = date('Y-m-d', strtotime($i->box_validity_date));
+        $today_date = date('Y-m-d', strtotime('now'));
+        if( $today_date > $voucher_valid_date || $i->box_voucher_status == 5){/**voucher expired */
+            $i->box_voucher_status = 5; /** mark as expired */
+            $i->save();
+            $payload = [
+                'message' => 'Voucher '.$voucher.' Which you tried to activate is no longer valid',
+                'voucher' => $voucher
+            ];
+            $user = Auth::user()->email;
+            Mail::to($user)
+                ->send(new ActivationFailed($payload));
+            $admin_user = Config::get('mail.from.address');
+            Mail::to($admin_user)
+                ->send(new ActivationFailedAdmin($payload));
+            return response([
+                'status' => -211,
+                'message' => 'Voucher '.$voucher.' has no selling date attached',
+                'voucher' => $voucher
+            ]);
+        }
+        if( $i->box_voucher_status == 2){ /** purchased-- can be activated */
+            $i->box_voucher_status = 6;
+            $i->customer_user_id = $request->get('customer_user_id');
+            $i->voucher_activation_date = $request->get('activation_date');
+            if($i->save()){
+                $payload = [
+                    'message' => 'Voucher '.$voucher.' has been successfully activated. Go ahead and redeem.',
+                    'voucher' => $voucher
+                ];
+                $user_email = Auth::user()->email;
+                Mail::to($user_email)->send(new ActivationSuccess($payload));
+                return response([
+                    'status' => 0,
+                    'message' => 'Voucher activated successfully. You can now redeem it!',
+                    'voucher' => $voucher,
+                    'validity' => $voucher_valid_date
+                ]);
+            }
+        }else{
+            return response([
+                'status' => -211,
+                'message' => 'Unknown voucher!',
                 'voucher' => $voucher
             ]);
         }
@@ -386,7 +610,9 @@ class InventoryController extends Controller
         $validator = Validator::make($request->all(), [
             'redeemed_date' => 'required|string',
             'partner_identity' => 'required|string',
-            'booking_date' => 'required|string'
+            'booking_date' => 'required|string',
+            'redeemed_service' => 'required|string',
+            'partner_pay_amount' => 'required'
         ]);
         if( $validator->fails() ){
             return response([
@@ -396,20 +622,167 @@ class InventoryController extends Controller
             ], 401);
         }
         $i =  Inventory::where('box_voucher', $voucher)->first();
-        if(empty($i)){
-            $i =  Inventory::where('box_voucher_new', $voucher)->first();
+        if( $i->box_voucher_status == 6 ){ /** is in activated state */
+            $i->box_voucher_status = 3;
+            $i->redeemed_date = $request->get('redeemed_date');
+            $i->booking_date = $request->get('booking_date');
+            $i->partner_internal_id = $request->get('partner_identity');
+            $i->partner_pay_amount = $request->get('partner_pay_amount');
+            $i->partner_pay_effec_date = $request->get('redeemed_date');
+            $i->partner_pay_due_date = $request->get('booking_date');
+            $i->partner_invoice = 'INV-' . $this->createCode(6);
+            $i->redeemed_service = $request->get('redeemed_service');
+            if($i->save()){
+                return response([
+                    'status' => 0,
+                    'message' => 'Voucher '.$voucher.' has been successfully redeemed. The customer has been booked for '.$request->get('redeemed_service').' on '.$request->get('booking_date'),
+                    'voucher' => $voucher
+                ]);
+            }
         }
-        $i->box_voucher_status = 3;
-        $i->redeemed_date = $request->get('redeemed_date');
-        $i->booking_date = $request->get('booking_date');
-        $i->partner_internal_id = $request->get('partner_identity');
-        if($i->save()){
+        return response([
+            'status' => -211,
+            'message' => 'Voucher '.$voucher.' could not be redeemed again. General error occured.',
+            'voucher' => $voucher
+        ]);
+    }
+    public function modify_booking(Request $request, $voucher)
+    {
+        $validator = Validator::make($request->all(), [
+            'new_booking_date' => 'required|string',
+            'partner_identity' => 'required|string'
+        ]);
+        if( $validator->fails() ){
             return response([
-                'status' => 0,
-                'message' => 'updated successfully',
+                'status' => -211,
+                'message' => 'Invalid or empty field',
+                'errors' => $validator->errors()
+            ], 401);
+        }
+        $i =  Inventory::where('box_voucher', $voucher)
+                ->where('partner_internal_id', $request->get('partner_identity'))
+                ->first();
+        if( $i->box_voucher_status == 3 ){ /** is in redeemed state */
+            $i->booking_date = $request->get('new_booking_date');
+            if($i->save()){
+                $ptn = Userinfo::where('internal_id', $request->get('partner_identity'))->first();
+                $usr = Userinfo::where('internal_id', $i->customer_user_id)->first();
+                $this_usr = User::find($usr->userid);
+                $payload = [
+                    'message' => 'Your booking date for the voucher '.$voucher.' 
+                    has been changed to '.date('d/m/Y', strtotime($request->get('new_booking_date'))).' by ' . $ptn->business_name,
+                    'date' => date('d/m/Y', strtotime($request->get('new_booking_date')))
+                ];
+                $user_email = $this_usr->email;
+                Mail::to($user_email)->send(new ModificationSuccess($payload));
+                return response([
+                    'status' => 0,
+                    'message' => 'The booking date has been successfully changed. The customer has been notified of these changes',
+                    'voucher' => $voucher
+                ]);
+            }
+        }
+        return response([
+            'status' => -211,
+            'message' => 'General error occured.',
+            'voucher' => $voucher
+        ]);
+    }
+    public function cancel_booking(Request $request, $voucher)
+    {
+        if(substr( $voucher, 0, 2 ) === "R-"){ /** replacement voucher cant cancel */
+            return response([
+                'status' => -211,
+                'message' => 'Voucher '.$voucher.' has already been replaced. A voucher can only be replaced once.',
                 'voucher' => $voucher
             ]);
         }
+        $validator = Validator::make($request->all(), [
+            'cancellation_date' => 'required|string',
+            'partner_identity' => 'required|string',
+            'reason' => 'required|string'
+        ]);
+        if( $validator->fails() ){
+            return response([
+                'status' => -211,
+                'message' => 'Invalid or empty field',
+                'errors' => $validator->errors()
+            ], 401);
+        }
+        $i =  Inventory::where('box_voucher', $voucher)
+                ->where('partner_internal_id', $request->get('partner_identity'))
+                ->first();
+        $new_inventory = $i;
+        if( $i->box_voucher_status == 3 ){ /** is in redeemed state */
+            $voucher_valid_date = date('Y-m-d', strtotime($i->box_validity_date));
+            $today_date = date('Y-m-d', strtotime('now'));
+            if( $today_date > $voucher_valid_date ){/** voucher is expired */
+                return response([
+                    'status' => -211,
+                    'message' => 'Voucher '.$voucher.' is expired',
+                    'voucher' => $voucher
+                ]);
+            }else{
+                $new_box_voucher = 'R-' . $this->createCode(8);
+                /** save old */
+                $input_data = [
+                    'partner_internal_id' => $request->get('partner_identity'),
+                    'box_voucher_new' => $new_box_voucher,
+                    'box_voucher' => $voucher,
+                    'cancellation_date' => $request->get('cancellation_date'),
+                    'box_voucher_status' => 4/** set cancel it */
+                ];
+                $input_new = $i->toArray();
+                Inventory::find($input_new['id'])->update($input_data);
+
+                $new_inventory->box_voucher = $new_box_voucher;
+                $new_inventory->box_voucher_status = 2;/**back to purchased */
+                $new_inventory->redeemed_date = null; 
+                $new_inventory->voucher_activation_date = null;
+                $new_inventory->cancellation_date = null; 
+                $new_inventory->booking_date = null; 
+                $new_inventory->partner_pay_due_date = null; 
+                $new_inventory->partner_pay_effec_date = null; 
+                $new_inventory->partner_pay_amount = null; 
+                $new_inventory->partner_internal_id = null; 
+                $new_inventory->partner_invoice = null; 
+                $new_inventory->redeemed_service = null;
+                $input = $new_inventory->toArray();
+                unset($input['id']);/** remove unq key */
+                if(Inventory::create($input)){
+                    $ptn = Userinfo::where('internal_id', $request->get('partner_identity'))->first();
+                    $usr = Userinfo::where('internal_id', $i->customer_user_id)->first();
+                    $this_usr = User::find($usr->userid);
+                    $cancellation_payload = [
+                        'cancelled_voucher' => $voucher,
+                        'new_voucher' => $new_box_voucher,
+                        'reason' => $request->get('reason'),
+                        'partner' => $request->get('partner_identity')
+                    ];
+                    Cancellation::create($cancellation_payload);
+                    $payload = [
+                        'message' => 'The voucher '.$voucher.' which you had redeemed at '.$ptn->business_name.' has been cancelled and replaced by a new voucher code ' .$new_box_voucher.'. You will need to login to your account and reactivate the new code.',
+                        'voucher' => $new_box_voucher,
+                        'partner' => $ptn->business_name,
+                        'reason' => $request->get('reason')
+                    ];
+                    $user = $this_usr->email;
+                    Mail::to($user)->send(new PartnerCancellation($payload));
+                    $admin_user = Config::get('mail.from.address');
+                    Mail::to($admin_user)->send(new PartnerCancellationAdmin($payload));
+                    return response([
+                        'status' => 0,
+                        'message' => 'Voucher '.$voucher.' has been cancelled. The customer will be notified',
+                        'voucher' => $new_box_voucher
+                    ]);
+                }
+            }
+        }
+        return response([
+            'status' => -211,
+            'message' => 'General error occured.',
+            'voucher' => $voucher
+        ]);
     }
     public function assign_c_buyer_pbox(Request $request)
     {

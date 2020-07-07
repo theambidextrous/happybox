@@ -7,10 +7,9 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 
-class ActivationFailed extends Mailable
+class ActivationFailedAdmin extends Mailable
 {
     use Queueable, SerializesModels;
-
     public $payload;
     /**
      * Create a new message instance.
@@ -29,6 +28,6 @@ class ActivationFailed extends Mailable
      */
     public function build()
     {
-        return $this->subject('Voucher Activation Failed')->view('emails.orders.activation_failed');
+        return $this->subject('Voucher Activation Failed')->view('emails.orders.activation_failed_admin');
     }
 }

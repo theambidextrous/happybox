@@ -301,12 +301,12 @@ class UserinfoController extends Controller
     public function show_byidf($id, Request $request)
     {
         try {
-            if(!$this->is_admin($request) && $request->user()->id != $id){
-                return response([
-                    'status' => -211,
-                    'message' => 'Permission denied'
-                ], 401);
-            }
+            // if(!$this->is_admin($request) && $request->user()->id != $id){
+            //     return response([
+            //         'status' => -211,
+            //         'message' => 'Permission denied'
+            //     ], 401);
+            // }
             $userinfo =  Userinfo::where('internal_id', $id)->first();
             return response([
                 'status' => 0,
@@ -401,7 +401,7 @@ class UserinfoController extends Controller
             'business_name' => 'required|string',
             'business_category' => 'required|string',
             'business_reg_no' => 'required|string',
-            'services' => 'required|string'
+            'services' => 'string'
         ]);
         if( $validator->fails() ){
             return response([
@@ -411,7 +411,18 @@ class UserinfoController extends Controller
             ], 401);
         }
         $input = $request->all();
+        $input['internal_id'] = 'PT-' . $this->createCode(8);
+        $input['userid'] = $id;
         $userinfo = Userinfo::where('userid', $id)->first();
+        if(!$userinfo){
+            Userinfo::create($input);
+            return response([
+                'status' => 0,
+                'message' => 'user updated successfully',
+                'userid' => $id,
+                'internal_id' => $input['internal_id']
+            ]);
+        }
         $internal_id = $userinfo->internal_id;
         $userinfo->fname = $request->get('fname');
         $userinfo->sname = $request->get('sname');
@@ -421,7 +432,9 @@ class UserinfoController extends Controller
         $userinfo->business_name = $request->get('business_name');
         $userinfo->business_category = $request->get('business_category');
         $userinfo->business_reg_no = $request->get('business_reg_no');
-        $userinfo->services = $request->get('services');
+        if($request->get('services')){
+            $userinfo->services = $request->get('services');
+        }
         if($userinfo->save()){
             return response([
                 'status' => 0,

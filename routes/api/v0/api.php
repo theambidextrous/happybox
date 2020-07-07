@@ -29,6 +29,7 @@ Route::prefix('/users')->group( function() {
     /** register partners */
     Route::prefix('/partners')->group( function(){
         Route::post('/register', 'api\v0\user\UserController@create_partner');
+        Route::post('/become/request', 'api\v0\user\UserController@become_partner');
         Route::get('/info/topic/{t}', 'api\v0\user\UserinfoController@show_bytopic');
         Route::get('/info/all', 'api\v0\user\UserinfoController@show_ptn_all');
     });
@@ -120,8 +121,18 @@ Route::prefix('/services')->group( function() {
     Route::prefix('/orders')->group( function(){
         Route::get('/order/req/id/{id}', 'api\v0\happybox\OrderController@findby_check_out_Req');
     });
+    /** ratings */
+    Route::prefix('/ratings')->group( function(){
+        Route::get('/ratings', 'api\v0\happybox\RatingController@index');
+        Route::get('/ratings/partner/{idf}', 'api\v0\happybox\RatingController@by_ptn_value');
+        Route::get('/ratings/ptn/{idf}', 'api\v0\happybox\RatingController@by_ptn');
+    });
     /** SECURED */
     Route::middleware('auth:api')->group( function(){
+        /** ratings */
+        Route::prefix('/ratings')->group( function(){
+            Route::post('/ratings', 'api\v0\happybox\RatingController@create');
+        });
         /** orders */
         Route::prefix('/orders')->group( function(){
             Route::get('/orders', 'api\v0\happybox\OrderController@index');
@@ -197,7 +208,10 @@ Route::prefix('/services')->group( function() {
             Route::post('/inventory', 'api\v0\happybox\InventoryController@create');
             Route::post('/inventory/reports', 'api\v0\happybox\InventoryController@get_report');
             Route::put('/inventory/redeem/bypartner/{v}', 'api\v0\happybox\InventoryController@redeem_by_partner');
+            Route::put('/inventory/modify/booking/{v}', 'api\v0\happybox\InventoryController@modify_booking');
+            Route::put('/inventory/cancel/ptn/voucher/{v}', 'api\v0\happybox\InventoryController@cancel_booking');
             Route::put('/inventory/activate/cu/{v}', 'api\v0\happybox\InventoryController@v_activate');
+            Route::put('/inventory/cancel/voucher/{v}', 'api\v0\happybox\InventoryController@v_cancel');
         });
          /** reports */
          Route::prefix('/reports')->group( function(){

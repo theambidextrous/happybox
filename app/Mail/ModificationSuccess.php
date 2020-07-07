@@ -7,7 +7,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 
-class ActivationFailed extends Mailable
+class ModificationSuccess extends Mailable
 {
     use Queueable, SerializesModels;
 
@@ -29,6 +29,6 @@ class ActivationFailed extends Mailable
      */
     public function build()
     {
-        return $this->subject('Voucher Activation Failed')->view('emails.orders.activation_failed');
+        return $this->subject('HappyBox Booking Date Modified')->view('emails.orders.booking_modified');
     }
 }

@@ -6,8 +6,12 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\User;
 use Validator;
+use Config;
 use Illuminate\Auth\Middleware\Authenticate;
 use Illuminate\Support\Str;
+/**mailables */
+use Illuminate\Support\Facades\Mail;
+use App\Mail\PartnershipRequest;
 
 class UserController extends Controller
 {
@@ -216,6 +220,7 @@ class UserController extends Controller
             $input['is_admin'] = false;
             $input['is_client'] = false;
             $input['is_partner'] = true;
+            $input['is_active'] = true;
             $input['password'] = bcrypt($input['password']);
             $user = User::create($input);
             $access_token = $user->createToken('authToken')->accessToken;
@@ -235,6 +240,43 @@ class UserController extends Controller
             return response([
                 'status' => -211,
                 'message' => 'Database rule violation error'
+            ], 401);
+        }
+    }
+
+    public function become_partner(Request $request)
+    {
+        try{
+            $validator = Validator::make($request->all(), [
+                'email' => 'required|email',
+                'fname' => 'required|string',
+                'sname' => 'required|string',
+                'short_description' => 'required|string',
+                'location' => 'required|string',
+                'phone' => 'required|string',
+                'business_name' => 'required|string',
+                'business_category' => 'required|string',
+                'business_reg_no' => 'required|string'
+                // 'services' => 'string'
+            ]);
+            if( $validator->fails() ){
+                return response([
+                    'status' => -211,
+                    'message' => 'Invalid or empty fields',
+                    'errors' => $validator->errors()
+                ], 401);
+            }
+            $payload = $request->all();
+            $admin_user = Config::get('mail.from.address');
+            Mail::to($admin_user)->send(new PartnershipRequest($payload));
+            return response([
+                'status' => 0,
+                'message' => 'Request sent successfully'
+            ], 200);
+        }catch (Exception $e) {
+            return response([
+                'status' => -211,
+                'message' => $e->getMessage()
             ], 401);
         }
     }
