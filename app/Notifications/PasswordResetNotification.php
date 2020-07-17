@@ -47,7 +47,7 @@ class PasswordResetNotification extends Notification
             ->line('You are receiving this email because we received a password reset request for your account.')
             ->action('Reset Password', $notification_link)
             ->line('This reset link will expire in '.config('auth.passwords.users.expire').' minutes.')
-            ->line('If you did not make this request, no action is required. Token::: ' . $this->token);
+            ->line('If you did not make this request, no action is required.');
     }
 
     /**
