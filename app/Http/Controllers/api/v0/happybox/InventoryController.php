@@ -149,38 +149,43 @@ class InventoryController extends Controller
             if(is_null($i)){
                 return response([
                     'status' => -211,
-                    'message' => 'The voucher you are trying to redeem is invalid',
+                    'message' => 'The voucher is invalid',
                     'data' => null
-                ]);
-            }
-            if($i->box_voucher_status == 3){
-                return response([
-                    'status' => -211,
-                    'message' => 'The voucher is already redeemed',
-                    'data' => null
-                ]);
-            }
-            $voucher_valid_date = date('Y-m-d', strtotime($i->box_validity_date));
-            $today_date = date('Y-m-d', strtotime('now'));
-            if( $today_date > $voucher_valid_date ){
-                return response([
-                    'status' => -211,
-                    'message' => 'The voucher is expired!',
-                    'data' => null
-                ]);
-            }
-            if($i->box_voucher_status == 6){
-                return response([
-                    'status' => 0,
-                    'message' => 'fetched successfully',
-                    'data' => $i
                 ]);
             }
             return response([
-                'status' => -211,
-                'message' => 'Unrecognized voucher code. ',
-                'data' => null
+                'status' => 0,
+                'message' => 'fetched successfully',
+                'data' => $i
             ]);
+            // if($i->box_voucher_status == 3){
+            //     return response([
+            //         'status' => -211,
+            //         'message' => 'The voucher is already redeemed',
+            //         'data' => null
+            //     ]);
+            // }
+            // $voucher_valid_date = date('Y-m-d', strtotime($i->box_validity_date));
+            // $today_date = date('Y-m-d', strtotime('now'));
+            // if( $today_date > $voucher_valid_date ){
+            //     return response([
+            //         'status' => -211,
+            //         'message' => 'The voucher is expired!',
+            //         'data' => null
+            //     ]);
+            // }
+            // if($i->box_voucher_status == 6){
+            //     return response([
+            //         'status' => 0,
+            //         'message' => 'fetched successfully',
+            //         'data' => $i
+            //     ]);
+            // }
+            // return response([
+            //     'status' => -211,
+            //     'message' => 'Unrecognized voucher code. ',
+            //     'data' => null
+            // ]);
         } catch (\Illuminate\Database\QueryException $e) {
             return response([
                 'status' => -211,
@@ -604,7 +609,38 @@ class InventoryController extends Controller
             ]);
         }
     }
+    public function ptn_pay_effec_dt(Request $request, $id)
+    {
+        $validator = Validator::make($request->all(), [
+            'partner_pay_effec_date' => 'required|string'
+        ]);
+        if( $validator->fails() ){
+            return response([
+                'status' => -211,
+                'message' => 'Invalid or empty field',
+                'errors' => $validator->errors()
+            ], 401);
+        }
+        $i =  Inventory::find($id);
+        if(is_null($i)){
+            return response([
+                'status' => -211,
+                'message' => 'Entry not found'
+            ]);
+        }
+        $i->partner_pay_effec_date = $request->get('partner_pay_effec_date');
+        if($i->save()){
+            return response([
+                'status' => 0,
+                'message' => 'Date posted!'
+            ]);
+        }
+        return response([
+            'status' => -211,
+            'message' => 'mission failed again'
+        ]);
 
+    }
     public function redeem_by_partner(Request $request, $voucher)
     {
         $validator = Validator::make($request->all(), [
@@ -628,7 +664,7 @@ class InventoryController extends Controller
             $i->booking_date = $request->get('booking_date');
             $i->partner_internal_id = $request->get('partner_identity');
             $i->partner_pay_amount = $request->get('partner_pay_amount');
-            $i->partner_pay_effec_date = $request->get('redeemed_date');
+            // $i->partner_pay_effec_date = $request->get('redeemed_date');//day they get paid
             $i->partner_pay_due_date = $request->get('booking_date');
             $i->partner_invoice = 'INV-' . $this->createCode(6);
             $i->redeemed_service = $request->get('redeemed_service');

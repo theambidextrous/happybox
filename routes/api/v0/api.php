@@ -210,6 +210,7 @@ Route::prefix('/services')->group( function() {
             Route::get('/inventory/cu/{c}', 'api\v0\happybox\InventoryController@by_cust_user');
             Route::post('/inventory', 'api\v0\happybox\InventoryController@create');
             Route::post('/inventory/reports', 'api\v0\happybox\InventoryController@get_report');
+            Route::post('/inventory/ptn/pay/effec/date/{id}', 'api\v0\happybox\InventoryController@ptn_pay_effec_dt');
             Route::put('/inventory/redeem/bypartner/{v}', 'api\v0\happybox\InventoryController@redeem_by_partner');
             Route::put('/inventory/modify/booking/{v}', 'api\v0\happybox\InventoryController@modify_booking');
             Route::put('/inventory/cancel/ptn/voucher/{v}', 'api\v0\happybox\InventoryController@cancel_booking');
