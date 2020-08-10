@@ -19,3 +19,4 @@ Route::get('/', function () {
 Route::get('/docs.tpl', function () {
     return view('welcome');
 });
+Route::get('/barcode.tpl', 'api\v0\happybox\BarcodeController@barcode');

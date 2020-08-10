@@ -12,6 +12,8 @@ use App\Cancellation;
 use Validator;
 use Auth;
 use Config;
+use DNS1D;
+use DNS2D;
 use Illuminate\Auth\Middleware\Authenticate;
 use Illuminate\Support\Str;
 /**mailables */
@@ -32,6 +34,55 @@ class InventoryController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+    public function bcode($barcodenumber, $type = 'C39'){
+        $img_src = "data:image/png;base64,";
+        if( in_array($type, ['QRCODE','PDF417','DATAMATRIX']) ){
+            $barcode = DNS2D::getBarcodePNG($barcodenumber, $type, 2,60, array(1, 133, 182));
+            return response([
+                'status' => 0,
+                'message' => 'success',
+                'source' => $img_src.$barcode
+            ], 200); 
+        }else{
+            $barcode = DNS1D::getBarcodePNG($barcodenumber, $type, 2,60, array(1, 133, 182));
+            return response([
+                'status' => 0,
+                'message' => 'success',
+                'source' => $img_src.$barcode
+            ], 200); 
+        }
+        
+    }
+    public function bcodev(Request $request){
+        $validator = Validator::make($request->all(), [
+            'box_internal_id' => 'required|string',
+            'stock_type' => 'required|integer',
+        ]);
+        if( $validator->fails() ){
+            return response([
+                'status' => -211,
+                'message' => 'Invalid or empty field',
+                'errors' => $validator->errors()
+            ], 401);
+        }
+        $input = $request->all();
+        $barcodev = Inventory::select(['box_barcode','box_voucher','box_voucher_status'])
+            ->where('box_voucher_status', 1)
+            ->where('box_internal_id', $input['box_internal_id'])
+            ->where('box_type', '00')
+            ->get();
+        if($input['stock_type'] == 0 ){
+            $barcodev = Inventory::select(['box_barcode','box_voucher','box_voucher_status'])
+                ->where('box_internal_id', $input['box_internal_id'])
+                ->where('box_type', '00')
+                ->get();
+        }
+        return response([
+            'status' => 0,
+            'message' => 'success',
+            'data' => $barcodev
+        ], 200);
+    }
     public function index(Request $request)
     {
         try{
@@ -226,7 +277,7 @@ class InventoryController extends Controller
             $input = $request->all();
             if($input['box_type'] == '00'){
                 $input['box_voucher'] = 'P-' . $this->createCode(8);
-                $input['box_barcode'] = 'BX' . $this->createCode(16);
+                $input['box_barcode'] = 'BX' . $this->createCode(8);
             }else{
                 $input['box_voucher'] = 'E-' . $this->createCode(8); 
             }

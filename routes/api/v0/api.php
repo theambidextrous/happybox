@@ -116,6 +116,7 @@ Route::prefix('/services')->group( function() {
     });
     /** inventories */
     Route::prefix('/inventories')->group( function(){
+        Route::get('/inventory/ibarcode/{barcode}/type/{type}', 'api\v0\happybox\InventoryController@bcode');
         Route::get('/inventory/stock/{box}', 'api\v0\happybox\InventoryController@stock');
     });
     Route::prefix('/orders')->group( function(){
@@ -216,6 +217,8 @@ Route::prefix('/services')->group( function() {
             Route::put('/inventory/cancel/ptn/voucher/{v}', 'api\v0\happybox\InventoryController@cancel_booking');
             Route::put('/inventory/activate/cu/{v}', 'api\v0\happybox\InventoryController@v_activate');
             Route::put('/inventory/cancel/voucher/{v}', 'api\v0\happybox\InventoryController@v_cancel');
+            Route::get('/inventory/barcode/{barcode}/type/{type}', 'api\v0\happybox\InventoryController@bcode');
+            Route::post('/inventory/barcode/vouchers', 'api\v0\happybox\InventoryController@bcodev');
         });
          /** reports */
          Route::prefix('/reports')->group( function(){
