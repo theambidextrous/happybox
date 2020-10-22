@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Order;
 use App\Payment;
+use App\OrderCron;
 use Validator;
 use Auth;
 use Config;
@@ -25,6 +26,35 @@ class OrderController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+    public function new_cron(Request $request)
+    {
+        //'order_id', 'customer_buyer', 'box_voucher', 'order_meta', 'deliver_to', 'sendy_log', 'is_send',
+        $validator = Validator::make($request->all(), [
+            'order_id' => 'required|string',
+            'customer_buyer' => 'required|string',
+            'box_voucher' => 'required|string',
+            'order_meta' => 'required|string',
+            'deliver_to' => 'required|string',
+            'sendy_log' => 'required|string',
+        ]);
+        if( $validator->fails() ){
+            return response([
+                'status' => -211,
+                'message' => 'Invalid or empty field',
+                'errors' => $validator->errors()
+            ], 401);
+        }
+        $input = $request->all();
+        OrderCron::create($input);
+        return response([
+            'status' => 0,
+            'message' => 'created successfully'
+        ], 200);
+    }
+    public function run_cron(Request $request)
+    {
+        //'order_id', 'customer_buyer', 'box_voucher', 'order_meta', 'deliver_to', 'sendy_log', 'is_send',
+    }
     public function index(Request $request)
     {
         try{

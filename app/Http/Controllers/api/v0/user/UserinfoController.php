@@ -5,6 +5,7 @@ namespace App\Http\Controllers\api\v0\user;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Userinfo;
+use App\User;
 use Validator;
 use Illuminate\Auth\Middleware\Authenticate;
 use Illuminate\Support\Str;
@@ -398,6 +399,7 @@ class UserinfoController extends Controller
             'short_description' => 'required|string',
             'location' => 'required|string',
             'phone' => 'required|string',
+            'email' => 'required|string',
             'business_name' => 'required|string',
             'business_category' => 'required|string',
             'business_reg_no' => 'required|string',
@@ -414,6 +416,7 @@ class UserinfoController extends Controller
         $input['internal_id'] = 'PT-' . $this->createCode(8);
         $input['userid'] = $id;
         $userinfo = Userinfo::where('userid', $id)->first();
+        User::find($id)->update(['email' => $request->get('email')]);
         if(!$userinfo){
             Userinfo::create($input);
             return response([

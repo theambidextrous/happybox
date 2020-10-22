@@ -22,6 +22,8 @@ use Illuminate\Support\Facades\Route;
 Route::prefix('/users')->group( function() {
     /** all users login */
     Route::post('/login', 'api\v0\LoginController@login');
+    /** contact us */
+    Route::post('contact/us', 'api\v0\LoginController@contact_us');
     /** register clients */
     Route::prefix('/clients')->group( function(){
         Route::post('/register', 'api\v0\user\UserController@create_client');
@@ -156,6 +158,8 @@ Route::prefix('/services')->group( function() {
             Route::post('/order/find/vouchers','api\v0\happybox\InventoryController@find_o_voucher');
             Route::post('/order/mail/evouchers','api\v0\happybox\OrderController@mail_e_voucher');
             Route::post('/order/mail/fullorder','api\v0\happybox\OrderController@mail_fullorder');
+            Route::post('/new/cron','api\v0\happybox\OrderController@new_cron');
+            Route::post('/run/cron','api\v0\happybox\OrderController@run_cron');
             //
         });
         /** prices */

@@ -6,6 +6,10 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\User;
+use Config;
+/**mailables */
+use Illuminate\Support\Facades\Mail;
+use App\Mail\ContactUs;
 
 class LoginController extends Controller
 {
@@ -51,6 +55,18 @@ class LoginController extends Controller
             ]);
         }
 
+    }
+    public function contact_us(Request $request)
+    {
+        $validator = $request->validate([
+            'name' => 'required|string',
+            'email' => 'required|email',
+            'enquiry' => 'required|string',
+            'detail' => 'required|string',
+        ]);
+        $admin_user = Config::get('mail.from.address');
+        Mail::to($admin_user)->send(new ContactUs($validator));
+        return response(['status' => 0,'message' => 'failed'], 200);
     }
     public function is_active(Request $request ){
         if(isset($request->user()->id)){
