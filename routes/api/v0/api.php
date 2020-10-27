@@ -115,6 +115,7 @@ Route::prefix('/services')->group( function() {
         Route::get('/picture/{id}', 'api\v0\happybox\PictureController@show');
         Route::get('/picture/byitem/{item}', 'api\v0\happybox\PictureController@byitem');
         Route::get('/picture/byitem/single/{item}', 'api\v0\happybox\PictureController@byitem_one');
+        Route::get('/picture/byitem/one/{item}/type/{type}', 'api\v0\happybox\PictureController@byitem_one_type');
     });
     /** inventories */
     Route::prefix('/inventories')->group( function(){

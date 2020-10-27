@@ -143,6 +143,34 @@ class PictureController extends Controller
             ], 401);
         }
     }
+    public function byitem_one_type($item, $type)
+    {
+        try {
+            $p =  Picture::where('related_item', $item)->where('type', $type)->first();
+            if(empty($p)){
+                return response([
+                    'status' => 0,
+                    'message' => 'fetched successfully',
+                    'data' => null
+                ]);
+            }
+            return response([
+                'status' => 0,
+                'message' => 'fetched successfully',
+                'data' => $p
+            ]);
+        } catch (\Illuminate\Database\QueryException $e) {
+            return response([
+                'status' => -211,
+                'message' => 'Database server rule violation error'
+            ], 401);
+        } catch (PDOException $e) {
+            return response([
+                'status' => -211,
+                'message' => 'Database rule violation error'
+            ], 401);
+        }  
+    }
     public function byitem_one($item){
         try {
             $p =  Picture::where('related_item', $item)->first();
