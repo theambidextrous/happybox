@@ -38,7 +38,7 @@ Route::prefix('/users')->group( function() {
     Route::get('/findbyid/active/{id}', 'api\v0\user\UserController@show_active');
     /** =======AUTHENTICATED ROUTES======================================= */
     // Route::middleware('auth:api', 'verified')->
-    Route::middleware('auth:api')->group( function(){
+    Route::middleware('auth:api', 'verified')->group( function(){
         /** is logged in  */
         Route::get('/loginstatus', 'api\v0\LoginController@is_active');
         /** shipping */
@@ -135,7 +135,7 @@ Route::prefix('/services')->group( function() {
         Route::get('/ratings/ptn/{idf}', 'api\v0\happybox\RatingController@by_ptn');
     });
     /** SECURED */
-    Route::middleware('auth:api')->group( function(){
+    Route::middleware('auth:api', 'verified')->group( function(){
         /** ratings */
         Route::prefix('/ratings')->group( function(){
             Route::post('/ratings', 'api\v0\happybox\RatingController@create');

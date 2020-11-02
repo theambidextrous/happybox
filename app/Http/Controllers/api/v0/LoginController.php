@@ -27,6 +27,9 @@ class LoginController extends Controller
         if( !Auth::attempt( $login ) ){
             return response(['status' => -211, 'message' => 'Invalid username or password']);
         }
+        if( is_null(Auth::user()->email_verified_at) ){
+            return response(['status' => -211, 'message' => 'Email address not verified!']);
+        }
         $accessToken = Auth::user()->createToken('authToken')->accessToken;
         $user = Auth::user();
         if(!$user['is_active']){
