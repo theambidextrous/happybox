@@ -8,6 +8,7 @@ use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\VerifiesEmails;
 use Laravel\Passport\HasApiTokens;
 use App\Notifications\PasswordResetNotification;
+use App\Notifications\VerifyEmailNotification;
 
 class User extends Authenticatable implements MustVerifyEmail
 {
@@ -19,7 +20,7 @@ class User extends Authenticatable implements MustVerifyEmail
      * @var array
      */
     protected $fillable = [
-        'username', 'email', 'password', 'is_admin', 'is_client', 'is_partner', 'is_active',
+        'username', 'email', 'password', 'is_admin', 'is_client', 'is_partner', 'is_active', 'name',
     ];
 
     /**
@@ -40,7 +41,10 @@ class User extends Authenticatable implements MustVerifyEmail
         'email_verified_at' => 'datetime',
     ];
 
-
+    public function sendEmailVerificationNotification()
+    {
+        $this->notify(new VerifyEmailNotification());
+    }
     public function sendPasswordResetNotification($token){
         $this->Notify(new PasswordResetNotification($token));
     }

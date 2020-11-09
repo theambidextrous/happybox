@@ -1,0 +1,137 @@
+HAPPYBOX
+
+activated ===> show to partner iff is activated
+
+default price range - select option placeholder
+email -- not updating server end
+service-price pair -- uniq
+
+
+partners list - nairbi happybox
+edit partner bug
+location comma separated
+partner dash - call
+
+check valididty = if is any error = show invalid no more steps
+cart - zero value items
+barcodes - word download fail
+
+SENDY DISCUSSION
+
+
+
+
+
+slack::
+URL:happyboxgroup.slack.com
+Email:idd.otuya@outlook.com
+
+gmail
+pass:@Vatar2020
+ec2
+
+ubuntu@ec2-3-249-167-180.eu-west-1.compute.amazonaws.com
+
+AWS 
+UN:damien.lienard@africaexportservices.com
+PW:Mot2passeaws
+
+Desktop Site:
+https://xd.adobe.com/view/7e3dc8eb-816e-4826-7ba3-d89b27fc924c-080c/
+Mobile View:
+https://xd.adobe.com/view/888f3bb2-c06b-4998-75ae-466ec3c6ccc5-febe/
+Email Templates:
+https://xd.adobe.com/view/24ce4af8-08e6-4251-6b69-7cec4dc8ae06-52ff/
+
+GOING LIVE
+Order.php includes
+front .env
+api .env
+
+password:HappyBox@SugarLab13
+
+happybox mysql
+user:root, happy_box
+password:5appyBox2020
+db:happy_box_db
+
+laravel logs:var/www/api.happybox.ke/public_html/storage/logs/laravel.log
+
+sendy
+userid 722463498
+pass:password$
+
+email --- client1@happybox.ke
+token --- f02439c17faa93e085a7b3000c74f363b01400dd7e968a7ea8a642b04f8ecd37
+password --- avatar2020
+password_confirmation -- avatar2020
+
+box status ==== col - is_active
+values:::
+1 - draft
+2 - selling
+
+vourcher status
+1 - idle/instock
+2 - purchased
+3 - redeemed
+4 - cancelled
+5 - expired
+6 - activated
+7 - lost
+deploy
+edit Util.php
+Handler.php 
+https://www.interserver.net/tips/kb/deploy-laravel-project-apache-ubuntu/
+
+===============================================================================
+REMOTE LOGIN
+
+Admin login
+email === root@happybox.ke
+pass === @Vatar2020
+
+Customer login
+email === m.kinely@happybox.ke
+pass === @Vatar2020
+
+Partner login
+email === karen.miller@happybox.ke
+pass === @Vatar2020
+=====================================================================================
+LOCAL LOGIN
+
+
+APP_HOME=https://happybox.ke/staging
+APP_ADMIN_HOME=https://happybox.ke/staging/adm-src-hb
+APP_CLIENT_HOME=https://happybox.ke/staging/clt-src-hb
+APP_PARTNER_HOME=https://happybox.ke/staging/ptn-src-hb
+APP_API=https://happybox.ke:8443/api/v0/
+APP_UPLOADS=https://happybox.ke:8443/media/
+APP_ERRORS=0
+APP_SENDY_KEY=OSTtFqqyraAsfFs7XmhX
+APP_SENDY_USER=happybox
+APP_SENDY_URL=https://api.sendyit.com/v1/
+APP_MAPS_KEY=AIzaSyAOZ_8qU7llYTL6bKx-SbEw0H-JWBpner0
+APP_MAPS_URL_DISTANCE=https://maps.googleapis.com/maps/api/distancematrix/json?
+APP_MAPS_URL_LOCATION=https://maps.googleapis.com/maps/api/geocode/json?
+APP_CONTACT_INFO=happybox,0779301840,iotuya05@gmail.com
+APP_CONTACT_ADDRESS="Sarit center, westlands, nairobi kenya"
+
+APP_MPESA_C_KEY=OYn2dTHFer6zT4b3tTZaIuTyOSEPq7ri
+APP_MPESA_C_SECRET=zumMeEIOLfuVgEy1
+APP_MPESA_C2B_C_KEY=cY3vCLgquSYLtEQN9d9JP36MTA5DGfgF
+APP_MPESA_C2B_C_SECRET=AGx2zCE89mqeWkxK
+APP_MPESA_PAYBILL=174379
+APP_MPESA_PASSKEY=bfb279f9aa9bdbcf158e97dd71a467cd2e0c893059b10f78e6b72ada1ed2c919
+APP_MPESA_TRANS_TYPE=CustomerPayBillOnline
+APP_MPESA_CALL_BACK=/callbackurl.php
+APP_MPESA_CONFIRMATION=/confirmation-url-hb.php
+APP_MPESA_VALIDATION=/validation-url-hb.php
+APP_MPESA_ENV=sandbox
+APP_MPESA_C2B_PHONE=254708374149
+APP_MPESA_C2B_PAYBILL=600000
+
+
+
+

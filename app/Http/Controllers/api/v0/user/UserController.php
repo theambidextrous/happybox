@@ -12,6 +12,7 @@ use Illuminate\Support\Str;
 /**mailables */
 use Illuminate\Support\Facades\Mail;
 use App\Mail\PartnershipRequest;
+use App\Mail\OnBoard;
 
 class UserController extends Controller
 {
@@ -165,7 +166,8 @@ class UserController extends Controller
                 'email' => 'required|email',
                 'password' => 'required|string',
                 'c_password' => 'required|same:password',
-                'is_active' => 'string'
+                'is_active' => 'string',
+                'name' => 'string',
             ]);
             if( $validator->fails() ){
                 return response([
@@ -177,8 +179,9 @@ class UserController extends Controller
             $input = $request->all();
             $input['password'] = bcrypt($input['password']);
             $input['is_active'] = true;
-            $user = User::create($input);
+            $user = $notify = User::create($input);
             $access_token = $user->createToken('authToken')->accessToken;
+            $notify->sendEmailVerificationNotification();
             $user['token'] = $access_token;
             // $success['user_id'] = $user->id();
             return response([
@@ -199,7 +202,6 @@ class UserController extends Controller
             ], 401);
         }
     }
-
     public function create_partner(Request $request)
     {
         try{
@@ -207,7 +209,8 @@ class UserController extends Controller
                 'username' => 'required|string',
                 'email' => 'required|email',
                 'password' => 'required|string',
-                'c_password' => 'required|same:password'
+                'c_password' => 'required|same:password',
+                'name' => 'string',
             ]);
             if( $validator->fails() ){
                 return response([
@@ -222,8 +225,9 @@ class UserController extends Controller
             $input['is_partner'] = true;
             $input['is_active'] = true;
             $input['password'] = bcrypt($input['password']);
-            $user = User::create($input);
+            $user = $notify = User::create($input);
             $access_token = $user->createToken('authToken')->accessToken;
+            $notify->sendEmailVerificationNotification();
             $user['token'] = $access_token;
             return response([
                 'status' => 0,
@@ -269,6 +273,9 @@ class UserController extends Controller
             $payload = $request->all();
             $admin_user = Config::get('mail.from.address');
             Mail::to($admin_user)->send(new PartnershipRequest($payload));
+            Mail::to($payload['email'])->send(new OnBoard([
+                'name' => $payload['fname'] . ' ' . $payload['sname']
+            ]));
             return response([
                 'status' => 0,
                 'message' => 'Request sent successfully'

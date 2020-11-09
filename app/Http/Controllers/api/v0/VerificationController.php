@@ -17,7 +17,13 @@ class VerificationController extends Controller
         $this->middleware('signed')->only('verify');
         $this->middleware('throttle:6,1')->only('verify','resend');
     }
-
+    // public function show()
+    // {
+    //     return response([
+    //         'status' => 0,
+    //         'message' => 'email verification sent. User infor added'
+    //     ]);
+    // }
     public function resend(Request $request)
     {
         if($request->user()->hasVerifiedEmail()){

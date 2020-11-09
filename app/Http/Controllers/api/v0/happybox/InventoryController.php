@@ -51,7 +51,6 @@ class InventoryController extends Controller
                 'source' => $img_src.$barcode
             ], 200); 
         }
-        
     }
     public function bcodev(Request $request){
         $validator = Validator::make($request->all(), [
@@ -644,7 +643,7 @@ class InventoryController extends Controller
                     'voucher' => $voucher
                 ];
                 $user_email = Auth::user()->email;
-                Mail::to($user_email)->send(new ActivationSuccess($payload));
+                Mail::to($user_email)->send(new ActivationSuccess(['name' => Auth::user()->name ]));
                 return response([
                     'status' => 0,
                     'message' => 'Voucher activated successfully. You can now redeem it!',

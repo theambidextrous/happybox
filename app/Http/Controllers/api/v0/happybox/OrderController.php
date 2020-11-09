@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use App\Order;
 use App\Payment;
 use App\OrderCron;
+use App\User;
+use App\Userinfo;
 use Validator;
 use Auth;
 use Config;
@@ -26,6 +28,51 @@ class OrderController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+    public function c_updt(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'id' => 'required',
+            'sendy_log' => 'required|string',
+            'is_send' => 'required',
+        ]);
+        if( $validator->fails() ){
+            return response([
+                'status' => -211,
+                'message' => 'Invalid or empty field',
+                'errors' => $validator->errors()
+            ], 401);
+        }
+        $pf = OrderCron::find($request->get('id'))->update([
+            'sendy_log' => $request->get('sendy_log'),
+            'is_send' => $request->get('is_send'),
+        ]);
+        return response([
+            'status' => 0,
+            'message' => 'Sendy log updated',
+            'data' => $pf
+        ], 200);
+
+    }
+    public function f_cron($date)
+    {
+        $order_date = date("Y-m-d ") . '23:59:59';
+        $date = date('Y-m-d H:i:s', strtotime($order_date));
+        $resp = OrderCron::where('is_send', false)
+                ->where('created_at', '<=', $date)
+                ->get();
+        if(is_null($resp))
+        {
+            return response([
+                'status' => 0,
+                'message' => 'Freedom to play. No work to do',
+            ], 200);
+        }
+        return response([
+            'status' => 0,
+            'data' => $resp->toArray(),
+            'date' => $date
+        ]);
+    }
     public function new_cron(Request $request)
     {
         //'order_id', 'customer_buyer', 'box_voucher', 'order_meta', 'deliver_to', 'sendy_log', 'is_send',
@@ -45,6 +92,13 @@ class OrderController extends Controller
             ], 401);
         }
         $input = $request->all();
+        if( OrderCron::where('order_id', $input['order_id'])->count() > 0 )
+        {
+            return response([
+                'status' => 0,
+                'message' => 'already created'
+            ], 200);
+        }
         OrderCron::create($input);
         return response([
             'status' => 0,

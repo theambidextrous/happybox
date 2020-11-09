@@ -37,23 +37,8 @@ Route::prefix('/users')->group( function() {
     });
     Route::get('/findbyid/active/{id}', 'api\v0\user\UserController@show_active');
     /** =======AUTHENTICATED ROUTES======================================= */
-    // Route::middleware('auth:api', 'verified')->
-    Route::middleware('auth:api', 'verified')->group( function(){
-        /** is logged in  */
-        Route::get('/loginstatus', 'api\v0\LoginController@is_active');
-        /** shipping */
-        Route::get('/shipping/user/{idf}', 'api\v0\user\ShippingController@show');
-        Route::put('/shipping/user/{idf}', 'api\v0\user\ShippingController@update');
-        Route::post('/shipping/user/{idf}', 'api\v0\user\ShippingController@create');
-        /** userinfo */
-        Route::get('/info/{userid}', 'api\v0\user\UserinfoController@show');
-        Route::get('/info/byidf/{userid}', 'api\v0\user\UserinfoController@show_byidf');
-        /** upload profile pic */
-        Route::post('/profilepic/{userid}', 'api\v0\user\UserinfoController@change_profile');
-        /** register admins --- using root user */
-        Route::prefix('/admins')->group( function(){
-            Route::post('/register', 'api\v0\user\UserController@create_admin');
-        });
+    // Route::middleware('auth:api')->
+    Route::middleware('auth:api')->group( function(){
         /** find user(s) */
         Route::get('/findall', 'api\v0\user\UserController@all');
         Route::get('/findbyid/{id}', 'api\v0\user\UserController@show');
@@ -77,12 +62,31 @@ Route::prefix('/users')->group( function() {
             Route::put('/profile/{userid}', 'api\v0\user\UserinfoController@update_admin');
         });
     });
+    // Route::middleware('auth:api', 'verified')->
+    Route::middleware('auth:api', 'verified')->group( function(){
+        /** is logged in  */
+        Route::get('/loginstatus', 'api\v0\LoginController@is_active');
+        /** shipping */
+        Route::get('/shipping/user/{idf}', 'api\v0\user\ShippingController@show');
+        Route::put('/shipping/user/{idf}', 'api\v0\user\ShippingController@update');
+        Route::post('/shipping/user/{idf}', 'api\v0\user\ShippingController@create');
+        /** userinfo */
+        Route::get('/info/{userid}', 'api\v0\user\UserinfoController@show');
+        Route::get('/info/byidf/{userid}', 'api\v0\user\UserinfoController@show_byidf');
+        /** upload profile pic */
+        Route::post('/profilepic/{userid}', 'api\v0\user\UserinfoController@change_profile');
+        /** register admins --- using root user */
+        Route::prefix('/admins')->group( function(){
+            Route::post('/register', 'api\v0\user\UserController@create_admin');
+        });
+    });
     /** RESETS */
     Route::post('/forgotpassword', 'api\v0\ForgotPasswordController@sendResetLinkEmail');
     Route::post('/resetpassword', 'api\v0\ResetPasswordController@reset');
     /** VERIFY */
     Route::get('/email/resend', 'api\v0\VerificationController@resend')->name('verification.resend');
     Route::get('/email/verify/{id}/{hash}', 'api\v0\VerificationController@verify')->name('verification.verify');
+    Route::get('/email/verify', 'api\v0\VerificationController@show')->name('verification.notice');
 }); 
 
 /** Services */
@@ -124,9 +128,9 @@ Route::prefix('/services')->group( function() {
     });
     Route::prefix('/orders')->group( function(){
         Route::get('/order/req/id/{id}', 'api\v0\happybox\OrderController@findby_check_out_Req');
-    });
-    Route::prefix('/orders')->group( function(){
         Route::get('/order/ord/id/{id}', 'api\v0\happybox\OrderController@findby_ord_Req');
+        Route::get('/find/crons/{d}','api\v0\happybox\OrderController@f_cron');
+        Route::post('/find/crons/update','api\v0\happybox\OrderController@c_updt');
     });
     /** ratings */
     Route::prefix('/ratings')->group( function(){
