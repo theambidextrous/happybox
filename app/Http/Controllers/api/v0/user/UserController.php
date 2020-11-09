@@ -45,12 +45,12 @@ class UserController extends Controller
         } catch (\Illuminate\Database\QueryException $e) {
             return response([
                 'status' => -211,
-                'message' => 'Database server rule violation error'
+                'message' => 'Invalid data. Make sure the email or phone is not already used'
             ], 401);
         } catch (PDOException $e) {
             return response([
                 'status' => -211,
-                'message' => 'Database rule violation error'
+                'message' => 'Invalid data. Make sure the email or phone is not already used'
             ], 401);
         }
     }
@@ -193,12 +193,12 @@ class UserController extends Controller
         } catch (\Illuminate\Database\QueryException $e) {
             return response([
                 'status' => -211,
-                'message' => 'Database server rule violation error'
+                'message' => 'Invalid data. Make sure the email or phone is not already used'
             ], 401);
         } catch (PDOException $e) {
             return response([
                 'status' => -211,
-                'message' => 'Database rule violation error'
+                'message' => 'Invalid data. Make sure the email or phone is not already used'
             ], 401);
         }
     }
@@ -238,12 +238,12 @@ class UserController extends Controller
         } catch (\Illuminate\Database\QueryException $e) {
             return response([
                 'status' => -211,
-                'message' => 'Database server rule violation error'
+                'message' => 'Invalid data. Make sure the email or phone is not already used'
             ], 401);
         } catch (PDOException $e) {
             return response([
                 'status' => -211,
-                'message' => 'Database rule violation error'
+                'message' => 'Invalid data. Make sure the email or phone is not already used'
             ], 401);
         }
     }
@@ -327,12 +327,12 @@ class UserController extends Controller
         } catch (\Illuminate\Database\QueryException $e) {
             return response([
                 'status' => -211,
-                'message' => 'Database server rule violation error'
+                'message' => 'Invalid data. Make sure the email or phone is not already used'
             ], 401);
         } catch (PDOException $e) {
             return response([
                 'status' => -211,
-                'message' => 'Database rule violation error'
+                'message' => 'Invalid data. Make sure the email or phone is not already used'
             ], 401);
         }
     }
