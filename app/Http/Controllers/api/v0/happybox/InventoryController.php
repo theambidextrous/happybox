@@ -14,6 +14,7 @@ use Auth;
 use Config;
 use DNS1D;
 use DNS2D;
+use PDF;
 use Illuminate\Auth\Middleware\Authenticate;
 use Illuminate\Support\Str;
 /**mailables */
@@ -514,9 +515,14 @@ class InventoryController extends Controller
                         'partner' => 'N/A. Cancelled by user'
                     ];
                     Cancellation::create($cancellation_payload);
+                    $pdf_data = [
+                        'box_voucher' => $new_box_voucher,
+                    ];
                     $payload = [
                         'message' => 'Voucher '.$voucher.' has been cancelled and replaced by a new voucher code ' .$new_box_voucher,
-                        'voucher' => $new_box_voucher
+                        'voucher' => $new_box_voucher,
+                        'c_buyer' => Auth::user()->name,
+                        'evoucher_attachment' => $this->vourcher_attach([$pdf_data]),
                     ];
                     $user = Auth::user()->email;
                     Mail::to($user)->send(new CancellationSucess($payload));
@@ -540,6 +546,12 @@ class InventoryController extends Controller
                 'voucher' => $voucher
             ]);
         }
+    }
+    protected function vourcher_attach($data)
+    {
+        $file_name = (string) Str::uuid() . '.pdf';
+        PDF::loadView('emails.orders.evoucher_attach', [ 'data' => $data ])->save(public_path('hh4c16wwv73khin1oh2vasty8lqzuei0/' . $file_name));//->stream($file_name);
+        return $file_name;
     }
     public function v_activate(Request $request, $voucher){
         $validator = Validator::make($request->all(), [

@@ -29,6 +29,11 @@ class CancellationSucess extends Mailable
      */
     public function build()
     {
-        return $this->subject('New Voucher | Replacement')->view('emails.orders.cancellation_success');
+        return $this->subject('New Voucher | Replacement')
+            ->view('emails.orders.cancellation_success')
+            ->attach(public_path('hh4c16wwv73khin1oh2vasty8lqzuei0/' . $this->payload['evoucher_attachment']), [
+                'as' => 'Your_Replacement_Evourcher.pdf',
+                'mime' => 'application/pdf',
+            ]);
     }
 }

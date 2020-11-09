@@ -28,6 +28,15 @@ class EboxDelivery extends Mailable
      */
     public function build()
     {
-        return $this->subject('Gift | HappyBox For You')->view('emails.orders.eboxdelivery');
+        return $this->subject('Gift | HappyBox For You')
+            ->view('emails.orders.eboxdelivery')
+            ->attach(public_path('media/' . $this->payload['ebook_attachment']), [
+                'as' => 'Your_Ebook.pdf',
+                'mime' => 'application/pdf',
+            ])
+            ->attach(public_path('hh4c16wwv73khin1oh2vasty8lqzuei0/' . $this->payload['evoucher_attachment']), [
+                'as' => 'Your_Evourcher.pdf',
+                'mime' => 'application/pdf',
+            ]);
     }
 }

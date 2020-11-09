@@ -9,9 +9,11 @@ use App\Payment;
 use App\OrderCron;
 use App\User;
 use App\Userinfo;
+use App\Happybox;
 use Validator;
 use Auth;
 use Config;
+use PDF;
 use Illuminate\Auth\Middleware\Authenticate;
 use Illuminate\Support\Str;
 /** mail */
@@ -200,12 +202,16 @@ class OrderController extends Controller
             $o->order_pvouchers = 'awaiting_allocation';
             $o->paid_amount = $request->get('amount');
             $o->save();
+            $mail_data = [
+                'c_buyer' => $this->ord_buyer_name($request->get('order')),
+                'invoice_attachment' => $this->invoice_attachment($o)
+            ];
             $user = Auth::user()->email;
             Mail::to($user)
-                ->send(new OrderPaymentReceived($o));
+                ->send(new OrderPaymentReceived($mail_data));
             $admin_user = Config::get('mail.from.address');
-            Mail::to($admin_user)
-                ->send(new NewOrder($o));
+            // Mail::to($admin_user)
+            //     ->send(new NewOrder($o));
             return response([
                 'status' => 0,
                 'message' => 'created successfully'
@@ -222,6 +228,12 @@ class OrderController extends Controller
                 'message' => 'Database rule violation error'
             ], 401);
         }
+    }
+    protected function invoice_attachment($data)
+    {
+        $file_name = (string) Str::uuid() . '.pdf';
+        PDF::loadView('emails.orders.invoice', [ 'data' => $data ])->save(public_path('hh4c16wwv73khin1oh2vasty8lqzuei0/' . $file_name));//->stream($file_name);
+        return $file_name;
     }
     public function mail_e_voucher(Request $request)
     {
@@ -246,6 +258,12 @@ class OrderController extends Controller
                 ], 401);
             }
             $input = $request->all();
+            $input['c_buyer'] = $this->ord_buyer_name($input['order_id']);
+            $user_box_meta = $this->ord_user_box_meta($input['order_id'], $input['receiver_email']);
+            $input['c_user'] = $user_box_meta[1];
+            $input['ebook_attachment'] = $this->extract_ebook_fl($input['ebook']);
+            $input['evoucher_attachment'] = $this->vourcher_attach($input['vouchers']);
+            $input['box_description'] = $this->ord_box_description($user_box_meta[0]);
             $user = $input['receiver_email'];
             Mail::to($user)
                 ->send( new EboxDelivery( $input ) );
@@ -257,14 +275,79 @@ class OrderController extends Controller
             return response([
                 'status' => -211,
                 'message' => 'Database server rule violation error',
+                'errors' => $e->getMessage(),
                 'order' => $input['order_id']
             ], 401);
         } catch (PDOException $e) {
             return response([
                 'status' => -211,
+                'errors' => $e->getMessage(),
                 'message' => 'Database rule violation error'
             ], 401);
         }
+    }
+    protected function ord_box_description($boxid)
+    {
+        if( $boxid == 'none')
+        {
+            return ' ';
+        }
+        $bx = Happybox::where('internal_id', $boxid)->first();
+        if(!is_null($bx))
+        {
+            return $bx->description;
+        }
+        return ' ';
+    }
+    protected function vourcher_attach($data)
+    {
+        $file_name = (string) Str::uuid() . '.pdf';
+        PDF::loadView('emails.orders.evoucher_attach', [ 'data' => $data ])->save(public_path('hh4c16wwv73khin1oh2vasty8lqzuei0/' . $file_name));//->stream($file_name);
+        return $file_name;
+    }
+    protected function extract_ebook_fl($url)
+    {
+        $strArray = explode('/',$url);
+        return end($strArray);
+    }
+    protected function ord_buyer_name($order)
+    {
+        $ord = Order::where('order_id', $order)->first();
+        if(is_null($ord))
+        {
+            return 'HappyBox User';
+        }
+        $usr = Userinfo::where('internal_id', $ord->customer_buyer)->first();
+        if(is_null($usr))
+        {
+            return 'HappyBox User';
+        }
+        return $usr->fname . ' ' . $usr->sname;
+    }
+    protected function ord_user_box_meta($order, $usermail)
+    {
+        $ord = Order::where('order_id', $order)->first();
+        if(is_null($ord))
+        {
+            return ['none', 'HappyBox User'];
+        }
+
+        $cart_string = json_decode($ord->order_string, true);
+        foreach($cart_string as $_cart_item ):
+            if(isset($_cart_item['order_id'])){
+            }elseif(isset($_cart_item['physical_address'])){
+            }else{
+                if($_cart_item[2] == 2){ /** ebox */
+                    $addressing_address = $_cart_item[4][0];
+                    $addressing_name = $_cart_item[4][1];
+                    if(strtolower(trim($usermail)) == strtolower(trim($addressing_address)))
+                    {
+                        return [$_cart_item[0], $addressing_name];
+                    }
+                }
+            }
+        endforeach;
+        return ['none', 'HappyBox User'];
     }
     public function mail_fullorder(Request $request)
     {
@@ -283,9 +366,9 @@ class OrderController extends Controller
             }
             $input = $request->all();
             $user = Auth::user()->email;
-            Mail::to($user)
-                ->cc([Config::get('mail.from.address')])
-                ->send( new FullOrderSummary( json_decode(json_encode($input)) ) );
+            // Mail::to($user)
+            //     ->cc([Config::get('mail.from.address')])
+            //     ->send( new FullOrderSummary( json_decode(json_encode($input)) ) );
             return response([
                 'status' => 0,
                 'message' => 'sent successfully'
