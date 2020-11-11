@@ -81,25 +81,25 @@ border-top-right-radius:18px;
 border-bottom-right-radius:18px;
 border-bottom-left-radius:18px;">
 	<div style="width:100%;margin:10px auto;" class="mob_100">
-		<img src="{{asset('mails/hb-logo-red_1.svg')}}" alt="" style=" margin:34px auto 20px;">
+		<img src="{{asset('mails/hb-logo-red_1.png')}}" alt="" style=" margin:34px auto 20px;">
 	</div>
 	<div style=" width:93%;margin:10px auto;" class="mob_100">
 		<h3 style="text-align:center;font:normal normal bold 20px/24px Calibri;letter-spacing:0px;color:#00ACB3">Dear {{$payload['c_user']}}</h3>
 	</div>
 	<div style=" width:93%;margin:24px auto -2px;" >
-		<img src="{{asset('mails/your_evoucher.svg')}}" alt="" style="width:100%;">
+		<img src="{{asset('mails/your_evoucher.png')}}" alt="" style="width:100%;">
 	</div>
 	<div style="width:100%;" >
-		<img src="{{asset('mails/rect_evoucher.svg')}}" alt="" style="width:100%;">
+		<img src="{{asset('mails/rect_evoucher.png')}}" alt="" style="width:100%;">
 	</div>
 	<div style=" width:93%;margin:0px auto 10px;" >
-		<img src="{{asset('mails/this_gift.svg')}}" alt="" style="margin:auto;"> <h2 style="text-align:center;font:normal normal bold 26px/19px Calibri;letter-spacing:0px;color:#000000;margin-top:54px;">{{$payload['c_buyer']}}</h2>
+		<img src="{{asset('mails/this_gift.png')}}" alt="" style="margin:auto;"> <h2 style="text-align:center;font:normal normal bold 26px/19px Calibri;letter-spacing:0px;color:#000000;margin-top:54px;">{{$payload['c_buyer']}}</h2>
 	</div>
 	<div style=" width:93%;margin:10px auto;text-align:center;" >
 	</div>
 	<div style=" width:93%;margin:60px auto 40px;background:#FFFFFF 0% 0% no-repeat padding-box;box-shadow:0px 3px 8px #00000029;" >
 		<div style="width:100%;position:relative;">
-			<img src="{{asset('mails/post_card.svg')}}" alt="" style="position:absolute;right:0px;top:-57px;">
+			<img src="{{asset('mails/post_card.png')}}" alt="" style="position:absolute;right:0px;top:-57px;">
 		</div>
 		<div style=" padding:69px 20px 24px;">
 			<h3 style="font:normal normal bold 20px/19px Segoe Script;letter-spacing:0px;color:#C20A2B;">Dear Recipient <br></h3>
@@ -109,7 +109,7 @@ border-bottom-left-radius:18px;">
 		</div>
 	</div>
 	<div style="width:100%;margin:0px auto 10px;" >
-		<img src="{{asset('mails/below_dear.svg')}}" alt="" style="width:100%;">
+		<img src="{{asset('mails/below_dear.png')}}" alt="" style="width:100%;">
 	</div>
 	<div style=" width:93%;margin:0px auto 10px;" >
 		<table>
@@ -147,10 +147,10 @@ padding:9px 6px;
 height:39px;
 margin:auto;" class="mob_95">
 		<div style="width:50%;float:left">
-			<img src="{{asset('mails/hb-alt-logo-white.svg')}}" style=" display:inline;" alt=""> <img src="{{asset('mails/Chooseyourgift.svg')}}" style=" display:inline;" alt="">
+			<img src="{{asset('mails/hb-alt-logo-white.png')}}" style=" display:inline;" alt=""> <img src="{{asset('mails/Chooseyourgift.png')}}" style=" display:inline;" alt="">
 		</div>
 		<div style="width:50%;float:left;text-align:right;">
-			<a href="https://www.facebook.com/HappyBoxke-104873668046223" target="_blank"><img src="{{asset('mails/icn-fb-white.svg')}}" style=" display:inline;height:26px;margin-left:19px;" alt=""></a> <a href="https://www.instagram.com/happybox.ke/" target="_blank"><img src="{{asset('mails/icn-ig-white.svg')}}" style="display:inline;height:26px;margin-left:19px;" alt=""></a> <a href="https://www.linkedin.com/company/happybox-ke/" target="_blank"><img src="{{asset('mails/icn-li-white.svg')}}" style="display:inline;height:26px;margin-left:19px;" alt=""></a>
+			<a href="https://www.facebook.com/HappyBoxke-104873668046223" target="_blank"><img src="{{asset('mails/icn-fb-white.png')}}" style=" display:inline;height:26px;margin-left:19px;" alt=""></a> <a href="https://www.instagram.com/happybox.ke/" target="_blank"><img src="{{asset('mails/icn-ig-white.png')}}" style="display:inline;height:26px;margin-left:19px;" alt=""></a> <a href="https://www.linkedin.com/company/happybox-ke/" target="_blank"><img src="{{asset('mails/icn-li-white.png')}}" style="display:inline;height:26px;margin-left:19px;" alt=""></a>
 		</div>
 	</div>
 </div>

@@ -71,7 +71,7 @@ img {
 		<img src="{{asset('mails/happybox-voucher-cover-img-r@2x.png')}}" alt="" style=" margin:auto;">
 	</div>
 	<div style="background:#C20A2B;width:100%;height:10px;position:relative;" >
-		<img src="{{asset('mails/voucher2_gift.svg')}}" alt="" style=" width:auto;
+		<img src="{{asset('mails/voucher2_gift.png')}}" alt="" style=" width:auto;
 background:#c20a2b;
 padding:10px;
 border-radius:50%;
@@ -87,16 +87,16 @@ top:-31px;">
         </p>
 	</div>
 	<div style="width:100%; margin:17px auto 10px;" >
-		<img src="{{asset('mails/voucher2_dotted.svg')}}" alt="" style="width:100%;">
+		<img src="{{asset('mails/voucher2_dotted.png')}}" alt="" style="width:100%;">
 	</div>
 	<div style="width:60%;margin:auto;" class="mob_100">
-		<img src="{{asset('mails/3_steps.svg')}}" alt="" style="margin:auto;width:100%;">
+		<img src="{{asset('mails/3_steps.png')}}" alt="" style="margin:auto;width:100%;">
 	</div>
 	<div style="width:60%;margin:10px auto;">
 		<table style="margin-top:20px;margin-bottom:20px;">
 			<tbody>
 				<tr>
-					<td style="width:12%;vertical-align:middle;"><img src="{{asset('mails/step1.svg')}}" alt="" style=""></td>
+					<td style="width:12%;vertical-align:middle;"><img src="{{asset('mails/step1.png')}}" alt="" style=""></td>
 					<td style="vertical-align:middle;"><p style="padding-left:7px;"> <span style="color:#C20A2B;"> <strong>ACTIVATE</strong></span> your voucher early on <a href="https://happybox.ke/" target="_blank" style="text-decoration:none;font-weight:bold;"><span style="color:#C20A2B;">happybox.ke</span></a> in the<br>
 							<a href="{{Config::get('app.client_url')}}/user-dash-activate-voucher.php" style="text-decoration:none;font-weight:bold;" target="_blank"><span style="color:#C20A2B;">register your voucher </span></a> section </p></td>
 				</tr>
@@ -104,14 +104,14 @@ top:-31px;">
 					<td colspan="2" style="height:20px"></td>
 				</tr>
 				<tr>
-					<td style="width:12%;vertical-align:middle;"><img src="{{asset('mails/step2.svg')}}" alt="" style=""></td>
+					<td style="width:12%;vertical-align:middle;"><img src="{{asset('mails/step2.png')}}" alt="" style=""></td>
 					<td style="vertical-align:middle;"><p style="padding-left:7px;"> <span style="color:#C20A2B;"> <strong> SELECT</strong></span> your next experience on <a href="https://happybox.ke/" target="_blank" style="text-decoration:none;"><span style="color:#C20A2B;">happybox.ke</span></a> </p></td>
 				</tr>
 				<tr>
 					<td colspan="2" style="height:20px"></td>
 				</tr>
 				<tr>
-					<td style="width:12%;vertical-align:middle;"><img src="{{asset('mails/step3.svg')}}" alt="" style=""></td>
+					<td style="width:12%;vertical-align:middle;"><img src="{{asset('mails/step3.png')}}" alt="" style=""></td>
 					<td style="vertical-align:middle;"><p style="padding-left:7px;"> <strong><a href="https://happybox.ke/" target="_blank" style="text-decoration:none;"><span style="color:#C20A2B;">BOOK</span></a></strong> your experience with the selected partner and<br>
 							share your voucher code, stating you have a HappyBox </p></td>
 				</tr>

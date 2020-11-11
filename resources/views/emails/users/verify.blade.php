@@ -60,13 +60,13 @@ img {
 <body leftmargin="0" topmargin="0" marginwidth="0" marginheight="0" style="margin:0 auto;padding:0;font-family:Calibri;font-size:16px;">
 <div border="0" cellpadding="0" cellspacing="0" style="max-width:800px;width:100%;margin:0 auto;padding:0;overflow-x:hidden;">
 	<div style="width:100%;">
-		<a href="https://happybox.ke/" target="_blank"> <img src="{{asset('mails/customer_head.svg')}}" alt="" style="padding-bottom:15px;width:100%;"></a>
+		<a href="https://happybox.ke/" target="_blank"> <img src="{{asset('mails/customer_head.png')}}" alt="" style="padding-bottom:15px;width:100%;"></a>
 	</div>
 	<div style="width:80%;margin:10px auto;" class="mob_100">
 		<h3 style="text-align:center;font:normal normal bold 20px/24px Calibri;letter-spacing:0px;color:#00ACB3">Dear {{ $name }},</h3>
 	</div>
 	<div style="width:80%;margin:24px auto;" >
-		<img src="{{asset('mails/welcome_cong.svg')}}" alt="" style="width:100%;">
+		<img src="{{asset('mails/welcome_cong.png')}}" alt="" style="width:100%;">
 	</div>
 	<div style="width:80%;margin:10px auto;text-align:center;" >
 		<p> You now have access to an easy going gifting experience. </p>
@@ -75,14 +75,14 @@ img {
 	<div style="width:80%;margin:10px auto;" >
 		<table  style="margin-top:20px;margin-bottom:40px;" >
 			<tr>
-				<td style="width:12%;vertical-align:middle;"><img src="{{asset('mails/icn-partner-portal-function-03.svg')}}" alt="" style=""></td>
+				<td style="width:12%;vertical-align:middle;"><img src="{{asset('mails/icn-partner-portal-function-03.png')}}" alt="" style=""></td>
 				<td style="vertical-align:middle;"><p style="color:#0185B6;padding-left:7px;"> Monitor the boxes you have been gifted and check your order history. </p></td>
 			</tr>
 			<tr>
 				<td colspan="2" style="height:20px"></td>
 			</tr>
 			<tr>
-				<td style="width:12%;vertical-align:middle;"><img src="{{asset('mails/icn-partner-portal-function-01.svg')}}" alt="" style=""></td>
+				<td style="width:12%;vertical-align:middle;"><img src="{{asset('mails/icn-partner-portal-function-01.png')}}" alt="" style=""></td>
 				<td style="vertical-align:middle;"><p style="color:#00ACB3;padding-left:7px;"> Look up all the partners that correspond to your boxes. </p></td>
 			</tr>
 			<tr>
@@ -102,18 +102,18 @@ img {
 	<div style="width:100%">
 		<div style="">
 			<a href="{{$url}}">
-                <img src="{{asset('mails/btn-user-activate.svg')}}" style="margin:11px auto;height:56px;" alt="">
+                <img src="{{asset('mails/btn-user-activate.png')}}" style="margin:11px auto;height:56px;" alt="">
             </a>
 		</div>
 	</div>
 	<div style="width:80%;margin:10px auto;">
 		<div style="">
-			<img src="{{asset('mails/welcome_happy.svg')}}" style="margin:17px auto;" alt="">
+			<img src="{{asset('mails/welcome_happy.png')}}" style="margin:17px auto;" alt="">
 		</div>
 	</div>
 	<div style="width:100%">
 		<div style="">
-			<a href="https://happybox.ke/" target="_blank"> <img src="{{asset('mails/news_see_you_soon.svg')}}" style="margin:0px auto;padding-top:29px;width:80%;" alt=""></a>
+			<a href="https://happybox.ke/" target="_blank"> <img src="{{asset('mails/news_see_you_soon.png')}}" style="margin:0px auto;padding-top:29px;width:80%;" alt=""></a>
 		</div>
 	</div>
 	<div style="width:100%">
@@ -129,10 +129,10 @@ padding:12px 8px 9px;
 height:39px;
 margin:-1px auto;" class="mob_95">
 		<div style="width:50%;float:left">
-			<img src="{{asset('mails/hb-alt-logo-white.svg')}}" style="display:inline;" alt=""> <img src="{{asset('mails/Chooseyourgift.svg')}}" style="display:inline;" alt="">
+			<img src="{{asset('mails/hb-alt-logo-white.png')}}" style="display:inline;" alt=""> <img src="{{asset('mails/Chooseyourgift.png')}}" style="display:inline;" alt="">
 		</div>
 		<div style="width:50%;float:left;text-align:right;">
-			<a href="https://www.facebook.com/HappyBoxke-104873668046223" target="_blank"><img src="{{asset('mails/icn-fb-white.svg')}}" style="display:inline;height:26px;margin-left:19px;" alt=""></a> <a href="https://www.instagram.com/happybox.ke/" target="_blank"><img src="{{asset('mails/icn-ig-white.svg')}}" style="display:inline;height:26px;margin-left:19px;" alt=""></a> <a href="https://www.linkedin.com/company/happybox-ke/" target="_blank"><img src="{{asset('mails/icn-li-white.svg')}}" style="display:inline;height:26px;margin-left:19px;" alt=""></a>
+			<a href="https://www.facebook.com/HappyBoxke-104873668046223" target="_blank"><img src="{{asset('mails/icn-fb-white.png')}}" style="display:inline;height:26px;margin-left:19px;" alt=""></a> <a href="https://www.instagram.com/happybox.ke/" target="_blank"><img src="{{asset('mails/icn-ig-white.png')}}" style="display:inline;height:26px;margin-left:19px;" alt=""></a> <a href="https://www.linkedin.com/company/happybox-ke/" target="_blank"><img src="{{asset('mails/icn-li-white.png')}}" style="display:inline;height:26px;margin-left:19px;" alt=""></a>
 		</div>
 	</div>
 	<div style="width:100%;float:left;">
