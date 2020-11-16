@@ -271,7 +271,7 @@ class UserController extends Controller
                 ], 401);
             }
             $payload = $request->all();
-            $admin_user = Config::get('mail.from.address');
+            $admin_user = Config::get('mail.from.admin');
             Mail::to($admin_user)->send(new PartnershipRequest($payload));
             Mail::to($payload['email'])->send(new OnBoard([
                 'name' => $payload['fname'] . ' ' . $payload['sname']

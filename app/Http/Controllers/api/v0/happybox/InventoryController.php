@@ -727,7 +727,7 @@ class InventoryController extends Controller
             $i->partner_internal_id = $request->get('partner_identity');
             $i->partner_pay_amount = $request->get('partner_pay_amount');
             // $i->partner_pay_effec_date = $request->get('redeemed_date');//day they get paid
-            $i->partner_pay_due_date = $request->get('booking_date');
+            $i->partner_pay_due_date = $this->nxt_month_date($request->get('booking_date'));
             $i->partner_invoice = 'INV-' . $this->createCode(6);
             $i->redeemed_service = $request->get('redeemed_service');
             if($i->save()){
@@ -743,6 +743,12 @@ class InventoryController extends Controller
             'message' => 'Voucher '.$voucher.' could not be redeemed again. General error occured.',
             'voucher' => $voucher
         ]);
+    }
+    protected function nxt_month_date($bdate)
+    {
+        $month =  Date("Y-m", strtotime($bdate . " +1 month"));
+        $date_ = date('Y-m-d', strtotime($month . '-15'));
+        return $date_;
     }
     public function modify_booking(Request $request, $voucher)
     {
@@ -762,6 +768,7 @@ class InventoryController extends Controller
                 ->first();
         if( $i->box_voucher_status == 3 ){ /** is in redeemed state */
             $i->booking_date = $request->get('new_booking_date');
+            $i->partner_pay_due_date = $this->nxt_month_date($request->get('new_booking_date'));
             if($i->save()){
                 $ptn = Userinfo::where('internal_id', $request->get('partner_identity'))->first();
                 $usr = Userinfo::where('internal_id', $i->customer_user_id)->first();

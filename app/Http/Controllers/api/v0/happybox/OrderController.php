@@ -204,7 +204,7 @@ class OrderController extends Controller
             $o->save();
             $mail_data = [
                 'c_buyer' => $this->ord_buyer_name($request->get('order')),
-                'invoice_attachment' => $this->invoice_attachment($o)
+                // 'invoice_attachment' => $this->invoice_attachment($o)
             ];
             $user = Auth::user()->email;
             Mail::to($user)

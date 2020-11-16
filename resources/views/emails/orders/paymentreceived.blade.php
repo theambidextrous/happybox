@@ -77,8 +77,7 @@ img {
 		<p> E-Voucher(s) are sent by email shortly after purchase, and<br>
 			Physical Box(es) are delivered to the specified address the following day<br>
 			before noon except on Sunday. </p>
-		<p> Find your invoices at any time on your HappyBox Account,<br>
-			under My Purchase History. </p>
+		<p> Find your <a href="{{Config::get('app.client_url')}}/user-dash-purchase-history.php">invoices</a> at any time on your HappyBox Account,<br>under My Purchase History. </p>
 		<p> Thank you for your business! </p>
 	</div>
 	<div style="width:80%;margin:10px auto 1px;text-align:center;">

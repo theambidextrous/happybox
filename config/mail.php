@@ -86,6 +86,7 @@ return [
     'from' => [
         'address' => env('MAIL_FROM_ADDRESS', 'admin@happybox.ke'),
         'name' => env('MAIL_FROM_NAME', 'HappyBox'),
+        'admin' => env('MAIL_ADMIN_ADDRESS', 'director@happybox.ke')
     ],
     
     /*
@@ -99,7 +100,7 @@ return [
     |
     */
     'reply_to' => [
-        'address' => 'customer.care@happybox.ke',
+        'address' => 'director@happybox.ke',
         'name' => 'HappyBox Customer Experience'
     ],
 

@@ -31,10 +31,10 @@ class OrderPaymentReceived extends Mailable
     public function build()
     {
         return $this->subject('Payment Acknowledgement')
-            ->view('emails.orders.paymentreceived')
-            ->attach(public_path('hh4c16wwv73khin1oh2vasty8lqzuei0/' . $this->order['invoice_attachment']), [
-                'as' => 'Your_Invoice.pdf',
-                'mime' => 'application/pdf',
-            ]);
+            ->view('emails.orders.paymentreceived');
+            // ->attach(public_path('hh4c16wwv73khin1oh2vasty8lqzuei0/' . $this->order['invoice_attachment']), [
+            //     'as' => 'Your_Invoice.pdf',
+            //     'mime' => 'application/pdf',
+            // ]);
     }
 }
