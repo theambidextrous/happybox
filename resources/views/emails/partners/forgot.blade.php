@@ -75,7 +75,7 @@ img {
 			a new password. </p>
 	</div>
 	<div style="width:80%; margin:18px auto;" >
-		<a href="#" target="_blank"> <img src="{{asset('mails/btn-password-reset.png')}}" alt="" style=" margin:auto;"> </a>
+		<a href="{{ $url }}" target="_blank"> <img src="{{asset('mails/btn-password-reset.png')}}" alt="" style=" margin:auto;"> </a>
 	</div>
 	<div style="width:80%;margin:10px auto 1px;">
 		<img src="{{asset('mails/onboarding_your.png')}}" alt="" style="margin:33px auto 4px;">

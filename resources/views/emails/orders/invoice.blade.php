@@ -63,7 +63,7 @@ img {
 		<table style="width:100%;border:none;" cellspacing="0" cellpadding="0">
 			<tr>
 				<td style="width:50%;vertical-align:middle;"><span style="color:#c20a2b;font-size:49px;font-weight:bold;">INVOICE</span></td>
-				<td style="vertical-align:middle;" alig="right"><img src="{{asset('mails/happy_logo.png')}}" alt="" style=" width:auto;float:right;height:70px;"/></td>
+				<td style="vertical-align:middle;" alig="right"><img src="{{public_path('mails/happy_logo.png')}}" alt="" style=" width:auto;float:right;height:70px;"/></td>
 			</tr>
 		</table>
 	</div>

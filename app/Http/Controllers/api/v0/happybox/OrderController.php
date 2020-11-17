@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers\api\v0\happybox;
-
+// ini_set('max_execution_time', 300);
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Order;
@@ -302,8 +302,24 @@ class OrderController extends Controller
     protected function vourcher_attach($data)
     {
         $file_name = (string) Str::uuid() . '.pdf';
-        PDF::loadView('emails.orders.evoucher_attach', [ 'data' => $data ])->save(public_path('hh4c16wwv73khin1oh2vasty8lqzuei0/' . $file_name));//->stream($file_name);
+        //, [], $this->pdf_config()
+        PDF::loadView('emails.orders.evoucher_attach', [ 'data' => $data ])->save(public_path('hh4c16wwv73khin1oh2vasty8lqzuei0/' . $file_name));
         return $file_name;
+    }
+    protected function pdf_config()
+    {
+        return [
+            'format' => 'A4',
+            'margin_top' => 0,
+            'margin_left' => 0,
+            'margin_right' => 0,
+            'margin_top' => 0,
+            'margin_bottom' => 0,
+            'margin_header' => 0,
+            'margin_footer' => 0,
+            'orientation' => 'P',
+            'display_mode' => 'fullpage',
+        ];
     }
     protected function extract_ebook_fl($url)
     {

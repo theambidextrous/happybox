@@ -1,7 +1,6 @@
 <?php
-
 namespace App\Http\Controllers\api\v0\happybox;
-
+// ini_set('max_execution_time', 300);
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Inventory;
@@ -507,6 +506,18 @@ class InventoryController extends Controller
                 $i->box_voucher = $voucher;
                 $i->cancellation_date = $request->get('cancellation_date');
                 $i->box_voucher_status = 4;/** set cancel it */
+                $pdf_data = [
+                    'box_voucher' => $new_box_voucher,
+                ];
+                $voucher_attachement = null;
+                try {
+                    $voucher_attachement = $this->vourcher_attach([$pdf_data]);
+                } catch ( Exception $e ) {
+                    return response([
+                        'status' => -211,
+                        'message' => $e->getMessage(),
+                    ]);
+                }
                 if($i->save() && Inventory::create($input)){
                     $cancellation_payload = [
                         'cancelled_voucher' => $voucher,
@@ -515,14 +526,11 @@ class InventoryController extends Controller
                         'partner' => 'N/A. Cancelled by user'
                     ];
                     Cancellation::create($cancellation_payload);
-                    $pdf_data = [
-                        'box_voucher' => $new_box_voucher,
-                    ];
                     $payload = [
                         'message' => 'Voucher '.$voucher.' has been cancelled and replaced by a new voucher code ' .$new_box_voucher,
                         'voucher' => $new_box_voucher,
                         'c_buyer' => Auth::user()->name,
-                        'evoucher_attachment' => $this->vourcher_attach([$pdf_data]),
+                        'evoucher_attachment' => $voucher_attachement,
                     ];
                     $user = Auth::user()->email;
                     Mail::to($user)->send(new CancellationSucess($payload));
@@ -532,6 +540,10 @@ class InventoryController extends Controller
                         'voucher' => $new_box_voucher
                     ]);
                 }
+                return response([
+                    'status' => -211,
+                    'message' => 'Action failed',
+                ]);
             }
         }else{/** code is after redemption */
             $payload = [
@@ -550,8 +562,24 @@ class InventoryController extends Controller
     protected function vourcher_attach($data)
     {
         $file_name = (string) Str::uuid() . '.pdf';
-        PDF::loadView('emails.orders.evoucher_attach', [ 'data' => $data ])->save(public_path('hh4c16wwv73khin1oh2vasty8lqzuei0/' . $file_name));//->stream($file_name);
+        //, [], $this->pdf_config()
+        PDF::loadView('emails.orders.evoucher_attach', [ 'data' => $data ])->save(public_path('hh4c16wwv73khin1oh2vasty8lqzuei0/' . $file_name));
         return $file_name;
+    }
+    protected function pdf_config()
+    {
+        return [
+            'format' => 'A4',
+            'margin_top' => 0,
+            'margin_left' => 0,
+            'margin_right' => 0,
+            'margin_top' => 0,
+            'margin_bottom' => 0,
+            'margin_header' => 0,
+            'margin_footer' => 0,
+            'orientation' => 'P',
+            'display_mode' => 'fullpage',
+        ];
     }
     public function v_activate(Request $request, $voucher){
         $validator = Validator::make($request->all(), [
@@ -740,7 +768,7 @@ class InventoryController extends Controller
         }
         return response([
             'status' => -211,
-            'message' => 'Voucher '.$voucher.' could not be redeemed again. General error occured.',
+            'message' => 'Voucher '.$voucher.' could not be redeemed.',
             'voucher' => $voucher
         ]);
     }
@@ -854,6 +882,22 @@ class InventoryController extends Controller
                 $new_inventory->redeemed_service = null;
                 $input = $new_inventory->toArray();
                 unset($input['id']);/** remove unq key */
+                $pdf_data = [
+                    'box_voucher' => $new_box_voucher,
+                ];
+                $voucher_attachement = null;
+                try {
+                    $voucher_attachement = $this->vourcher_attach([$pdf_data]);
+                    // return response([
+                    //     'status' => -211,
+                    //     'message' => 'test here ' . $voucher_attachement
+                    // ]);
+                } catch (Exception $e) {
+                    return response([
+                        'status' => -211,
+                        'message' => $e->getMessage(),
+                    ]);
+                }
                 if(Inventory::create($input)){
                     $ptn = Userinfo::where('internal_id', $request->get('partner_identity'))->first();
                     $usr = Userinfo::where('internal_id', $i->customer_user_id)->first();
@@ -869,18 +913,24 @@ class InventoryController extends Controller
                         'message' => 'The voucher '.$voucher.' which you had redeemed at '.$ptn->business_name.' has been cancelled and replaced by a new voucher code ' .$new_box_voucher.'. You will need to login to your account and reactivate the new code.',
                         'voucher' => $new_box_voucher,
                         'partner' => $ptn->business_name,
-                        'reason' => $request->get('reason')
+                        'reason' => $request->get('reason'),
+                        'name' => $this_usr->name,
+                        'evoucher_attachment' => $voucher_attachement,
                     ];
                     $user = $this_usr->email;
                     Mail::to($user)->send(new PartnerCancellation($payload));
                     $admin_user = Config::get('mail.from.address');
-                    Mail::to($admin_user)->send(new PartnerCancellationAdmin($payload));
+                    // Mail::to($admin_user)->send(new PartnerCancellationAdmin($payload));
                     return response([
                         'status' => 0,
                         'message' => 'Voucher '.$voucher.' has been cancelled. The customer will be notified',
                         'voucher' => $new_box_voucher
                     ]);
                 }
+                return response([
+                    'status' => -211,
+                    'Action failed'
+                ]);
             }
         }
         return response([
