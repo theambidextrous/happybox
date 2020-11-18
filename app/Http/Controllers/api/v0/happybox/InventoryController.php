@@ -950,10 +950,17 @@ class InventoryController extends Controller
                 'box_purchase_date' => 'required|string',
                 'box_validity_date' => 'required|string',
                 'customer_buyer_invoice' => 'required|string',
-                'box_qty' => 'required|string',
+                'box_qty' => 'required',
                 'box_voucher_status' => 'required|string',
                 'box_delivery_address' => 'required|string'
             ]);
+            if(!intval($request->get('box_qty')))
+            {
+                return response([
+                    'status' => -211,
+                    'message' => 'Invalid quantity: ' . $request->get('box_qty'),
+                ], 401);
+            }
             if( $validator->fails() ){
                 return response([
                     'status' => -211,
