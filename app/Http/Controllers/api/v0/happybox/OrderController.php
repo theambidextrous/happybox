@@ -261,6 +261,7 @@ class OrderController extends Controller
             $input['c_buyer'] = $this->ord_buyer_name($input['order_id']);
             $user_box_meta = $this->ord_user_box_meta($input['order_id'], $input['receiver_email']);
             $input['c_user'] = $user_box_meta[1];
+            $input['note'] = $user_box_meta[2];
             $input['ebook_attachment'] = $this->extract_ebook_fl($input['ebook']);
             $input['evoucher_attachment'] = $this->vourcher_attach($input['vouchers']);
             $input['box_description'] = $this->ord_box_description($user_box_meta[0]);
@@ -345,7 +346,7 @@ class OrderController extends Controller
         $ord = Order::where('order_id', $order)->first();
         if(is_null($ord))
         {
-            return ['none', 'HappyBox User'];
+            return ['none', 'HappyBox User', ''];
         }
 
         $cart_string = json_decode($ord->order_string, true);
@@ -356,14 +357,15 @@ class OrderController extends Controller
                 if($_cart_item[2] == 2){ /** ebox */
                     $addressing_address = $_cart_item[4][0];
                     $addressing_name = $_cart_item[4][1];
+                    $note = trim($_cart_item[4][2]);
                     if(strtolower(trim($usermail)) == strtolower(trim($addressing_address)))
                     {
-                        return [$_cart_item[0], $addressing_name];
+                        return [$_cart_item[0], $addressing_name, $note];
                     }
                 }
             }
         endforeach;
-        return ['none', 'HappyBox User'];
+        return ['none', 'HappyBox User', ''];
     }
     public function mail_fullorder(Request $request)
     {

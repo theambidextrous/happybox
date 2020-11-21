@@ -31,11 +31,11 @@ class EboxDelivery extends Mailable
         return $this->subject('Gift | HappyBox For You')
             ->view('emails.orders.eboxdelivery')
             ->attach(public_path('media/' . $this->payload['ebook_attachment']), [
-                'as' => 'Your_Ebook.pdf',
+                'as' => 'Your-Booklet.pdf',
                 'mime' => 'application/pdf',
             ])
             ->attach(public_path('hh4c16wwv73khin1oh2vasty8lqzuei0/' . $this->payload['evoucher_attachment']), [
-                'as' => 'Your_Evourcher.pdf',
+                'as' => 'Your-Evoucher.pdf',
                 'mime' => 'application/pdf',
             ]);
     }

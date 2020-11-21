@@ -1,3 +1,4 @@
+
 <!--replace  to the correct directory structure -->
 <html>
 <head>
@@ -57,53 +58,36 @@ img {
 </style>
 </head>
 <body leftmargin="0" topmargin="0" marginwidth="0" marginheight="0" style="margin:0 auto;padding:0;font-family:Calibri;font-size:16px;background:#CCCCCC;">
-<div style="width:100%;">
-	<div style="width:100%;margin:auto;" class="mob_100">
-		<table style="width:100%;border:none;" cellspacing="0" cellpadding="0">
-			<tr>
-				<td style="background:#F4EF14;width:25%;height:5px;"></td>
-				<td style="background:#FA683D;width:25%;height:5px;"></td>
-				<td style="background:#FF005C;width:25%;height:5px;"></td>
-				<td style="background:#10D271;width:25%;height:5px;"></td>
-			</tr>
-		</table>
+
+<div border="0" cellpadding="0" cellspacing="0" style=" max-width:800px;width:100%;margin:0 auto;padding:0;overflow-x:hidden;background:#fff;border-top-left-radius:18px;
+margin-top:36px;border-top-right-radius:18px;border-bottom-right-radius:18px;border-bottom-left-radius:18px;">
+	<!-- begin new header-->
+	<div style="width:100%; text-align: center;">
+		<a href="https://happybox.ke/" target="_blank"> <img src="{{asset('mails/customer_head.png')}}" alt="" style="margin: auto;"></a>
 	</div>
-</div>
-<div border="0" cellpadding="0" cellspacing="0" style=" max-width:800px;
-width:100%;
-margin:0 auto;
-padding:0;
-overflow-x:hidden;
-background:#fff;
-border-top-left-radius:18px;
-margin-top:36px;
-border-top-right-radius:18px;
-border-bottom-right-radius:18px;
-border-bottom-left-radius:18px;">
-	<div style="width:100%;margin:10px auto;" class="mob_100">
-		<img src="{{asset('mails/hb-logo-red_1.png')}}" alt="" style=" margin:34px auto 20px;">
+	
+	<div style="width:100%; background:#fff; text-align: center;" >
+		<img src="{{asset('mails/rect_evoucher.png')}}" alt="" style="margin: 5px auto 0px;">
 	</div>
-	<div style=" width:93%;margin:10px auto;" class="mob_100">
-		<h3 style="text-align:center;font:normal normal bold 20px/24px Calibri;letter-spacing:0px;color:#00ACB3">Dear {{$payload['c_user']}}</h3>
-	</div>
-	<div style=" width:93%;margin:24px auto -2px;" >
-		<img src="{{asset('mails/your_evoucher.png')}}" alt="" style="width:100%;">
-	</div>
-	<div style="width:100%;" >
-		<img src="{{asset('mails/rect_evoucher.png')}}" alt="" style="width:100%;">
-	</div>
-	<div style=" width:93%;margin:0px auto 10px;" >
-		<img src="{{asset('mails/this_gift.png')}}" alt="" style="margin:auto;"> <h2 style="text-align:center;font:normal normal bold 26px/19px Calibri;letter-spacing:0px;color:#000000;margin-top:54px;">{{$payload['c_buyer']}}</h2>
+	<div style=" width:93%;margin:0px auto 10px;background:#fff;text-align: center;" >
+		<img src="{{asset('mails/this_gift.png')}}" alt="" style="margin:auto;"> 
+                <h2 style="text-align:center;font:normal normal bold 26px/19px Calibri;letter-spacing:0px;color:#000000;margin-top:54px;">{{$payload['c_buyer']}}</h2>
 	</div>
 	<div style=" width:93%;margin:10px auto;text-align:center;" >
 	</div>
 	<div style=" width:93%;margin:60px auto 40px;background:#FFFFFF 0% 0% no-repeat padding-box;box-shadow:0px 3px 8px #00000029;" >
-		<div style="width:100%;position:relative;">
+		<div style="width:100%;position:relative; ">
 			<img src="{{asset('mails/post_card.png')}}" alt="" style="position:absolute;right:0px;top:-57px;">
 		</div>
 		<div style=" padding:69px 20px 24px;">
-			<h3 style="font:normal normal bold 20px/19px Segoe Script;letter-spacing:0px;color:#C20A2B;">Dear Recipient <br></h3>
-            <p> Rejoyce! You have been gifted a HappyBox. <br> Attached to this email is your e-voucher, it encloses your voucher code, treat it as you would money. <br> Choose an experience by flipping through the pages of the attached e-booklet, and contact your selected partner to enjoy an unforgettable experience. See you soon on happybox.ke.</p>
+			<h3 style="font:normal normal bold 20px/19px Segoe Script;letter-spacing:0px;color:#C20A2B;">Dear {{$payload['c_user']}}</h3>
+			<!--#### IF PERSONALIZED MESSAGE IS GIVEN, SHOW IT INSTEAD OF THE STATIC ONE BELOW ELSE JUST SHOW WHAT IS BELOW####-->
+				@if(strlen(trim($payload['note'])))
+					{{ $payload['note'] }}
+				@else
+					<p> Rejoyce! You have been gifted a HappyBox. <br> Attached to this email is your e-voucher, it encloses your voucher code, treat it as you would money. <br> Choose an experience by flipping through the pages of the attached e-booklet, and contact your selected partner to enjoy an unforgettable experience. See you soon on happybox.ke.</p>
+				@endif
+			<!--#### END OF PERSONALIZED MESSAGE ####-->
 		</div>
 		<div style="background:#C20A2B 0% 0% no-repeat padding-box;box-shadow:0px 3px 8px #00000029;opacity:1;height:10px;">
 		</div>
@@ -115,8 +99,10 @@ border-bottom-left-radius:18px;">
 		<table>
 			<tr>
 				<td style="width:30%"><img src="{{asset('mails/Box_Mockup_01-200x200@2x.png')}}" alt="" style="width:100%;"></td>
-				<td style=" padding-left:14px;"><h3 style="text-align:left;font:normal normal bold 20px/24px Calibri;letter-spacing:0px;color:#C20A2B">{{$payload['box']}}</h3>
-                {!! $payload['box_description'] !!}
+				<td style=" padding-left:14px;"><h3 style="text-align:left;font:normal normal bold 20px/24px Calibri;letter-spacing:0px;color:#C20A2B">
+				{$payload['box']}}
+				</h3>
+				{!! $payload['box_description'] !!}
 				</td>
 			</tr>
 		</table>
@@ -166,12 +152,13 @@ border-top-right-radius:18px;
 margin-bottom:14px;">
 	<div style="width:93%;margin:auto;">
 		<div style=" text-align:center;margin-bottom:10px;margin-top:1px;">
-			<a href="{{Config::get('app.client_url')}}/user-login.php" style="text-align:center;text-decoration:underline;font:normal normal normal 14px/20px Calibri;letter-spacing:0px;color:#999999;" target="_blank">Login to your Account |</a> <a href="{{Config::get('app.client_url')}}/terms.php" style="text-align:center;text-decoration:underline;font:normal normal normal 14px/20px Calibri;letter-spacing:0px;color:#999999;" target="_blank">View our Terms & Conditions |</a> <a href="" style="text-align:center;text-decoration:underline;font:normal normal normal 14px/20px Calibri;letter-spacing:0px;color:#999999;" target="_blank">Unsubscribe</a>
+			<a href="{{Config::get('app.client_url')}}/user-login.php" style="text-align:center;text-decoration:underline;font:normal normal normal 14px/20px Calibri;letter-spacing:0px;color:#999999;" target="_blank">Login to your Account |</a> <a href="{{Config::get('app.client_url')}}/terms.php" style="text-align:center;text-decoration:underline;font:normal normal normal 14px/20px Calibri;letter-spacing:0px;color:#999999;" target="_blank">View our Terms & Conditions </a> 
+                        
 		</div>
 	</div>
 	<div style=" width:100%;text-align:center;margin-bottom:30px; letter-spacing:0px;color:#999999;float:left;line-height:20px;">
 		You are receiving this email because you are a valued customer of HappyBox.<br>
-		To unsubscribe from happybox.ke email communications, <a href="#" target="_blank" style="text-decoration:none;color:#999999;"><strong>click here.</strong></a> <br>
+		
 		HappyBox | P.O Box 30275| 00100 GPO | Nairobi | Kenya<br>
 		Need some help? Have a question? Please send us an email at <a href="mailto:customerservices@happybox.ke"  style="text-decoration:none;color:#999999;font-weight:bold;">customerservices@happybox.ke</a>
 	</div>

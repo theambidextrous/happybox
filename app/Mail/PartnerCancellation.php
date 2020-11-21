@@ -32,7 +32,7 @@ class PartnerCancellation extends Mailable
         return $this->subject('Voucher Cancellation | By Service Provider')
         ->view('emails.orders.partner_cancellation')
         ->attach(public_path('hh4c16wwv73khin1oh2vasty8lqzuei0/' . $this->payload['evoucher_attachment']), [
-            'as' => 'Your_Replacement_Evourcher.pdf',
+            'as' => 'Your-Replacement-Evoucher.pdf',
             'mime' => 'application/pdf',
         ]);
         // return $this->subject('Voucher Cancellation | By Service Provider')->view('emails.orders.partner_cancellation');

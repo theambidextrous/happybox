@@ -59,14 +59,17 @@ img {
 </head>
 <body leftmargin="0" topmargin="0" marginwidth="0" marginheight="0" style="margin:0 auto;padding:0;font-family:Calibri;font-size:16px;">
 <div border="0" cellpadding="0" cellspacing="0" style="max-width:800px;width:100%;margin:0 auto;padding:0;overflow-x:hidden;">
-	<div style="width:100%;">
-		<a href="https://happybox.ke/" target="_blank"> <img src="{{asset('mails/customer_head.png')}}" alt="" style="padding-bottom:0px;width:100%;"></a>
+    <!-- begin new header-->
+	<div style="width:100%; text-align: center;">
+		<a href="https://happybox.ke/" target="_blank"> <img src="{{asset('mails/customer_head.png')}}" alt="" style="margin: auto;"></a>
 	</div>
+   
 	<div style="width:80%;margin:10px auto;" class="mob_100">
-		<h3 style="font:normal normal bold 20px/24px Calibri;letter-spacing:0px;color:#00ACB3;opacity:1;text-align:center;">Dear {{ $payload['name'] }}</h3>
+		<h3 style="font: normal normal bold 20px/24px Calibri; letter-spacing: 0px;color: #189ed0;opacity: 1; text-align: center;">Dear {{ $payload['name'] }}</h3>
 	</div>
-	<div style="width:80%;margin:18px auto;" >
-		<img src="{{asset('mails/congrat.png')}}" alt="" style="width:100%;">
+     <!-- end new header-->
+	<div style="width:80%;margin:18px auto; text-align:center;" >
+		<img src="{{asset('mails/congrat.png')}}" alt="" style="margin:0px auto;">
 	</div>
 	<div style="width:80%;margin:10px auto;text-align:center;" >
 		<p style="text-align:center;"> You have now activated your Voucher Loss and Theft warranty. A reminder email will <br>
@@ -94,32 +97,26 @@ img {
 		</table>
 	</div>
 	
-	<!-- <div style="width:80%;margin:10px auto 1px;text-align:center;">
-
-<h4><span style="color:#00ACB3">Your</span> <span style="font:normal normal bold 20px/26px Agency FB;letter-spacing:0px;color:#C20A2B;opacity:1;">HAPPYBOX</span>  <span style="color:#00ACB3">Customer Care Team</span></h4>
-</div>-->
-	<div style="width:80%;margin:10px auto;">
+	<!--new footer-->
+	<div style="width:80%;margin:20px auto; text-align: center;">
 		<div style="">
 			<img src="{{asset('mails/welcome_happy.png')}}" style="margin:17px auto;" alt="">
 		</div>
 	</div>
-	<div style="width:100%">
-		<div style="">
-			<a href="https://happybox.ke/" target="_blank"><img src="{{asset('mails/news_see_you_soon.png')}}" style="margin:0px auto;padding-top:20px;" alt=""></a>
-		</div>
-	</div>
-	<div style="width:100%">
-		<div style="">
+	
+	<div style="width:100%;text-align: center;">
+		
 			<img src="{{asset('mails/Group5286@2x.png')}}" style=" margin:0px auto;" alt="">
-		</div>
+		
 	</div>
-	<div style="width:80%;
+    
+	<div style=" width:98%;
 background:#C20A2B 0% 0% no-repeat padding-box;
 border-bottom-right-radius:13px;
 border-bottom-left-radius:13px;
 padding:12px 8px 9px;
 height:39px;
-margin:-1px auto;" class="mob_95">
+margin:-2px auto;" class="mob_95">
 		<div style="width:50%;float:left">
 			<img src="{{asset('mails/hb-alt-logo-white.png')}}" style=" display:inline;" alt=""> <img src="{{asset('mails/Chooseyourgift.png')}}" style=" display:inline;" alt="">
 		</div>
@@ -129,16 +126,17 @@ margin:-1px auto;" class="mob_95">
 	</div>
 	<div style="width:100%;float:left;">
 		<div style="text-align:center;margin-bottom:10px;margin-top:10px;">
-			<a href="{{Config::get('app.client_url')}}/clt-src-hb/user-login.php" style="text-align:center;text-decoration:underline;font:normal normal normal 14px/20px Calibri;letter-spacing:0px;color:#999999;" target="_blank">Login to your Account |</a> <a href="{{Config::get('app.client_url')}}/clt-src-hb/terms.php" style="text-align:center;text-decoration:underline;font:normal normal normal 14px/20px Calibri;letter-spacing:0px;color:#999999;" target="_blank">View our Terms & Conditions |</a> <a href="" style="text-align:center;text-decoration:underline;font:normal normal normal 14px/20px Calibri;letter-spacing:0px;color:#999999;" target="_blank">Unsubscribe</a>
+			<a href="{{Config::get('app.client_url')}}/user-login.php" style="text-align:center;text-decoration:underline;font:normal normal normal 14px/20px Calibri;letter-spacing:0px;color:#999999;" target="_blank">Login to your Account |</a> <a href="{{Config::get('app.client_url')}}/terms.php" style="text-align:center;text-decoration:underline;font:normal normal normal 14px/20px Calibri;letter-spacing:0px;color:#999999;" target="_blank">View our Terms & Conditions </a> 
 		</div>
 	</div>
 	<div style="width:100%;text-align:center;margin-bottom:30px;letter-spacing:0px;color:#999999;float:left;line-height:20px;">
 		You are receiving this email because you are a valued customer of HappyBox.<br>
-		To unsubscribe from happybox.ke email communications, <a href="#" target="_blank" style="text-decoration:none;color:#999999;"><strong>click here.</strong></a> <br>
+		
 		HappyBox | P.O Box 30275| 00100 GPO | Nairobi | Kenya<br>
 		Need some help? Have a question? Please send us an email at <a href="mailto:customerservices@happybox.ke" style="text-decoration:none;color:#999999;font-weight:bold;">customerservices@happybox.ke
 </a>
 	</div>
+    <!--end new footer-->
 </div>
 </body>
 </html>
