@@ -90,8 +90,7 @@ img {
 			</tr>
 			<tr>
 				<td style="width:12%;vertical-align:middle;"><img src="{{asset('mails/welcom_3.png')}}" alt="" style=""></td>
-				<td style="vertical-align:middle;"><p style="color:#FA683D;padding-left:7px;"> Give us your feedback on the experiences you have enjoyed, because <br>
-						your feedback is paramount to us. </p></td>
+				<td style="vertical-align:middle;"><p style="color:#FA683D;padding-left:7px;"> Give us your feedback on the experiences you have enjoyed, because <br>your feedback is paramount to us. </p></td>
 			</tr>
 		</table>
 		<br>
@@ -101,14 +100,14 @@ img {
 	</div>
 	<div style="width:100%">
 		<div style="">
-			<a href="{{$url}}">
+			<a href="{{ $url }}">
                 <img src="{{asset('mails/btn-user-activate.png')}}" style="margin:11px auto;height:56px;" alt="">
             </a>
 		</div>
 	</div>
 	<div style="width:80%;margin:10px auto;">
 		<div style="">
-			<img src="{{asset('mails/welcome_happy.png')}}" style="margin:17px auto;" alt="">
+			<img src="{{ asset('mails/welcome_happy.png') }}" style="margin:17px auto;" alt="">
 		</div>
 	</div>
 	<div style="width:100%">

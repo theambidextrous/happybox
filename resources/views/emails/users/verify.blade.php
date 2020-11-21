@@ -100,7 +100,12 @@ img {
 	</div>
 	<div style="width:80%;margin:10px auto;">
 		<p style="text-align:center;"> Click on the link below to activate your account and start enjoying your<br>HappyBox experience! </p>
-		<p><a href="{{ $url }}" target="_blank">Here is the link</a></p>
+	</div>
+	
+	<div style="width:80%;margin:10px auto;">
+		<p style="text-align:center;">
+			<a href="{{ $url }}" target="_blank"> <img src="{{asset('mails/btn-user-activate.png')}}" alt="" style="margin:5px auto;"> </a>
+		</p>
 	</div>
 
 	<!--new footer-->

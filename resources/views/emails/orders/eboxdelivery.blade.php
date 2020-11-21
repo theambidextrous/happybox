@@ -71,7 +71,8 @@ margin-top:36px;border-top-right-radius:18px;border-bottom-right-radius:18px;bor
 	</div>
 	<div style=" width:93%;margin:0px auto 10px;background:#fff;text-align: center;" >
 		<img src="{{asset('mails/this_gift.png')}}" alt="" style="margin:auto;"> 
-                <h2 style="text-align:center;font:normal normal bold 26px/19px Calibri;letter-spacing:0px;color:#000000;margin-top:54px;">{{$payload['c_buyer']}}</h2>
+                <h2 style="text-align:center;font:normal normal bold 26px/19px Calibri;letter-spacing:0px;color:#000000;margin-top:54px;">
+				{{ $payload['c_buyer'] }}</h2>
 	</div>
 	<div style=" width:93%;margin:10px auto;text-align:center;" >
 	</div>
@@ -80,7 +81,7 @@ margin-top:36px;border-top-right-radius:18px;border-bottom-right-radius:18px;bor
 			<img src="{{asset('mails/post_card.png')}}" alt="" style="position:absolute;right:0px;top:-57px;">
 		</div>
 		<div style=" padding:69px 20px 24px;">
-			<h3 style="font:normal normal bold 20px/19px Segoe Script;letter-spacing:0px;color:#C20A2B;">Dear {{$payload['c_user']}}</h3>
+			<h3 style="font:normal normal bold 20px/19px Segoe Script;letter-spacing:0px;color:#C20A2B;">Dear {{ $payload['c_user'] }}</h3>
 			<!--#### IF PERSONALIZED MESSAGE IS GIVEN, SHOW IT INSTEAD OF THE STATIC ONE BELOW ELSE JUST SHOW WHAT IS BELOW####-->
 				@if(strlen(trim($payload['note'])))
 					{{ $payload['note'] }}
@@ -100,7 +101,7 @@ margin-top:36px;border-top-right-radius:18px;border-bottom-right-radius:18px;bor
 			<tr>
 				<td style="width:30%"><img src="{{asset('mails/Box_Mockup_01-200x200@2x.png')}}" alt="" style="width:100%;"></td>
 				<td style=" padding-left:14px;"><h3 style="text-align:left;font:normal normal bold 20px/24px Calibri;letter-spacing:0px;color:#C20A2B">
-				{$payload['box']}}
+				{{ $payload['box'] }}
 				</h3>
 				{!! $payload['box_description'] !!}
 				</td>
