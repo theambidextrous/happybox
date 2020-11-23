@@ -1,4 +1,3 @@
-
 <html>
 <head>
 <meta name=viewport content="width=device-width, initial-scale=1">
@@ -7,50 +6,50 @@
 <style>
 /*universal */
 img {
-	margin: 0;
-	padding: 0;
-	max-width: 100%;
-	display: block;
-	border: none;
-	outline: none;
+	margin:0;
+	padding:0;
+	max-width:100%;
+	display:block;
+	border:none;
+	outline:none;
 }
 @media (max-width:767px) {
 .mob_100 {
-	width: 100% !important;
-	padding-left: 10px !important;
-	padding-right: 10px !important;
+	width:100% !important;
+	padding-left:10px !important;
+	padding-right:10px !important;
 }
 .partner_img, .partner_des {
 }
 .partner_des {
-	width: 87%;
-	margin-top: 11px;
-	padding-left: 9px;
+	width:87%;
+	margin-top:11px;
+	padding-left:9px;
 }
 .mob_auto_img {
-	margin: auto !important;
+	margin:auto !important;
 }
 .mob_95 {
-	width: 95% !important;
-	padding-left: 10px !important;
-	padding-right: 10px !important;
+	width:95% !important;
+	padding-left:10px !important;
+	padding-right:10px !important;
 }
 .mob_hide {
-	display: none;
+	display:none;
 }
 .desk_hide {
-	display: block;
+	display:block;
 }
 .our_part_img {
-	margin-bottom: 8px;
+	margin-bottom:8px;
 }
 }
 @media (min-width:768px) {
 .mob_hide {
-	display: block;
+	display:block;
 }
 .desk_hide {
-	display: none;
+	display:none;
 }
 }
 /*end universal */
@@ -58,37 +57,32 @@ img {
 </head>
 <body leftmargin="0" topmargin="0" marginwidth="0" marginheight="0" style="margin:0 auto;padding:0;font-family:Calibri;font-size:16px;">
 <div border="0" cellpadding="0" cellspacing="0" style="max-width:800px;width:100%;margin:0 auto;padding:0;overflow-x:hidden;">
-      <!-- begin new header-->
-	<div style="width:100%; text-align: center;">
-		<a href="https://happybox.ke/" target="_blank"> <img src="{{asset('mails/customer_head.png')}}" alt="" style="margin: auto;"></a>
+	<!-- begin new header-->
+	<div style="width:100%;text-align:center;">
+		<a href="https://happybox.ke/" target="_blank"> <img src="{{asset('mails/customer_head.png')}}" alt="" style="margin:auto;"></a>
 	</div>
-
 	<div style="width:80%;margin:10px auto;" class="mob_100">
-		<h3 style="font: normal normal bold 20px/24px Calibri; letter-spacing: 0px;color: #189ed0;opacity: 1; text-align: center;">Dear {{ $payload['name'] }}</h3>
+		<h3 style="font:normal normal bold 20px/24px Calibri;letter-spacing:0px;color:#189ed0;opacity:1;text-align:center;">Dear {{ $payload['name'] }}</h3>
 	</div>
-               <!-- end new header-->
-               <div style="width:80%;margin:24px auto; text-align: center;" >
-	<a href="" style="display: block; background: #00acb3; width: 100%;  color: white;text-decoration: none; font-weight: bold;text-align: center; font-size: 21px;
-    padding: 13px 10px;border-radius: 9px;outline: 1px solid #83b2bd;outline-offset: -6px;">Cancellation of your Happybox voucher</a>
+	<!-- end new header-->
+	<div style="width:80%;margin:18px auto; text-align:center;" >
+		<img src="{{asset('mails/cancellation.png')}}" alt="" style="margin:0px auto;">
 	</div>
 	<div style="width:80%;margin:10px auto;text-align:center;" >
-		<p> You recently cancelled your HappyBox Voucher with {{ $payload['partner'] }}. </p>
-		<p>Upon receipt of this cancellation, HappyBox immediately blocked the use of the <br>said voucher	and it is now totally void. </p>
+		<p>You recently cancelled your HappyBox Voucher with {{ $payload['partner'] }}. </p>
+		<p>Upon receipt of this cancellation, HappyBox immediately blocked the use of the<br> said voucher	and it is now totally void. </p>
 		<p>We are pleased to provide you with replacement voucher. </p>
-		<p>This voucher is to be used in place of the one you cancelled. It takes the form of an <br> e-voucher, and is attached to this message. </p>
-	</div><!--new footer-->
-	<div style="width:80%;margin:20px auto; text-align: center;">
+		<p>This voucher is to be used in place of the one you cancelled. It takes the form of an<br> e-voucher, and is attached to this message. </p>
+	</div>
+	<!--new footer-->
+	<div style="width:80%;margin:20px auto;text-align:center;">
 		<div style="">
 			<img src="{{asset('mails/welcome_happy.png')}}" style="margin:17px auto;" alt="">
 		</div>
 	</div>
-	
-	<div style="width:100%;text-align: center;">
-		
-			<img src="{{asset('mails/Group5286@2x.png')}}" style=" margin:0px auto;" alt="">
-		
+	<div style="width:100%;text-align:center;">
+		<img src="{{asset('mails/Group5286@2x.png')}}" style=" margin:0px auto;" alt="">
 	</div>
-    
 	<div style=" width:98%;
 background:#C20A2B 0% 0% no-repeat padding-box;
 border-bottom-right-radius:13px;
@@ -105,18 +99,15 @@ margin:-2px auto;" class="mob_95">
 	</div>
 	<div style="width:100%;float:left;">
 		<div style="text-align:center;margin-bottom:10px;margin-top:10px;">
-			<a href="{{Config::get('app.client_url')}}/user-login.php" style="text-align:center;text-decoration:underline;font:normal normal normal 14px/20px Calibri;letter-spacing:0px;color:#999999;" target="_blank">Login to your Account |</a> <a href="{{Config::get('app.client_url')}}/terms.php" style="text-align:center;text-decoration:underline;font:normal normal normal 14px/20px Calibri;letter-spacing:0px;color:#999999;" target="_blank">View our Terms & Conditions </a> 
+			<a href="{{Config::get('app.client_url')}}/user-login.php" style="text-align:center;text-decoration:underline;font:normal normal normal 14px/20px Calibri;letter-spacing:0px;color:#999999;" target="_blank">Login to your Account |</a> <a href="{{Config::get('app.client_url')}}/terms.php" style="text-align:center;text-decoration:underline;font:normal normal normal 14px/20px Calibri;letter-spacing:0px;color:#999999;" target="_blank">View our Terms & Conditions </a>
 		</div>
 	</div>
 	<div style="width:100%;text-align:center;margin-bottom:30px;letter-spacing:0px;color:#999999;float:left;line-height:20px;">
 		You are receiving this email because you are a valued customer of HappyBox.<br>
-		
 		HappyBox | P.O Box 30275| 00100 GPO | Nairobi | Kenya<br>
-		Need some help? Have a question? Please send us an email at <a href="mailto:customerservices@happybox.ke" style="text-decoration:none;color:#999999;font-weight:bold;">customerservices@happybox.ke
-</a>
+		Need some help? Have a question? Please send us an email at <a href="mailto:customerservices@happybox.ke" style="text-decoration:none;color:#999999;font-weight:bold;">customerservices@happybox.ke </a>
 	</div>
-    <!--end new footer-->
+	<!--end new footer-->
 </div>
 </body>
 </html>
-	

@@ -72,11 +72,11 @@ img {
 		<img src="{{asset('mails/congrat.png')}}" alt="" style="margin:0px auto;">
 	</div>
 	<div style="width:80%;margin:10px auto;text-align:center;" >
-		<p style="text-align:center;"> You have now activated your Voucher Loss and Theft warranty. A reminder email will <br>
+		<p style="text-align:center;">You have now activated your Voucher Loss and Theft warranty. A reminder email will <br>
 			be sent to you before your voucher expiry date.</p>
 		<p style="text-align:center;color:#00ACB3;font-weight:bold;"> Book your experience now! </p>
 	</div>
-	<div style="width:80%;margin:10px auto;text-align:center;" >
+	<div style="width:80%;margin:10px auto;">
 		<table style="width:80%;color:#FA683D;margin:10px auto 40px;" >
 			<tr>
 				<td style="vertical-align:middle;width:9%;"><img src="{{asset('mails/box_1.png')}}" alt="" style=""></td>
@@ -87,7 +87,7 @@ img {
 				<td style="vertical-align:middle;"><strong>BOOK</strong> your experience with the chosen partner </td>
 			</tr>
 			<tr>
-				<td style="vertical-align:middle;width:9%;"><img src="{{asset('mails/box3.png')}}" alt="" style=" ;"></td>
+				<td style="vertical-align:middle;width:9%;"><img src="{{asset('mails/box3.png')}}" alt="" style=";"></td>
 				<td style="vertical-align:middle;"><strong>SHARE</strong> your voucher code with them </td>
 			</tr>
 			<tr>
@@ -99,29 +99,19 @@ img {
 	
 	<!--new footer-->
 	<div style="width:80%;margin:20px auto; text-align: center;">
-		<div style="">
 			<img src="{{asset('mails/welcome_happy.png')}}" style="margin:17px auto;" alt="">
-		</div>
 	</div>
 	
-	<div style="width:100%;text-align: center;">
-		
-			<img src="{{asset('mails/Group5286@2x.png')}}" style=" margin:0px auto;" alt="">
-		
+	<div style="width:100%;text-align: center;">		
+			<img src="{{asset('mails/Group5286@2x.png')}}" style="margin:0px auto;" alt="">		
 	</div>
     
-	<div style=" width:98%;
-background:#C20A2B 0% 0% no-repeat padding-box;
-border-bottom-right-radius:13px;
-border-bottom-left-radius:13px;
-padding:12px 8px 9px;
-height:39px;
-margin:-2px auto;" class="mob_95">
+	<div style="width:98%;background:#C20A2B 0% 0% no-repeat padding-box;border-bottom-right-radius:13px;border-bottom-left-radius:13px;padding:12px 8px 9px;height:39px;margin:-2px auto;" class="mob_95">
 		<div style="width:50%;float:left">
-			<img src="{{asset('mails/hb-alt-logo-white.png')}}" style=" display:inline;" alt=""> <img src="{{asset('mails/Chooseyourgift.png')}}" style=" display:inline;" alt="">
+			<img src="{{asset('mails/hb-alt-logo-white.png')}}" style="display:inline;" alt=""> <img src="{{asset('mails/Chooseyourgift.png')}}" style="display:inline;" alt="">
 		</div>
 		<div style="width:50%;float:left;text-align:right;">
-			<a href="https://www.facebook.com/HappyBoxke-104873668046223" target="_blank"><img src="{{asset('mails/icn-fb-white.png')}}" style=" display:inline;height:26px;margin-left:19px;" alt=""></a> <a href="https://www.instagram.com/happybox.ke/" target="_blank"><img src="{{asset('mails/icn-ig-white.png')}}" style="display:inline;height:26px;margin-left:19px;" alt=""></a> <a href="https://www.linkedin.com/company/happybox-ke/" target="_blank"><img src="{{asset('mails/icn-li-white.png')}}" style="display:inline;height:26px;margin-left:19px;" alt=""></a>
+			<a href="https://www.facebook.com/HappyBoxke-104873668046223" target="_blank"><img src="{{asset('mails/icn-fb-white.png')}}" style="display:inline;height:26px;margin-left:19px;" alt=""></a> <a href="https://www.instagram.com/happybox.ke/" target="_blank"><img src="{{asset('mails/icn-ig-white.png')}}" style="display:inline;height:26px;margin-left:19px;" alt=""></a> <a href="https://www.linkedin.com/company/happybox-ke/" target="_blank"><img src="{{asset('mails/icn-li-white.png')}}" style="display:inline;height:26px;margin-left:19px;" alt=""></a>
 		</div>
 	</div>
 	<div style="width:100%;float:left;">
@@ -133,8 +123,7 @@ margin:-2px auto;" class="mob_95">
 		You are receiving this email because you are a valued customer of HappyBox.<br>
 		
 		HappyBox | P.O Box 30275| 00100 GPO | Nairobi | Kenya<br>
-		Need some help? Have a question? Please send us an email at <a href="mailto:customerservices@happybox.ke" style="text-decoration:none;color:#999999;font-weight:bold;">customerservices@happybox.ke
-</a>
+		Need some help? Have a question? Please send us an email at <a href="mailto:customerservices@happybox.ke" style="text-decoration:none;color:#999999;font-weight:bold;">customerservices@happybox.ke</a>
 	</div>
     <!--end new footer-->
 </div>
