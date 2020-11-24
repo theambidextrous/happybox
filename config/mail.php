@@ -84,9 +84,10 @@ return [
     */
 
     'from' => [
-        'address' => env('MAIL_FROM_ADDRESS', 'admin@happybox.ke'),
+        'address' => env('MAIL_FROM_ADDRESS', 'system@happybox.ke'),
         'name' => env('MAIL_FROM_NAME', 'HappyBox'),
-        'admin' => env('MAIL_ADMIN_ADDRESS', 'director@happybox.ke')
+        'admin' => env('MAIL_ADMIN_ADDRESS', 'director@happybox.ke'),
+        'ccare' => env('MAIL_CCARE_ADDRESS', 'customerservices@happybox.ke')
     ],
     
     /*

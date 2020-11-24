@@ -88,7 +88,7 @@
 			<table style="margin-top:20px;margin-bottom:20px;">
 				<tbody>
 					<tr>
-						<td style="vertical-align:middle;width:9%;"><img src="{{asset('mails/step1.png')}}" alt="" style=""></td>
+						<td style="vertical-align:middle;width:9%;"><img src="{{public_path('mails/step1.png')}}" alt="" style=""></td>
 						<td style="vertical-align:middle;">
 							<p style="padding-left:7px;"> <span style="color:#C20A2B;"> <strong>ACTIVATE</strong></span> your voucher early on <a href="https://happybox.ke/" target="_blank" style="text-decoration:none;font-weight:bold;"><span style="color:#C20A2B;">happybox.ke</span></a> in the <a href="{{Config::get('app.client_url')}}/user-dash-activate-voucher.php" style="text-decoration:none;font-weight:bold;" target="_blank"><span style="color:#000;">register your voucher </span></a> section </p>
 						</td>
@@ -97,7 +97,7 @@
 						<td colspan="2" style="height:20px"></td>
 					</tr>
 					<tr>
-						<td style="vertical-align:middle;width:9%;"><img src="{{asset('mails/step2.png')}}" alt="" style=""></td>
+						<td style="vertical-align:middle;width:9%;"><img src="{{public_path('mails/step2.png')}}" alt="" style=""></td>
 						<td style="vertical-align:middle;">
 							<p style="padding-left:7px;"> <span style="color:#C20A2B;"> <strong> SELECT</strong></span> your next experience on <a href="https://happybox.ke/" target="_blank" style="text-decoration:none;font-weight:bold;"><span style="color:#C20A2B;">happybox.ke</span></a> </p>
 						</td>
@@ -106,7 +106,7 @@
 						<td colspan="2" style="height:20px"></td>
 					</tr>
 					<tr>
-					 <td style="vertical-align:middle;width:9%;"><img src="{{asset('mails/step3.png')}}" alt="" style=""></td>
+					 <td style="vertical-align:middle;width:9%;"><img src="{{public_path('mails/step3.png')}}" alt="" style=""></td>
 						<td style="vertical-align:middle;">
 							<p style="padding-left:7px;"> <strong><a href="https://happybox.ke/" target="_blank" style="text-decoration:none;"><span style="color:#C20A2B;">BOOK</span></a></strong> your experience with the selected partner and share<br>your voucher code, stating you have a HappyBox </p>
 						</td>

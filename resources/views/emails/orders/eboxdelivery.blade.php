@@ -99,7 +99,7 @@ margin-top:36px;border-top-right-radius:18px;border-bottom-right-radius:18px;bor
 	<div style=" width:93%;margin:0px auto 10px;" >
 		<table>
 			<tr>
-				<td style="width:30%"><img src="{{asset('mails/Box_Mockup_01-200x200@2x.png')}}" alt="" style="width:100%;"></td>
+				<td style="width:30%"><img src="{{ $payload['image'] }}" alt="" style="width:200px;height:auto;"></td>
 				<td style=" padding-left:14px;"><h3 style="text-align:left;font:normal normal bold 20px/24px Calibri;letter-spacing:0px;color:#C20A2B">
 				{{ $payload['box'] }}
 				</h3>

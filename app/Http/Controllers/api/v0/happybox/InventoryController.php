@@ -807,7 +807,7 @@ class InventoryController extends Controller
                     'date' => date('d/m/Y', strtotime($request->get('new_booking_date')))
                 ];
                 $user_email = $this_usr->email;
-                Mail::to($user_email)->send(new ModificationSuccess($payload));
+                //Mail::to($user_email)->send(new ModificationSuccess($payload));
                 return response([
                     'status' => 0,
                     'message' => 'The booking date has been successfully changed. The customer has been notified of these changes',

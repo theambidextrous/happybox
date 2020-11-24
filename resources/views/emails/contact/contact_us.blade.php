@@ -54,7 +54,7 @@ body{background-color:#ddf0e6}.logo a:hover,.logo a:focus{color:#1e2e3b !importa
         
     <div style="Margin-left: 20px;Margin-right: 20px;">
         <div style="font-size: 12px;font-style: normal;font-weight: normal;line-height: 19px;Margin-bottom: 20px;" align="center">
-          <img style="border: 0;display: block;height: auto;width: 100%;max-width: 900px;" alt="" width="560" src="{{asset('media/slider-a.png')}}">
+          <img style="border: 0;display: block;height: auto;width: 100%;max-width: 900px;" alt="" width="560" src="{{asset('mails/customer_head.png')}}">
         </div>
       </div>
     <div style="Margin-left: 20px;Margin-right: 20px;">
@@ -67,7 +67,7 @@ body{background-color:#ddf0e6}.logo a:hover,.logo a:focus{color:#1e2e3b !importa
                 <strong>New Contact Message</strong>
             </h1>
             <h3 style="Margin-top: 20px;Margin-bottom: 0;font-style: normal;font-weight: normal;color: #d1e9dc;font-size: 14px;line-height: 21px;font-family: Open Sans,sans-serif;text-align: center;">
-                <strong>— happybox customer experience —</strong>
+                <strong><!-- — happybox customer experience — --></strong>
             </h3>
             <p class="size-15" style="Margin-top: 12px;Margin-bottom: 20px;font-size: 15px;line-height: 23px;" lang="x-size-15">
                 Dear Admin, <br>
@@ -87,147 +87,7 @@ body{background-color:#ddf0e6}.logo a:hover,.logo a:focus{color:#1e2e3b !importa
 </div>
 </div>
 <div style="mso-line-height-rule: exactly;line-height: 20px;font-size: 20px;">&nbsp;</div>
-<div class="layout one-col fixed-width stack" style="Margin: 0 auto;max-width: 600px;min-width: 320px; width: 320px;width: calc(28000% - 167400px);overflow-wrap: break-word;word-wrap: break-word;word-break: break-word;">
-    <div class="layout__inner" style="border-collapse: collapse;display: table;width: 100%;background-color: #ffffff;">
-        <!--[if (mso)|(IE)]><table align="center" cellpadding="0" cellspacing="0" role="presentation"><tr class="layout-fixed-width" style="background-color: #ffffff;"><td style="width: 600px" class="w560"><![endif]-->
-        <div class="column" style="text-align: left;color: #697d71;font-size: 14px;line-height: 21px;font-family: Merriweather,Georgia,serif;">
-            <div style="Margin-left: 20px;Margin-right: 20px;Margin-top: 12px;">
-                <div style="mso-line-height-rule: exactly;line-height: 20px;font-size: 1px;">&nbsp;</div>
-            </div>
-            <div style="Margin-left: 20px;Margin-right: 20px;">
-                <div class="divider" style="display: block;font-size: 2px;line-height: 2px;Margin-left: auto;Margin-right: auto;width: 40px;background-color: #96d1b2;Margin-bottom: 20px;">&nbsp;</div>
-            </div>
-            <div style="Margin-left: 20px;Margin-right: 20px;">
-                <div style="mso-line-height-rule: exactly;mso-text-raise: 11px;vertical-align: middle;">
-                    <h1 style="Margin-top: 0;Margin-bottom: 0;font-style: normal;font-weight: normal;color: #C20A2B;font-size: 22px;line-height: 31px;font-family: Open Sans,sans-serif;text-align: center;">
-                    </h1>
-                    <p class="size-22" style="Margin-top: 20px;Margin-bottom: 20px;font-size: 18px;line-height: 26px;text-align: center;" lang="x-size-22">
-                  </p>
-                </div>
-            </div>
-            <div style="Margin-left: 20px;Margin-right: 20px;">
-                <div class="btn btn--flat btn--large" style="Margin-bottom: 20px;text-align: center;">
-                <!--[if !mso]-->
-                    <a style="border-radius: 4px;display: inline-block;font-size: 14px;font-weight: bold;line-height: 24px;padding: 12px 24px;text-align: center;text-decoration: none !important;transition: opacity 0.1s ease-in;color: #ffffff !important;background-color: #C20A2B;font-family: Merriweather, Georgia, serif;" href="{{Config::get('app.APP_CLIENT_APP_URL')}}" target="_blank">Go to Website</a>
-                <!--[endif]-->
-                </div>
-            </div>
-            <div style="Margin-left: 20px;Margin-right: 20px;">
-                <div class="divider" style="display: block;font-size: 2px;line-height: 2px;Margin-left: auto;Margin-right: auto;width: 40px;background-color: #96d1b2;Margin-bottom: 20px;">&nbsp;</div>
-            </div>
-            <div style="Margin-left: 20px;Margin-right: 20px;Margin-bottom: 12px;">
-                <div style="mso-line-height-rule: exactly;line-height: 5px;font-size: 1px;">&nbsp;</div>
-            </div>
-          </div>
-        <!--[if (mso)|(IE)]></td></tr></table><![endif]-->
-        </div>
-      </div>
-      <div style="mso-line-height-rule: exactly;line-height: 20px;font-size: 20px;">&nbsp;</div>
-      <div class="layout three-col fixed-width stack" style="Margin: 0 auto;max-width: 600px;min-width: 320px; width: 320px;width: calc(28000% - 167400px);overflow-wrap: break-word;word-wrap: break-word;word-break: break-word;">
-        <div class="layout__inner" style="border-collapse: collapse;display: table;width: 100%;background-color: #ffffff;">
-        <!--[if (mso)|(IE)]><table align="center" cellpadding="0" cellspacing="0" role="presentation"><tr class="layout-fixed-width" style="background-color: #ffffff;"><td style="width: 200px" valign="top" class="w160"><![endif]-->
-            <div class="column" style="text-align: left;color: #697d71;font-size: 14px;line-height: 21px;font-family: Merriweather,Georgia,serif;max-width: 320px;min-width: 200px; width: 320px;width: calc(72200px - 12000%);Float: left;">
-                <div style="Margin-left: 20px;Margin-right: 20px;Margin-top: 12px;">
-                    <div style="mso-line-height-rule: exactly;line-height: 5px;font-size: 1px;">&nbsp;</div>
-                </div>
-                <div style="Margin-left: 20px;Margin-right: 20px;">
-                    <div style="mso-line-height-rule: exactly;line-height: 10px;font-size: 1px;">&nbsp;</div>
-                </div>
-                <div style="Margin-left: 20px;Margin-right: 20px;">
-                    <div style="mso-line-height-rule: exactly;line-height: 5px;font-size: 1px;">&nbsp;</div>
-                </div>
-                <div style="Margin-left: 20px;Margin-right: 20px;">
-                    <div style="mso-line-height-rule: exactly;mso-text-raise: 11px;vertical-align: middle;">
-                        <h2 style="Margin-top: 0;Margin-bottom: 0;font-style: normal;font-weight: normal;color: #C20A2B;font-size: 16px;line-height: 24px;font-family: Open Sans,sans-serif;text-align: center;">
-                            <strong>HappyBox</strong>
-                        </h2>
-                        <p class="size-12" style="Margin-top: 16px;Margin-bottom: 0;font-size: 12px;line-height: 19px;text-align:center;" lang="x-size-12">1300 N. Main Street<br>Nairobi, NRB 94596</p>
-                        <p class="size-12" style="Margin-top: 20px;Margin-bottom: 20px;font-size: 12px;line-height: 19px;text-align: center;" lang="x-size-12"><strong>Mon-Fri</strong> 7:00am-7:00pm<br><strong>Sat-Sun</strong> 8:00am-7:00pm</p>
-                    </div>
-                </div>
-                <div style="Margin-left: 20px;Margin-right: 20px;Margin-bottom: 12px;">
-                    <div style="mso-line-height-rule: exactly;line-height: 5px;font-size: 1px;">&nbsp;</div>
-                </div>
-            </div>
-            <!--[if (mso)|(IE)]></td><td style="width: 200px" valign="top" class="w160"><![endif]-->
-          <div class="column" style="text-align: left;color: #697d71;font-size: 14px;line-height: 21px;font-family: Merriweather,Georgia,serif;max-width: 320px;min-width: 200px; width: 320px;width: calc(72200px - 12000%);Float: left;">
-            <div style="Margin-left: 20px;Margin-right: 20px;Margin-top: 12px;">
-                <div style="mso-line-height-rule: exactly;line-height: 15px;font-size: 1px;">&nbsp;</div>
-            </div>
-            <div style="Margin-left: 20px;Margin-right: 20px;">
-                <div style="mso-line-height-rule: exactly;line-height: 5px;font-size: 1px;">&nbsp;</div>
-            </div>
-            <div style="Margin-left: 20px;Margin-right: 20px;">
-                <div style="mso-line-height-rule: exactly;mso-text-raise: 11px;vertical-align: middle;">
-                    <h2 style="Margin-top: 0;Margin-bottom: 0;font-style: normal;font-weight: normal;color: #C20A2B;font-size: 16px;line-height: 24px;font-family: Open Sans,sans-serif;text-align: center;">
-                        <strong>Services</strong>
-                    </h2>
-                    <p class="size-12" style="Margin-top: 16px;Margin-bottom: 0;font-size: 12px;line-height: 19px;text-align: center;" lang="x-size-12">Gastronomy<br>Sports & Adventure<br>Well-being</p>
-                    <!-- <p class="size-12" style="Margin-top: 20px;Margin-bottom: 20px;font-size: 12px;line-height: 19px;text-align: center;" lang="x-size-12"><strong>Mon-Fri</strong> 8:00am-8:00pm<br> <strong>Sat-Sun</strong> 8:00am-6:00pm</p> -->
-                </div>
-            </div>
-            <div style="Margin-left: 20px;Margin-right: 20px;Margin-bottom: 12px;">
-                <div style="mso-line-height-rule: exactly;line-height: 5px;font-size: 1px;">&nbsp;</div>
-            </div>
-        </div>
-        <!--[if (mso)|(IE)]></td><td style="width: 200px" valign="top" class="w160"><![endif]-->
-        <div class="column" style="text-align: left;color: #697d71;font-size: 14px;line-height: 21px;font-family: Merriweather,Georgia,serif;max-width: 320px;min-width: 200px; width: 320px;width: calc(72200px - 12000%);Float: left;">
-            <div style="Margin-left: 20px;Margin-right: 20px;Margin-top: 12px;">
-                <div style="mso-line-height-rule: exactly;line-height: 15px;font-size: 1px;">&nbsp;</div>
-            </div>
-            <div style="Margin-left: 20px;Margin-right: 20px;">
-                <div style="mso-line-height-rule: exactly;line-height: 5px;font-size: 1px;">&nbsp;</div>
-            </div>
-            <div style="Margin-left: 20px;Margin-right: 20px;">
-                <div style="mso-line-height-rule: exactly;mso-text-raise: 11px;vertical-align: middle;">
-                    <h2 style="Margin-top: 0;Margin-bottom: 0;font-style: normal;font-weight: normal;color: #C20A2B;font-size: 16px;line-height: 24px;font-family: Open Sans,sans-serif;text-align: center;">
-                        <strong>Industries</strong>
-                    </h2>
-                    <p class="size-12" style="Margin-top: 16px;Margin-bottom: 0;font-size: 12px;line-height: 19px;text-align: center;" lang="x-size-12">Hotel<br> Tours & travel <br> Events</p>
-                    <!-- <p class="size-12" style="Margin-top: 20px;Margin-bottom: 20px;font-size: 12px;line-height: 19px;text-align: center;" lang="x-size-12"><strong>Mon-Fri</strong>&nbsp;8:00am-8:00pm<br>
-                    <strong>Sat-Sun</strong>&nbsp;8:00am-6:00pm</p> -->
-                </div>
-            </div>
-            <div style="Margin-left: 20px;Margin-right: 20px;Margin-bottom: 12px;">
-                <div style="mso-line-height-rule: exactly;line-height: 5px;font-size: 1px;">&nbsp;</div>
-            </div>
-        </div>
-        <!--[if (mso)|(IE)]></td></tr></table><![endif]-->
-    </div>
-</div>
-<div style="mso-line-height-rule: exactly;line-height: 20px;font-size: 20px;">&nbsp;</div>
-<div role="contentinfo">
-    <div class="layout email-footer stack" style="Margin: 0 auto;max-width: 600px;min-width: 320px; width: 320px;width: calc(28000% - 167400px);overflow-wrap: break-word;word-wrap: break-word;word-break: break-word;">
-        <div class="layout__inner" style="border-collapse: collapse;display: table;width: 100%;">
-          <!--[if (mso)|(IE)]><table align="center" cellpadding="0" cellspacing="0" role="presentation"><tr class="layout-email-footer"><td style="width: 400px;" valign="top" class="w360"><![endif]-->
-        <div class="column wide" style="text-align: left;font-size: 12px;line-height: 19px;color: #C20A2B;font-family: PT Sans,Trebuchet MS,sans-serif;Float: left;max-width: 400px;min-width: 320px; width: 320px;width: calc(8000% - 47600px);">
-            <div style="Margin-left: 20px;Margin-right: 20px;Margin-top: 10px;Margin-bottom: 10px;">
-                <div style="font-size: 12px;line-height: 19px;"></div>
-                <div style="font-size: 12px;line-height: 19px;Margin-top: 18px;"></div>
-                <!--[if mso]>&nbsp;<![endif]-->
-            </div>
-        </div>
-        <!--[if (mso)|(IE)]></td><td style="width: 200px;" valign="top" class="w160"><![endif]-->
-        <div class="column narrow" style="text-align: left;font-size: 12px;line-height: 19px;color: #C20A2B;font-family: PT Sans,Trebuchet MS,sans-serif;Float: left;max-width: 320px;min-width: 200px; width: 320px;width: calc(72200px - 12000%);">
-            <div style="Margin-left: 20px;Margin-right: 20px;Margin-top: 10px;Margin-bottom: 10px;"></div>
-        </div>
-        <!--[if (mso)|(IE)]></td></tr></table><![endif]-->
-    </div>
-</div>
-<div class="layout one-col email-footer" style="Margin: 0 auto;max-width: 600px;min-width: 320px; width: 320px;width: calc(28000% - 167400px);overflow-wrap: break-word;word-wrap: break-word;word-break: break-word;">
-    <div class="layout__inner" style="border-collapse: collapse;display: table;width: 100%;">
-        <!--[if (mso)|(IE)]><table align="center" cellpadding="0" cellspacing="0" role="presentation"><tr class="layout-email-footer"><td style="width: 600px;" class="w560"><![endif]-->
-            <div class="column" style="text-align: left;font-size: 12px;line-height: 19px;color: #C20A2B;font-family: PT Sans,Trebuchet MS,sans-serif;">
-                <div style="Margin-left: 20px;Margin-right: 20px;Margin-top: 10px;Margin-bottom: 10px;">
-                    <div style="font-size: 12px;line-height: 19px;">
-                        <a style="text-decoration: underline;transition: opacity 0.1s ease-in;color: #C20A2B;" href="{{Config::get('app.APP_CLIENT_APP_URL')}}" target="_blank">Unsubscribe</a>
-                    </div>
-                </div>
-            </div>
-            <!--[if (mso)|(IE)]></td></tr></table><![endif]-->
-        </div>
-    </div>
-</div>
+
 <div style="line-height:40px;font-size:40px;">&nbsp;</div>
 </div>
 </td>

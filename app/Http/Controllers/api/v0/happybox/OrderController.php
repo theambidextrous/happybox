@@ -10,6 +10,7 @@ use App\OrderCron;
 use App\User;
 use App\Userinfo;
 use App\Happybox;
+use App\Picture;
 use Validator;
 use Auth;
 use Config;
@@ -265,6 +266,7 @@ class OrderController extends Controller
             $input['ebook_attachment'] = $this->extract_ebook_fl($input['ebook']);
             $input['evoucher_attachment'] = $this->vourcher_attach($input['vouchers']);
             $input['box_description'] = $this->ord_box_description($user_box_meta[0]);
+            $input['image'] = $this->ord_box_image($user_box_meta[0]);
             $user = $input['receiver_email'];
             Mail::to($user)
                 ->send( new EboxDelivery( $input ) );
@@ -299,6 +301,19 @@ class OrderController extends Controller
             return $bx->description;
         }
         return ' ';
+    }
+    protected function ord_box_image($boxid)
+    {
+        if( $boxid == 'none')
+        {
+            return asset('mails/Box_Mockup_01-200x200@2x.png');
+        }
+        $_media = Picture::where('related_item', $boxid)->where('type', '2')->first();
+        if(!is_null($_media))
+        {
+            return $_media->path_name;
+        }
+        return asset('mails/Box_Mockup_01-200x200@2x.png');
     }
     protected function vourcher_attach($data)
     {

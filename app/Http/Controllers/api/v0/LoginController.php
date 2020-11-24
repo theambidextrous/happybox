@@ -67,7 +67,7 @@ class LoginController extends Controller
             'enquiry' => 'required|string',
             'detail' => 'required|string',
         ]);
-        $admin_user = Config::get('mail.from.address');
+        $admin_user = Config::get('mail.from.ccare');
         Mail::to($admin_user)->send(new ContactUs($validator));
         return response(['status' => 0,'message' => 'failed'], 200);
     }
