@@ -638,7 +638,9 @@ class OrderController extends Controller
     public function by_customer($customer_buyer, Request $request)
     {
         try {
-            $o =  Order::where('customer_buyer', $customer_buyer)->get();
+            $o =  Order::where('customer_buyer', $customer_buyer)
+                ->where('paid', true)
+                ->get();
             return response([
                 'status' => 0,
                 'message' => 'fetched successfully',
