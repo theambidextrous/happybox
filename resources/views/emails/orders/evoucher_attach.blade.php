@@ -70,7 +70,7 @@
 </head>
 
 <body leftmargin="0" topmargin="0" marginwidth="0" marginheight="0" style="margin:0 auto;padding:0;font-family:Calibri;font-size:16px;background:#FFF;">
-	<div border="0" cellpadding="0" cellspacing="0" style="max-width:800px;width:100%;margin:0 auto;padding-top:60px;overflow-x:hidden;background:#fff;">
+	<div border="0" cellpadding="0" cellspacing="0" style="max-width:800px;width:100%;margin:0 auto;padding-top:120px;overflow-x:hidden;background:#fff;">
 		<div class="mob_100" style="width:76%;margin:auto;background:#c41f38;text-align:center;color:white;font-weight:bold;padding:11px 5px;font-size:21px;">
 			MY VOUCHER NUMBER
 		</div>
