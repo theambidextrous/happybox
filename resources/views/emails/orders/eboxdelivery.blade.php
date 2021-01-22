@@ -113,8 +113,7 @@ margin-top:36px;border-top-right-radius:18px;border-bottom-right-radius:18px;bor
 	<div style="width:93%;margin:auto;border:1px solid #0185B6;">
 	</div>
 	<div style=" width:80%;padding-top:15px;margin:auto;text-align:center;font:normal normal normal 16px/19px Calibri;letter-spacing:0px;color:#0185B6;padding-bottom:18px;">
-		Discover the large range of activities specially selected for you and choose your next<br>
-		experience on <a href="https://happybox.ke/" target="_blank" style="font-weight:bold;letter-spacing:0px;color:#0185B6;text-decoration:none !important;">happybox.ke</a>
+		Discover the large range of activities specially selected for you and<br> choose your next experience in the attached booklet or on <a href="https://happybox.ke/" target="_blank" style="font-weight:bold;letter-spacing:0px;color:#0185B6;text-decoration:none !important;">happybox.ke</a>
 	</div>
 	<div style="width:100%">
 		<div style="">
