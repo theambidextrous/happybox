@@ -532,8 +532,8 @@ class InventoryController extends Controller
                         'c_buyer' => Auth::user()->name,
                         'evoucher_attachment' => $voucher_attachement,
                     ];
-                    $user = Auth::user()->email;
-                    Mail::to($user)->send(new CancellationSucess($payload));
+                    // $user = Auth::user()->email;
+                    // Mail::to($user)->send(new CancellationSucess($payload));
                     return response([
                         'status' => 0,
                         'message' => 'Voucher '.$voucher.' has been cancelled and replaced by a new voucher ' .$new_box_voucher,
@@ -608,9 +608,9 @@ class InventoryController extends Controller
                 'message' => 'Voucher '.$voucher.' which you tried to activate is already redeemed',
                 'voucher' => $voucher
             ];
-            $user = Auth::user()->email;
-            Mail::to($user)
-                ->send(new ActivationFailed($payload));
+            // $user = Auth::user()->email;
+            // Mail::to($user)
+            //     ->send(new ActivationFailed($payload));
             $admin_user = Config::get('mail.from.address');
             Mail::to($admin_user)
                 ->send(new ActivationFailedAdmin($payload));
@@ -624,9 +624,9 @@ class InventoryController extends Controller
                 'message' => 'Voucher '.$voucher.' which you tried to activate is already activated',
                 'voucher' => $voucher
             ];
-            $user = Auth::user()->email;
-            Mail::to($user)
-                ->send(new ActivationFailed($payload));
+            // $user = Auth::user()->email;
+            // Mail::to($user)
+            //     ->send(new ActivationFailed($payload));
             $admin_user = Config::get('mail.from.address');
             Mail::to($admin_user)
                 ->send(new ActivationFailedAdmin($payload));
@@ -640,9 +640,9 @@ class InventoryController extends Controller
                 'message' => 'Voucher '.$voucher.' which you tried to activate has no selling date',
                 'voucher' => $voucher
             ];
-            $user = Auth::user()->email;
-            Mail::to($user)
-                ->send(new ActivationFailed($payload));
+            // $user = Auth::user()->email;
+            // Mail::to($user)
+            //     ->send(new ActivationFailed($payload));
             $admin_user = Config::get('mail.from.address');
             Mail::to($admin_user)
                 ->send(new ActivationFailedAdmin($payload));
@@ -658,9 +658,9 @@ class InventoryController extends Controller
                 'message' => 'Voucher '.$voucher.' which you tried to activate is no longer valid',
                 'voucher' => $voucher
             ];
-            $user = Auth::user()->email;
-            Mail::to($user)
-                ->send(new ActivationFailed($payload));
+            // $user = Auth::user()->email;
+            // Mail::to($user)
+            //     ->send(new ActivationFailed($payload));
             $admin_user = Config::get('mail.from.address');
             Mail::to($admin_user)
                 ->send(new ActivationFailedAdmin($payload));
