@@ -603,7 +603,7 @@ class InventoryController extends Controller
                 'voucher' => $voucher
             ]);
         }
-        if( $i->box_voucher_status == 3 || $i->box_voucher_status == 4){/** already redeemed */
+        if( $i->box_voucher_status == 3){/** already redeemed */
             $payload = [
                 'message' => 'Voucher '.$voucher.' which you tried to activate is already redeemed',
                 'voucher' => $voucher
