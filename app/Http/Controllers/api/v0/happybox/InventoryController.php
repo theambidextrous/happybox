@@ -582,6 +582,8 @@ class InventoryController extends Controller
         ];
     }
     public function v_activate(Request $request, $voucher){
+        $voucher_valid_date = date('Y-m-d', strtotime($i->box_validity_date));
+        $today_date = date('Y-m-d', strtotime('now'));
         $validator = Validator::make($request->all(), [
             'activation_date' => 'required|string',
             'customer_user_id' => 'required|string'
@@ -614,11 +616,10 @@ class InventoryController extends Controller
                 ->send(new ActivationFailedAdmin($payload));
             return response([
                 'status' => -211,
-                'message' => 'Voucher '.$voucher.' Is already redeemed',
+                'message' => 'Voucher '.$voucher.' is already redeemed',
                 'voucher' => $voucher
             ]);
-        }
-        if( $i->box_voucher_status == 6){/** already activated */
+        }elseif( $i->box_voucher_status == 6){/** already activated */
             $payload = [
                 'message' => 'Voucher '.$voucher.' Which you tried to activate is already activated',
                 'voucher' => $voucher
@@ -631,11 +632,10 @@ class InventoryController extends Controller
                 ->send(new ActivationFailedAdmin($payload));
             return response([
                 'status' => -211,
-                'message' => 'Voucher '.$voucher.' Is already activated',
+                'message' => 'Voucher '.$voucher.' is already activated',
                 'voucher' => $voucher
             ]);
-        }
-        if( $i->box_voucher_status == 1){/** no selling date */
+        }elseif( $i->box_voucher_status == 1){/** no selling date */
             $payload = [
                 'message' => 'Voucher '.$voucher.' Which you tried to activate has no selling date',
                 'voucher' => $voucher
@@ -651,14 +651,11 @@ class InventoryController extends Controller
                 'message' => 'Voucher '.$voucher.' has no selling date attached',
                 'voucher' => $voucher
             ]);
-        }
-        $voucher_valid_date = date('Y-m-d', strtotime($i->box_validity_date));
-        $today_date = date('Y-m-d', strtotime('now'));
-        if( $today_date > $voucher_valid_date || $i->box_voucher_status == 5){/**voucher expired */
+        }elseif( $today_date > $voucher_valid_date || $i->box_voucher_status == 5){/**voucher expired */
             $i->box_voucher_status = 5; /** mark as expired */
             $i->save();
             $payload = [
-                'message' => 'Voucher '.$voucher.' Which you tried to activate is no longer valid',
+                'message' => 'Voucher '.$voucher.' which you tried to activate is no longer valid',
                 'voucher' => $voucher
             ];
             $user = Auth::user()->email;
@@ -672,8 +669,7 @@ class InventoryController extends Controller
                 'message' => 'Voucher '.$voucher.' has no selling date attached',
                 'voucher' => $voucher
             ]);
-        }
-        if( $i->box_voucher_status == 2){ /** purchased-- can be activated */
+        }elseif( $i->box_voucher_status == 2){ /** purchased-- can be activated */
             $i->box_voucher_status = 6;
             $i->customer_user_id = $request->get('customer_user_id');
             $i->voucher_activation_date = $request->get('activation_date');
