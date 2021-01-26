@@ -582,6 +582,7 @@ class InventoryController extends Controller
         ];
     }
     public function v_activate(Request $request, $voucher){
+        $i =  Inventory::where('box_voucher', $voucher)->first();
         $voucher_valid_date = date('Y-m-d', strtotime($i->box_validity_date));
         $today_date = date('Y-m-d', strtotime('now'));
         $validator = Validator::make($request->all(), [
@@ -594,18 +595,17 @@ class InventoryController extends Controller
                 'message' => 'Invalid or empty field',
                 'errors' => $validator->errors()
             ], 401);
-        }
-        $i =  Inventory::where('box_voucher', $voucher)->first();
+        }        
         if(is_null($i)){
             return response([
                 'status' => -211,
-                'message' => 'Voucher '.$voucher.' Is Unknown',
+                'message' => 'Voucher '.$voucher.' is unknown',
                 'voucher' => $voucher
             ]);
         }
         if( $i->box_voucher_status == 3){/** already redeemed */
             $payload = [
-                'message' => 'Voucher '.$voucher.' Which you tried to activate is already redeemed',
+                'message' => 'Voucher '.$voucher.' which you tried to activate is already redeemed',
                 'voucher' => $voucher
             ];
             $user = Auth::user()->email;
@@ -621,7 +621,7 @@ class InventoryController extends Controller
             ]);
         }elseif( $i->box_voucher_status == 6){/** already activated */
             $payload = [
-                'message' => 'Voucher '.$voucher.' Which you tried to activate is already activated',
+                'message' => 'Voucher '.$voucher.' which you tried to activate is already activated',
                 'voucher' => $voucher
             ];
             $user = Auth::user()->email;
@@ -637,7 +637,7 @@ class InventoryController extends Controller
             ]);
         }elseif( $i->box_voucher_status == 1){/** no selling date */
             $payload = [
-                'message' => 'Voucher '.$voucher.' Which you tried to activate has no selling date',
+                'message' => 'Voucher '.$voucher.' which you tried to activate has no selling date',
                 'voucher' => $voucher
             ];
             $user = Auth::user()->email;
