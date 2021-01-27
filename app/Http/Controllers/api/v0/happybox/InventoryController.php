@@ -594,7 +594,7 @@ class InventoryController extends Controller {
   if (is_null($i)) {
    return response([
     'status' => -211,
-    'message' => 'Voucher ' . $voucher . ' is unknown',
+    'message' => 'Unknown voucher',
     'voucher' => $voucher
    ]);
   }
