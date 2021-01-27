@@ -578,7 +578,8 @@ class InventoryController extends Controller {
    'display_mode' => 'fullpage',
   ];
  }
- public function v_activate(Request $request, $voucher) {  
+ public function v_activate(Request $request, $voucher) {
+  $i =  Inventory::where('box_voucher', $voucher)->first();  
   $validator = Validator::make($request->all(), [
    'activation_date' => 'required|string',
    'customer_user_id' => 'required|string'
@@ -597,8 +598,7 @@ class InventoryController extends Controller {
     'voucher' => $voucher
    ]);
   }
-
-  $i =  Inventory::where('box_voucher', $voucher)->first();
+  
   $voucher_valid_date = date('Y-m-d', strtotime($i->box_validity_date));
   $today_date = date('Y-m-d', strtotime('now'));
   if ($i->box_voucher_status == 3) {
