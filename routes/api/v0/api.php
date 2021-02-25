@@ -167,6 +167,13 @@ Route::prefix('/services')->group( function() {
             Route::post('/run/cron','api\v0\happybox\OrderController@run_cron');
             //
         });
+        /** POS  */
+        Route::prefix('/pos')->group( function(){
+            Route::post('/make/sale', 'api\v0\happybox\PosController@sale');
+            Route::get('/find/sales', 'api\v0\happybox\PosController@findsales');
+            Route::post('/edit/sale/{id}', 'api\v0\happybox\PosController@editsale');
+            Route::post('/delete/sale/{id}', 'api\v0\happybox\PosController@deletesale');
+        });
         /** prices */
         Route::prefix('/prices')->group( function(){
             Route::post('/price', 'api\v0\happybox\PriceController@create');
