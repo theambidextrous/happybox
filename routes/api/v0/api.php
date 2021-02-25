@@ -178,6 +178,7 @@ Route::prefix('/services')->group( function() {
         Route::prefix('/prices')->group( function(){
             Route::post('/price', 'api\v0\happybox\PriceController@create');
             Route::put('/price/{id}', 'api\v0\happybox\PriceController@update');
+            Route::put('/delete/{id}', 'api\v0\happybox\PriceController@delete');
         });
         /** topics */
         Route::prefix('/topics')->group( function(){

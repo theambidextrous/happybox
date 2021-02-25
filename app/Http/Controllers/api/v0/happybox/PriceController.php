@@ -154,6 +154,16 @@ class PriceController extends Controller
         //
     }
 
+    public function delete($id)
+    {
+        Price::find($id)->delete();
+        return response([
+            'status' => 0,
+            'message' => 'Deleted successfully',
+            'price' => $id
+        ]);
+    }
+
     /**
      * Update the specified resource in storage.
      *

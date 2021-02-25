@@ -142,7 +142,7 @@ class PosController extends Controller
         if( $validator->fails() ){
             return response([
                 'status' => -211,
-                'message' => 'Select new purchase dates',
+                'message' => 'Form error. Select new purchase date',
                 'errors' => $validator->errors()
             ], 401);
         }
