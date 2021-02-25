@@ -254,23 +254,6 @@ class PosController extends Controller
                 return $user_id;
             }
         }
-        if( $this->phone_has_account($data['phone']) )
-        {
-            $user = User::where('phone', $data['phone'])->first();
-            if( !is_null($user) )
-            {
-                $user->name = $data['name'];
-                $user->username = $data['username'];
-                $user->password = $data['password'];
-                $user->save();
-                return $user->id;
-            }
-            else
-            {
-                $user_id = User::create($data)->id;
-                return $user_id;
-            }
-        }
         $user_id = User::create($data)->id;
         return $user_id;
     }
