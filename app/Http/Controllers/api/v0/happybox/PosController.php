@@ -103,7 +103,7 @@ class PosController extends Controller
         } catch (\Illuminate\Database\QueryException $e) {
             return response([
                 'status' => -211,
-                'message' => 'Database server rule violation error'
+                'message' => 'Database server rule violation error' . $e->getMessage()
             ], 401);
         } catch (PDOException $e) {
             return response([
