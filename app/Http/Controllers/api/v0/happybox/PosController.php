@@ -264,7 +264,7 @@ class PosController extends Controller
     {
         if( $this->id_has_info($data['userid']) )
         {
-            $info = Userinfo::where('userid', $userid)->first();
+            $info = Userinfo::where('userid', $data['userid'])->first();
             $info->fname = $data['fname'];
             $info->lname = $data['lname'];
             $info->phone = $data['phone'];
