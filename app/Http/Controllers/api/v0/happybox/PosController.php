@@ -237,6 +237,9 @@ class PosController extends Controller
     {
         $data['password'] = bcrypt($data['password']);
         $data['is_active'] = true;
+        $data['is_client'] = true;
+        $data['is_partner'] = false;
+        $data['is_admin'] = false;
         if( $this->mail_has_account($data['email']) )
         {
             $user = User::where('email', $data['email'])->first();

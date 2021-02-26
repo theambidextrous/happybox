@@ -444,7 +444,151 @@ class UserController extends Controller
             ], 401);
         }
     }
-
+    public function adm_findall()
+    {
+        $data = [];
+        $res = User::where('is_admin', true)->where('is_active', true)->get();
+        if(!is_null($res))
+        {
+            $data = $res->toArray();
+        }
+        return response([
+            'status' => 0,
+            'message' => 'Admin user query returned',
+            'data' => $this->format_adm_data($data),
+        ], 200);
+    }
+    protected function format_adm_data($data)
+    {
+        $rtn = [];
+        foreach( $data as $_data ):
+            $admin_meta = Userinfo::where('userid', $_data['id'])->first();
+            if(!is_null($admin_meta))
+            {
+                $_data['fname'] = $admin_meta->fname;
+                $_data['sname'] = $admin_meta->sname;
+                $_data['phone'] = $admin_meta->phone;
+                $_data['internal_id'] = $admin_meta->internal_id;
+            }
+            array_push($rtn, $_data);
+        endforeach;
+        
+        return $rtn;
+    }
+    public function new_admin(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'fname' => 'required|string',
+            'sname' => 'required|string',
+            'email' => 'required|email',
+            'phone' => 'required|string',
+            'password' => 'required|string',
+        ]);
+        if( $validator->fails() ){
+            return response([
+                'status' => -211,
+                'message' => 'Input error. Make sure all fields are filled',
+                'errors' => $validator->errors()
+            ], 401);
+        }
+        $input = $request->all();
+        $extracted_username = explode('@', $input['email'])[0];
+        $full_name = $input['fname'] . ' ' . $input['sname'];
+        $user_data = [
+            'username' => $extracted_username,
+            'email' => $input['email'],
+            'phone' => $input['phone'],
+            'password' => $input['password'],
+            'name' => $full_name,
+        ];
+        $userid = $this->add_new_admin($user_data);
+        $user_info_data = [
+            'fname' => $input['fname'],
+            'sname' => $input['sname'],
+            'short_description' => 'admin user',
+            'location' => 'no location captured',
+            'phone' => $input['phone'],
+            'userid' => $userid,
+        ];
+        $admin_internal_id = $this->add_info($user_info_data);
+        return response([
+            'status' => 0,
+            'message' => 'admin user posted successfully',
+            'data' => $admin_internal_id
+        ], 200);
+    }
+    protected function add_new_admin($data)
+    {
+        $data['password'] = bcrypt($data['password']);
+        $data['is_active'] = true;
+        $data['is_client'] = false;
+        $data['is_partner'] = false;
+        $data['is_admin'] = true;
+        if( $this->mail_has_account($data['email']) )
+        {
+            $user = User::where('email', $data['email'])->first();
+            if( !is_null($user) )
+            {
+                $user->name = $data['name'];
+                $user->username = $data['username'];
+                $user->password = $data['password'];
+                $user->save();
+                return $user->id;
+            }
+            else
+            {
+                $user_id = User::create($data)->id;
+                return $user_id;
+            }
+        }
+        $user_id = User::create($data)->id;
+        return $user_id;
+    }
+    protected function add_info($data)
+    {
+        if( $this->id_has_info($data['userid']) )
+        {
+            $info = Userinfo::where('userid', $userid)->first();
+            $info->fname = $data['fname'];
+            $info->lname = $data['lname'];
+            $info->phone = $data['phone'];
+            $info->save();
+            return $info->internal_id;
+        }
+        $data['internal_id'] = 'AD-' . $this->createCode(15);
+        Userinfo::create($data);
+        return $data['internal_id'];
+    }
+    protected function id_has_info($userid)
+    {
+        return Userinfo::where('userid', $userid)->count() > 0;
+    }
+    protected function mail_has_account($email)
+    {
+        return User::where('email', $email)->count() > 0;
+    }
+    public function change_pwd_admin(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'password' => 'required|string',
+            'c_password' => 'required|same:password'
+        ]);
+        if( $validator->fails() ){
+            return response([
+                'status' => -211,
+                'message' => 'Password error. Make sure passwords match',
+                'errors' => $validator->errors()
+            ], 401);
+        }
+        $input = $request->all();
+        $input['password'] = bcrypt($input['password']);
+        User::find($request->user()->id)->update($input);
+        return response([
+            'status' => 0,
+            'message' => 'Password changed successfully',
+            'data' => []
+        ], 200);
+    }
     /**
      * Show the form for editing the specified resource.
      *

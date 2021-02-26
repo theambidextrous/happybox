@@ -59,6 +59,9 @@ Route::prefix('/users')->group( function() {
         Route::prefix('/admins')->group( function(){
             Route::get('/findall', 'api\v0\user\UserController@admins');
             Route::post('/profile/{id}', 'api\v0\user\UserinfoController@create_for_admin');
+            Route::post('/find/all', 'api\v0\user\UserController@adm_findall');
+            Route::post('/change/pwd', 'api\v0\user\UserController@change_pwd_admin');
+            Route::post('/new/user', 'api\v0\user\UserController@new_admin');
             Route::put('/profile/{userid}', 'api\v0\user\UserinfoController@update_admin');
         });
     });
