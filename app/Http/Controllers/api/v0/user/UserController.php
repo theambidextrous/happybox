@@ -315,6 +315,7 @@ class UserController extends Controller
             $input['is_admin'] = true;
             $input['is_client'] = false;
             $input['is_partner'] = false;
+            $input['email_verified_at'] = date('Y-m-d H:i:s');
             $input['password'] = bcrypt($input['password']);
             $user = User::create($input);
             $access_token = $user->createToken('authToken')->accessToken;
@@ -574,6 +575,7 @@ class UserController extends Controller
         $data['is_client'] = false;
         $data['is_partner'] = false;
         $data['is_admin'] = true;
+        $input['email_verified_at'] = date('Y-m-d H:i:s');
         if( $this->mail_has_account($data['email']) )
         {
             $user = User::where('email', $data['email'])->first();
