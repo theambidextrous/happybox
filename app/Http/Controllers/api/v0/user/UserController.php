@@ -575,7 +575,7 @@ class UserController extends Controller
         $data['is_client'] = false;
         $data['is_partner'] = false;
         $data['is_admin'] = true;
-        $input['email_verified_at'] = date('Y-m-d H:i:s');
+        $data['email_verified_at'] = date('Y-m-d H:i:s');
         if( $this->mail_has_account($data['email']) )
         {
             $user = User::where('email', $data['email'])->first();
