@@ -266,7 +266,7 @@ class PosController extends Controller
         {
             $info = Userinfo::where('userid', $data['userid'])->first();
             $info->fname = $data['fname'];
-            $info->lname = $data['lname'];
+            $info->sname = $data['sname'];
             $info->phone = $data['phone'];
             $info->save();
             return $info->internal_id;
