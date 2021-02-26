@@ -5,6 +5,7 @@ namespace App\Http\Controllers\api\v0\user;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\User;
+use App\Userinfo;
 use Validator;
 use Config;
 use Illuminate\Auth\Middleware\Authenticate;
@@ -472,7 +473,7 @@ class UserController extends Controller
             }
             array_push($rtn, $_data);
         endforeach;
-        
+
         return $rtn;
     }
     public function new_admin(Request $request)
