@@ -546,6 +546,7 @@ class UserController extends Controller
             $user_data['password'] = bcrypt($input['password']);
         }
         User::find($id)->update($user_data);
+        $this->verify_adm_usr($id);
         $user_info_data = [
             'fname' => $input['fname'],
             'sname' => $input['sname'],
