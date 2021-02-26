@@ -62,6 +62,8 @@ Route::prefix('/users')->group( function() {
             Route::get('/find/all', 'api\v0\user\UserController@adm_findall');
             Route::post('/change/pwd', 'api\v0\user\UserController@change_pwd_admin');
             Route::post('/new/user', 'api\v0\user\UserController@new_admin');
+            Route::put('/edit/user/{id}', 'api\v0\user\UserController@edit_admin');
+            Route::put('/del/user/{id}', 'api\v0\user\UserController@del_admin');
             Route::put('/profile/{userid}', 'api\v0\user\UserinfoController@update_admin');
         });
     });

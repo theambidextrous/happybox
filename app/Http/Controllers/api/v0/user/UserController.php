@@ -518,6 +518,55 @@ class UserController extends Controller
             'data' => $admin_internal_id
         ], 200);
     }
+    public function edit_admin(Request $request, $id)
+    {
+        $validator = Validator::make($request->all(), [
+            'fname' => 'required|string',
+            'sname' => 'required|string',
+            'email' => 'required|email',
+            'phone' => 'required|string',
+        ]);
+        if( $validator->fails() ){
+            return response([
+                'status' => -211,
+                'message' => 'Input error. Make sure all fields are filled',
+                'errors' => $validator->errors()
+            ], 401);
+        }
+        $input = $request->all();
+        $full_name = $input['fname'] . ' ' . $input['sname'];
+        $user_data = [
+            'email' => $input['email'],
+            'phone' => $input['phone'],
+            'name' => $full_name,
+        ];
+        if( strlen($input['password']) )
+        {
+            $user_data['password'] = bcrypt($input['password']);
+        }
+        User::find($id)->update($user_data);
+        $user_info_data = [
+            'fname' => $input['fname'],
+            'sname' => $input['sname'],
+            'phone' => $input['phone'],
+        ];
+        Userinfo::where('userid', $id)->update($user_info_data);
+        return response([
+            'status' => 0,
+            'message' => 'admin user updated successfully',
+            'data' => [],
+        ], 200);
+    }
+    public function del_admin($id)
+    {
+        User::find($id)->delete();
+        Userinfo::where('userid', $id)->delete();
+        return response([
+            'status' => 0,
+            'message' => 'admin user deleted successfully',
+            'data' => [],
+        ], 200);
+    }
     protected function add_new_admin($data)
     {
         $data['password'] = bcrypt($data['password']);
