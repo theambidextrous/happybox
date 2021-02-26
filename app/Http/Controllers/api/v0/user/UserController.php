@@ -601,10 +601,9 @@ class UserController extends Controller
     }
     protected function verify_adm_usr($id)
     {
-        $data = [
-            'email_verified_at' => date('Y-m-d H:i:s'),
-        ];
-        User::find($id)->update($data);
+        $user = User::find($id);
+        $user->email_verified_at = date('Y-m-d H:i:s');
+        $user->save();
         return;
     }
     protected function add_info($data)
