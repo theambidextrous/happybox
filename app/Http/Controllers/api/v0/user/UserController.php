@@ -575,7 +575,6 @@ class UserController extends Controller
         $data['is_client'] = false;
         $data['is_partner'] = false;
         $data['is_admin'] = true;
-        $data['email_verified_at'] = date('Y-m-d H:i:s');
         if( $this->mail_has_account($data['email']) )
         {
             $user = User::where('email', $data['email'])->first();
@@ -585,16 +584,27 @@ class UserController extends Controller
                 $user->username = $data['username'];
                 $user->password = $data['password'];
                 $user->save();
+                $this->verify_adm_usr($user->id);
                 return $user->id;
             }
             else
             {
                 $user_id = User::create($data)->id;
+                $this->verify_adm_usr($user_id);
                 return $user_id;
             }
         }
         $user_id = User::create($data)->id;
+        $this->verify_adm_usr($user_id);
         return $user_id;
+    }
+    protected function verify_adm_usr($id)
+    {
+        $data = [
+            'email_verified_at' => date('Y-m-d H:i:s'),
+        ];
+        User::find($id)->update($data);
+        return;
     }
     protected function add_info($data)
     {
