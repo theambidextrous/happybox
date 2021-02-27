@@ -179,7 +179,7 @@ class PosController extends Controller
             $i->customer_buyer_invoice = null; 
             $i->box_voucher_status = 1; 
             $i->box_delivery_address = null; 
-            $i->is_pos = null;
+            $i->is_pos = false;
             $i->save();
             return response([
                 'status' => 0,
