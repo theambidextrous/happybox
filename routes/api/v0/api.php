@@ -177,6 +177,7 @@ Route::prefix('/services')->group( function() {
             Route::post('/make/sale', 'api\v0\happybox\PosController@sale');
             Route::get('/find/sales', 'api\v0\happybox\PosController@findsales');
             Route::post('/edit/sale/{id}', 'api\v0\happybox\PosController@editsale');
+            Route::post('/unsell/sale/{id}', 'api\v0\happybox\PosController@unsellsale');
             Route::post('/delete/sale/{id}', 'api\v0\happybox\PosController@deletesale');
         });
         /** prices */

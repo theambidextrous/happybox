@@ -166,6 +166,33 @@ class PosController extends Controller
             'data' => [],
         ], 401);
     }
+    public function unsellsale($id)
+    {
+        $i = Inventory::find($id);
+        if( !is_null($i) )
+        {
+            $i->order_number = null;
+            $i->customer_buyer_id = null; 
+            $i->customer_payment_method = null; 
+            $i->box_purchase_date = null; 
+            $i->box_validity_date = null; 
+            $i->customer_buyer_invoice = null; 
+            $i->box_voucher_status = 1; 
+            $i->box_delivery_address = null; 
+            $i->is_pos = null;
+            $i->save();
+            return response([
+                'status' => 0,
+                'message' => 'Box voucher has been returned to stock with "Instcok" status.',
+                'data' => [],
+            ], 200);
+        }
+        return response([
+            'status' => -211,
+            'message' => 'Error. Entry not found',
+            'data' => [],
+        ], 401);
+    }
     public function deletesale($id)
     {
         $i = Inventory::find($id)->delete();
