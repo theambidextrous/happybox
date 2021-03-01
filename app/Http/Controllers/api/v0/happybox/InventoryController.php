@@ -172,7 +172,7 @@ class InventoryController extends Controller {
      'message' => 'Permission denied'
     ], 401);
    }
-   $i =  Inventory::where('box_voucher_status', $status)->get();
+   $i =  Inventory::where('box_voucher_status', $status)->where('is_pos', false)->get();
    return response([
     'status' => 0,
     'message' => 'fetched successfully',

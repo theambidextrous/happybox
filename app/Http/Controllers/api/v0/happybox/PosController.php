@@ -119,7 +119,8 @@ class PosController extends Controller
     }
     public function findsales()
     {
-        $data = Inventory::where('is_pos', true)->orderBy('box_purchase_date', 'desc')->get();
+        $data = Inventory::where('is_pos', true)
+            ->where('box_voucher_status', 2)->orderBy('box_purchase_date', 'desc')->get();
         if( is_null($data) )
         {
             $data = [];
@@ -169,6 +170,14 @@ class PosController extends Controller
     public function unsellsale($id)
     {
         $i = Inventory::find($id);
+        if( intval($i->box_voucher_status) != 2)
+        {
+            return response([
+                'status' => -211,
+                'message' => 'Error. Box voucher could not be returned to stock.',
+                'data' => [],
+            ], 401);
+        }
         if( !is_null($i) )
         {
             $i->order_number = null;
@@ -183,7 +192,7 @@ class PosController extends Controller
             $i->save();
             return response([
                 'status' => 0,
-                'message' => 'Box voucher has been returned to stock with "Instcok" status.',
+                'message' => 'Box voucher has been returned to stock with "Instock" status.',
                 'data' => [],
             ], 200);
         }
