@@ -120,7 +120,7 @@ class PosController extends Controller
     public function findsales()
     {
         $data = Inventory::where('is_pos', true)
-            ->where('box_voucher_status', 2)->orderBy('box_purchase_date', 'desc')->get();
+            ->whereIn('box_voucher_status', [2,6])->orderBy('box_purchase_date', 'desc')->get();
         if( is_null($data) )
         {
             $data = [];
