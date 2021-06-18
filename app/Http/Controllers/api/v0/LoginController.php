@@ -14,47 +14,54 @@ use App\Mail\ContactUs;
 class LoginController extends Controller
 {
     public function login(Request $request ){
-        if ( !$request->isMethod('post') ) {
-            return response([
-                'status' => -211,
-                'message' => 'Method not allowed'
-            ], 403);
-        }
-        $login = $validate = $request->validate([
-                'email' => 'required|email',
-                'password' => 'required|string'
-            ]);
-        if( !Auth::attempt( $login ) ){
-            return response(['status' => -211, 'message' => 'Invalid username or password']);
-        }
-        if( is_null(Auth::user()->email_verified_at) ){
-            return response(['status' => -211, 'message' => 'Email address not verified!']);
-        }
-        $accessToken = Auth::user()->createToken('authToken')->accessToken;
-        $user = Auth::user();
-        if(!$user['is_active']){
-            return response(['status' => -211, 'message' => 'Account not active']);
-        }
-        if( $request->get('news') == '00'){
-            $u = User::find($user['id']);
-            $u->can_receive_news = 1;
-            if($u->save()){
+        try {
+            if ( !$request->isMethod('post') ) {
+                return response([
+                    'status' => -211,
+                    'message' => 'Method not allowed'
+                ], 403);
+            }
+            $login = $validate = $request->validate([
+                    'email' => 'required|email',
+                    'password' => 'required|string'
+                ]);
+            if( !Auth::attempt( $login ) ){
+                return response(['status' => -211, 'message' => 'Invalid Login Info or Session expired']);
+            }
+            if( is_null(Auth::user()->email_verified_at) ){
+                return response(['status' => -211, 'message' => 'Email address not verified!']);
+            }
+            $accessToken = Auth::user()->createToken('authToken')->accessToken;
+            $user = Auth::user();
+            if(!$user['is_active']){
+                return response(['status' => -211, 'message' => 'Account not active']);
+            }
+            if( $request->get('news') == '00'){
+                $u = User::find($user['id']);
+                $u->can_receive_news = 1;
+                if($u->save()){
+                    return response([
+                        'status' => 0,
+                        'user' => $user,
+                        'access_token' => $accessToken
+                    ]);
+                }else{
+                    return response([
+                        'status' => -211,
+                        'message' => 'Could not subscribe your account to news updates'
+                    ]);
+                }
+            }else{
                 return response([
                     'status' => 0,
                     'user' => $user,
                     'access_token' => $accessToken
                 ]);
-            }else{
-                return response([
-                    'status' => -211,
-                    'message' => 'Could not subscribe your account to news updates'
-                ]);
             }
-        }else{
+        } catch (\Throwable $th) {
             return response([
-                'status' => 0,
-                'user' => $user,
-                'access_token' => $accessToken
+                'status' => -211,
+                'message' => $th->getMessage(),
             ]);
         }
 

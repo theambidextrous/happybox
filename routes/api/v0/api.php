@@ -21,7 +21,7 @@ use Illuminate\Support\Facades\Route;
 /** Users */
 Route::prefix('/users')->group( function() {
     /** all users login */
-    Route::post('/login', 'api\v0\LoginController@login');
+    Route::post('/login', 'api\v0\LoginController@login')->name('login');
     /** contact us */
     Route::post('contact/us', 'api\v0\LoginController@contact_us');
     /** register clients */
