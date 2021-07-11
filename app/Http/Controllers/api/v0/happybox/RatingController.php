@@ -76,6 +76,7 @@ class RatingController extends Controller
     {
         try {
             $count = Rating::where('partner', $idf)->count();
+            $count = $count > 0 ? $count:1;
             $r =  Rating::where('partner', $idf)->sum('rating_value');
             return response([
                 'status' => 0,
