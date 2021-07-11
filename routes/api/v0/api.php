@@ -148,6 +148,8 @@ Route::prefix('/services')->group( function() {
         /** ratings */
         Route::prefix('/ratings')->group( function(){
             Route::post('/ratings', 'api\v0\happybox\RatingController@create');
+            Route::get('/can/{user}/ptn/{ptn}', 'api\v0\happybox\RatingController@canRate');
+            Route::get('/has/{user}/ptn/{ptn}', 'api\v0\happybox\RatingController@hasRated');
         });
         /** orders */
         Route::prefix('/orders')->group( function(){
