@@ -75,11 +75,12 @@ class RatingController extends Controller
     public function by_ptn_value($idf)
     {
         try {
+            $count = Rating::where('partner', $idf)->count();
             $r =  Rating::where('partner', $idf)->sum('rating_value');
             return response([
                 'status' => 0,
                 'message' => 'fetched successfully',
-                'data' => $r
+                'data' => round(($r/$count), 1),
             ]);
         } catch (\Illuminate\Database\QueryException $e) {
             return response([
