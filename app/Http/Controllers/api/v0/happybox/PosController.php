@@ -157,7 +157,7 @@ class PosController extends Controller
             $i->save();
             return response([
                 'status' => 0,
-                'message' => 'sale purchase date modified',
+                'message' => 'Box Purchase Date Modified',
                 'data' => $i,
             ], 200);
         }
