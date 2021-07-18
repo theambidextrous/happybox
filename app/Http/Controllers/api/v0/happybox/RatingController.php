@@ -28,9 +28,10 @@ class RatingController extends Controller
             'errors' => []
         ], 200);
     }
-    public function hasRated($user, $ptn)
+    public function hasRated($user, $ptn, $voucher)
     {
         $rtn = Rating::where('rating_user', $user)
+            ->where('voucher', $voucher)
             ->where('partner', $ptn)->count() > 0;
         return response([
             'status' => 0,
@@ -95,7 +96,29 @@ class RatingController extends Controller
             ], 401);
         }
     }
-
+    public function by_ptn_byvoucher($idf, $voucher)
+    {
+        try {
+            $count = Rating::where('partner', $idf)->where('voucher', $voucher)->count();
+            $count = $count > 0 ? $count:1;
+            $r =  Rating::where('partner', $idf)->where('voucher', $voucher)->sum('rating_value');
+            return response([
+                'status' => 0,
+                'message' => 'fetched successfully',
+                'data' => round(($r/$count), 1),
+            ]);
+        } catch (\Illuminate\Database\QueryException $e) {
+            return response([
+                'status' => -211,
+                'message' => 'Database server rule violation error'
+            ], 401);
+        } catch (PDOException $e) {
+            return response([
+                'status' => -211,
+                'message' => 'Database rule violation error'
+            ], 401);
+        }
+    }
     public function index()
     {
         try{

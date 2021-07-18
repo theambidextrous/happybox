@@ -141,6 +141,7 @@ Route::prefix('/services')->group( function() {
     Route::prefix('/ratings')->group( function(){
         Route::get('/ratings', 'api\v0\happybox\RatingController@index');
         Route::get('/ratings/partner/{idf}', 'api\v0\happybox\RatingController@by_ptn_value');
+        Route::get('/ratings/partner/{idf}/voucher/{voucher}', 'api\v0\happybox\RatingController@by_ptn_byvoucher');
         Route::get('/ratings/ptn/{idf}', 'api\v0\happybox\RatingController@by_ptn');
     });
     /** SECURED */
@@ -149,7 +150,7 @@ Route::prefix('/services')->group( function() {
         Route::prefix('/ratings')->group( function(){
             Route::post('/ratings', 'api\v0\happybox\RatingController@create');
             Route::get('/can/{user}/ptn/{ptn}', 'api\v0\happybox\RatingController@canRate');
-            Route::get('/has/{user}/ptn/{ptn}', 'api\v0\happybox\RatingController@hasRated');
+            Route::get('/has/{user}/ptn/{ptn}/voucher/{voucher}', 'api\v0\happybox\RatingController@hasRated');
         });
         /** orders */
         Route::prefix('/orders')->group( function(){
