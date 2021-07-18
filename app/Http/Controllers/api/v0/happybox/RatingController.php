@@ -45,8 +45,8 @@ class RatingController extends Controller
             $validator = Validator::make($request->all(), [
                 'rating_user' => 'required|string',
                 'rating_value' => 'required|integer',
-                'comment' => 'required|string',
-                'partner' => 'required|string'
+                'partner' => 'required|string',
+                'voucher' => 'required|string',
             ]);
             if( $validator->fails() ){
                 return response([
