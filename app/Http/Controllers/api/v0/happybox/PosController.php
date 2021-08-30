@@ -148,6 +148,7 @@ class PosController extends Controller
             ], 401);
         }
         $input = $request->all();
+        $input['box_purchase_date'] = $this->toDefaultDate($input['box_purchase_date']);
         $input['box_validity_date'] = date('Y-m-d',strtotime("+6 months",strtotime($input['box_purchase_date'])));
         $i = Inventory::find($id);
         if( !is_null($i) )
@@ -166,6 +167,15 @@ class PosController extends Controller
             'message' => 'Error. Entry not found',
             'data' => [],
         ], 401);
+    }
+    protected function toDefaultDate($date){
+        $splited = explode('/', $date);
+        if( count($splited) == 3 && strlen($splited[2]) == 4)
+        {
+            $new_string = $splited[2].'-'.$splited[1].'-'.$splited[0];
+            return date('Y-m-d', strtotime($new_string));
+        }
+        return $date;
     }
     public function unsellsale($id)
     {
